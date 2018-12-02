@@ -21,7 +21,7 @@ public class DAOBill extends DAO {
             ResultSet rs = ps.executeQuery();
             while(rs.next()) {
                 Model.Bill s = new Model.Bill();
-                s.setID(rs.getInt("ID"));
+                s.setBillID(rs.getInt("ID"));
                 s.setMaSinhVien(rs.getString("MaSinhVien"));
                 s.setHoTenSinhVien(rs.getString("HoTenSinhVien"));
                 s.setGioiTinh(rs.getString("GioiTinh"));
