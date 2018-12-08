@@ -121,8 +121,8 @@ public class MainFrm extends javax.swing.JFrame {
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
         // TODO add your handling code here:
-       // EmployeeFrm x = new EmployeeFrm("New form");
-       OrderFrm x = new OrderFrm();
+        EmployeeFrm x = new EmployeeFrm();
+       //OrderFrm x = new OrderFrm();
         x.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_jButton1MouseClicked
