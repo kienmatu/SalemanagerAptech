@@ -6,16 +6,19 @@
 package MainForm;
 
 import Entity.Employee;
-import Entity.HibernateUtil;
 import java.awt.Color;
 //import antlr.collections.List;
 import java.awt.event.ItemEvent;
 import java.awt.event.KeyEvent;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
@@ -63,7 +66,6 @@ public class EmployeeFrm extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         txtFullname = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        txtDate = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         txtPhoneNumber = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
@@ -72,6 +74,7 @@ public class EmployeeFrm extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         txtPassword = new javax.swing.JPasswordField();
+        txtDate = new com.toedter.calendar.JDateChooser();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblEmployee = new javax.swing.JTable();
 
@@ -129,9 +132,6 @@ public class EmployeeFrm extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 10)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(102, 153, 255));
         jLabel3.setText("EMPLOYEE FULL NAME");
-
-        txtDate.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        txtDate.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(45, 118, 232)));
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 10)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(102, 153, 255));
@@ -213,16 +213,16 @@ public class EmployeeFrm extends javax.swing.JFrame {
                                         .addComponent(cbbLuaChon, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(18, 18, 18)
                                         .addComponent(pnlDongY, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(txtUser, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(txtUser, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
                                         .addComponent(jLabel2)
                                         .addComponent(jLabel3)
-                                        .addComponent(txtFullname, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(txtFullname, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
                                         .addComponent(jLabel4)
-                                        .addComponent(txtDate, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(txtPhoneNumber, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(jLabel5)
-                                        .addComponent(txtPhoneNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                        .addComponent(txtDate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGap(66, 66, 66)
                                 .addComponent(jLabel9)))
@@ -265,6 +265,9 @@ public class EmployeeFrm extends javax.swing.JFrame {
         );
 
         txtPassword.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(45, 118, 232)));
+        txtDate.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+
+        txtDate.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(45, 118, 232)));
 
         jScrollPane1.setBackground(new java.awt.Color(255, 255, 255));
         jScrollPane1.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -352,7 +355,14 @@ public class EmployeeFrm extends javax.swing.JFrame {
                     //suaSinhVien();
                     break;
                 case "DELETE":
-                    resetField();
+                    if (DeleteEmp()) {
+                        JOptionPane.showMessageDialog(null, "DELETE USER " + txtUser.getText() + " Successfully");
+                        resetField();
+
+                    } else {
+                        JOptionPane.showMessageDialog(null, "An error occured!");
+                    }
+                    setDataforTable();
                     break;
                 case "EMPTY":
                     resetField();
@@ -362,6 +372,32 @@ public class EmployeeFrm extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_pnlDongYMouseClicked
+    private boolean DeleteEmp() {
+        EntityTransaction tran = null;
+        try {
+            String username = txtUser.getText();
+            if ("admin".equals(username)) {
+                return false;
+            }
+            EntityManager entityManager = Persistence.createEntityManagerFactory(unitName).createEntityManager();
+            tran = entityManager.getTransaction();
+            Employee employee = entityManager.find(Employee.class, username);
+            tran.begin();
+            entityManager.remove(employee);
+            tran.commit();
+
+            return true;
+        } catch (Exception e) {
+            if (tran != null && tran.isActive()) {
+                tran.rollback();
+                //JOptionPane.showMessageDialog(null, e);
+
+            }
+            //JOptionPane.showMessageDialog(null, e);
+            return false;
+        }
+    }
+
     private void setColor(JPanel panel) {
         panel.setBackground(new java.awt.Color(0, 51, 255));
     }
@@ -383,26 +419,29 @@ public class EmployeeFrm extends javax.swing.JFrame {
         int r = tblEmployee.getSelectedRow();
 //        tableHeaders.add("User Name");
 //        tableHeaders.add("Is Admin");
-//        tableHeaders.add("Password");
 //        tableHeaders.add("Emp Phone");
 //        tableHeaders.add("Emp Name");
 //        tableHeaders.add("Start Date");
         TableModel model = tblEmployee.getModel();
         if (r != -1) {
+            Date date = new Date();
+            DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            String today = formatter.format(model.getValueAt(r, 4));
             txtUser.setText(model.getValueAt(r, 0) != null ? model.getValueAt(r, 0).toString() : "");
             txtUser.enable(false);
-            txtPassword.setText(model.getValueAt(r, 2) != null ? model.getValueAt(r, 2).toString() : "");
-            txtFullname.setText(model.getValueAt(r, 4) != null ? model.getValueAt(r, 4).toString() : "");
-            txtDate.setText(model.getValueAt(r, 5) != null ? model.getValueAt(r, 5).toString() : "");
-            txtPhoneNumber.setText(model.getValueAt(r, 3) != null ? model.getValueAt(r, 3).toString() : "");
+            txtFullname.setText(model.getValueAt(r, 3) != null ? model.getValueAt(r, 3).toString() : "");
+            txtDate.setDate(today != null ?  new Date(today)  : new Date());
+            txtPhoneNumber.setText(model.getValueAt(r, 2) != null ? model.getValueAt(r, 2).toString() : "");
         }
+        cbbLuaChon.setSelectedIndex(1);
+
     }//GEN-LAST:event_tblEmployeeMouseClicked
     private void resetField() {
         txtUser.setText("");
         txtUser.enable(true);
         txtPassword.setText("");
         txtFullname.setText("");
-        txtDate.setText("");
+        txtDate.setDate(new Date());
         txtPhoneNumber.setText("");
     }
 
@@ -413,18 +452,10 @@ public class EmployeeFrm extends javax.swing.JFrame {
             String pass = txtPassword.getText();
             String name = txtFullname.getText();
             String phone = this.txtPhoneNumber.getText();
-            Date date = new SimpleDateFormat("dd/MM/yyyy").parse(txtDate.getText());
-            EntityManager entityManager = Persistence.createEntityManagerFactory("SaleManagerProjectPU").createEntityManager();
+            Date date = txtDate.getDate();//new SimpleDateFormat("dd/MM/yyyy").parse(txtDate.getText());
+            //JOptionPane.showMessageDialog(null, date);
+            EntityManager entityManager = Persistence.createEntityManagerFactory(unitName).createEntityManager();
             tran = entityManager.getTransaction();
-
-//            Query query = entityManager.createNativeQuery("INSERT INTO EMPLOYEE (USERNAME,PASS,EMPNAME,EMPPHONE,EMPSTARTDATE) "
-//                    + " VALUES(?,?,?,?,?)");
-//            query.setParameter(1, user);
-//            query.setParameter(2, pass);
-//            query.setParameter(3, name);
-//            query.setParameter(4, phone);
-//            query.setParameter(5, date);
-//            query.executeUpdate();
             Employee employee = new Employee(user, pass, name, phone, date);
             tran.begin();
             entityManager.persist(employee);
@@ -485,28 +516,31 @@ public class EmployeeFrm extends javax.swing.JFrame {
     private void setDataforTable() {
         try {
             tblEmployee.setModel(new DefaultTableModel());
-            EntityManager entityManager = Persistence.createEntityManagerFactory("SaleManagerProjectPU").createEntityManager();
-            javax.persistence.Query query = entityManager.createNamedQuery("Employee.findAll");
+            EntityManager entityManager = Persistence.createEntityManagerFactory(unitName).createEntityManager();
+            Query query = entityManager.createNamedQuery("Employee.findAll");
             List<Employee> resultList = query.getResultList();
 
             Vector<String> tableHeaders = new Vector<String>();
             Vector tableData = new Vector();
+
             tableHeaders.add("User Name");
             tableHeaders.add("Is Admin");
-            tableHeaders.add("Password");
+            // tableHeaders.add("Password");
             tableHeaders.add("Emp Phone");
             tableHeaders.add("Emp Name");
             tableHeaders.add("Start Date");
 
-            for (Object o : resultList) {
-                Employee e = (Employee) o;
+            for (Employee e : resultList) {
+                // Employee e = (Employee) o;
                 Vector<Object> oneRow = new Vector<Object>();
+                //String strDate = new SimpleDateFormat("MM/dd/yyyy").format((Date));
                 oneRow.add(e.getUsername());
                 oneRow.add((e.getIsadmin() == 1 ? " YES " : " NO "));
-                oneRow.add(e.getPass());
+                //oneRow.add(e.getPass());
                 oneRow.add(e.getEmpphone());
                 oneRow.add(e.getEmpname());
-                 oneRow.add(e.getEmpstartdate());
+                
+                oneRow.add(e.getEmpstartdate() != null ? e.getEmpstartdate() : "");
                 tableData.add(oneRow);
             }
             DefaultTableModel aModel = new DefaultTableModel(tableData, tableHeaders) {
@@ -544,7 +578,7 @@ public class EmployeeFrm extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel pnlDongY;
     private javax.swing.JTable tblEmployee;
-    private javax.swing.JTextField txtDate;
+    private com.toedter.calendar.JDateChooser txtDate;
     private javax.swing.JTextField txtFullname;
     private javax.swing.JPasswordField txtPassword;
     private javax.swing.JTextField txtPhoneNumber;

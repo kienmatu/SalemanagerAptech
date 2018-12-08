@@ -51,10 +51,10 @@ public class Customer implements Serializable {
     @Column(name = "CUSTPHONE")
     private String custphone;
     @Column(name = "CUSTDOB")
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Date custdob;
     @Column(name = "CUSTREGDATE")
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Date custregdate;
     @OneToMany(mappedBy = "custid")
     private Collection<Bill> billCollection;

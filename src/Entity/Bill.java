@@ -40,7 +40,7 @@ public class Bill implements Serializable {
     @Column(name = "BILLID")
     private Integer billid;
     @Column(name = "BILLDATE")
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Date billdate;
     @Column(name = "PRODUCT")
     private String product;

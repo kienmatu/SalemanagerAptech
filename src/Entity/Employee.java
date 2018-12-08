@@ -60,7 +60,7 @@ public class Employee implements Serializable {
     @Column(name = "EMPPHONE")
     private String empphone;
     @Column(name = "EMPSTARTDATE")
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Date empstartdate;
     @OneToMany(mappedBy = "username")
     private Collection<Bill> billCollection;
