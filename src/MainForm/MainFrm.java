@@ -53,6 +53,9 @@ public class MainFrm extends javax.swing.JFrame {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jButton1MouseClicked(evt);
             }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jButton1MousePressed(evt);
+            }
         });
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -121,11 +124,18 @@ public class MainFrm extends javax.swing.JFrame {
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
         // TODO add your handling code here:
-        EmployeeFrm x = new EmployeeFrm();
-       //OrderFrm x = new OrderFrm();
-        x.setVisible(true);
-        this.setVisible(false);
+//        EmployeeFrm x = new EmployeeFrm();
+//       //OrderFrm x = new OrderFrm();
+//        x.setVisible(true);
+//        this.setVisible(false);
     }//GEN-LAST:event_jButton1MouseClicked
+
+    private void jButton1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MousePressed
+        // TODO add your handling code here:
+        DashBoard d = new DashBoard();
+        d.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_jButton1MousePressed
 
     /**
      * @param args the command line arguments

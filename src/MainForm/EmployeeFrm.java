@@ -34,10 +34,9 @@ import javax.swing.table.TableModel;
  * @author KIENDINH
  */
 public class EmployeeFrm extends javax.swing.JFrame {
-
     private String luaChon = "ADD";
     private final static String unitName = "SaleManagerProjectPU";
-
+    private static final EntityManager entityManager = Persistence.createEntityManagerFactory(unitName).createEntityManager();
     /**
      * Creates new form Manage
      */
@@ -75,6 +74,7 @@ public class EmployeeFrm extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         txtPassword = new javax.swing.JPasswordField();
         txtDate = new com.toedter.calendar.JDateChooser();
+        lbCheck = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblEmployee = new javax.swing.JTable();
 
@@ -139,6 +139,23 @@ public class EmployeeFrm extends javax.swing.JFrame {
 
         txtPhoneNumber.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         txtPhoneNumber.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(45, 118, 232)));
+        txtPhoneNumber.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtPhoneNumberFocusLost(evt);
+            }
+        });
+        txtPhoneNumber.addInputMethodListener(new java.awt.event.InputMethodListener() {
+            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
+            }
+            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
+                txtPhoneNumberInputMethodTextChanged(evt);
+            }
+        });
+        txtPhoneNumber.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                txtPhoneNumberPropertyChange(evt);
+            }
+        });
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 10)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(102, 153, 255));
@@ -169,7 +186,7 @@ public class EmployeeFrm extends javax.swing.JFrame {
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel8.setText("ĐỒNG Ý");
+        jLabel8.setText("OK");
 
         javax.swing.GroupLayout pnlDongYLayout = new javax.swing.GroupLayout(pnlDongY);
         pnlDongY.setLayout(pnlDongYLayout);
@@ -198,6 +215,9 @@ public class EmployeeFrm extends javax.swing.JFrame {
             }
         });
 
+        lbCheck.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lbCheck.setForeground(new java.awt.Color(255, 0, 51));
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -208,21 +228,24 @@ public class EmployeeFrm extends javax.swing.JFrame {
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addGroup(jPanel3Layout.createSequentialGroup()
-                                        .addComponent(cbbLuaChon, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(cbbLuaChon, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addGap(18, 18, 18)
                                         .addComponent(pnlDongY, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(txtUser, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
-                                        .addComponent(jLabel2)
-                                        .addComponent(jLabel3)
-                                        .addComponent(txtFullname, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
-                                        .addComponent(jLabel4)
-                                        .addComponent(txtPhoneNumber, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
-                                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtUser, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtFullname, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtPhoneNumber, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
                                         .addComponent(jLabel5)
-                                        .addComponent(txtDate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(lbCheck, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(8, 8, 8))
+                                    .addComponent(txtDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGap(66, 66, 66)
                                 .addComponent(jLabel9)))
@@ -254,13 +277,16 @@ public class EmployeeFrm extends javax.swing.JFrame {
                 .addGap(0, 0, 0)
                 .addComponent(txtDate, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jLabel5)
-                .addGap(0, 0, 0)
-                .addComponent(txtPhoneNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(80, 80, 80)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(pnlDongY, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cbbLuaChon))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addGap(0, 0, 0)
+                        .addComponent(txtPhoneNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(80, 80, 80)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(pnlDongY, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cbbLuaChon)))
+                    .addComponent(lbCheck))
                 .addGap(35, 35, 35))
         );
 
@@ -351,8 +377,14 @@ public class EmployeeFrm extends javax.swing.JFrame {
                     setDataforTable();
                     break;
                 case "EDIT":
-                    resetField();
-                    //suaSinhVien();
+                     if (EditEmp()) {
+                        JOptionPane.showMessageDialog(null, "EDIT USER " + txtUser.getText() + " Successfully");
+                        resetField();
+
+                    } else {
+                        JOptionPane.showMessageDialog(null, "An error occured!");
+                    }
+                    setDataforTable();
                     break;
                 case "DELETE":
                     if (DeleteEmp()) {
@@ -372,6 +404,31 @@ public class EmployeeFrm extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_pnlDongYMouseClicked
+     private boolean EditEmp() {
+        EntityTransaction tran = null;
+        try {
+            String username = txtUser.getText();
+            
+            tran = entityManager.getTransaction();
+            Employee employee = entityManager.find(Employee.class, username);
+            tran.begin();
+            employee.setEmpname(txtFullname.getText());
+            employee.setPass(txtPassword.getText());
+            employee.setEmpphone(txtPhoneNumber.getText());
+            employee.setEmpstartdate(txtDate.getDate());
+            tran.commit();
+
+            return true;
+        } catch (Exception e) {
+            if (tran != null && tran.isActive()) {
+                tran.rollback();
+                //JOptionPane.showMessageDialog(null, e);
+
+            }
+            //JOptionPane.showMessageDialog(null, e);
+            return false;
+        }
+    }
     private boolean DeleteEmp() {
         EntityTransaction tran = null;
         try {
@@ -430,7 +487,7 @@ public class EmployeeFrm extends javax.swing.JFrame {
             txtUser.setText(model.getValueAt(r, 0) != null ? model.getValueAt(r, 0).toString() : "");
             txtUser.enable(false);
             txtFullname.setText(model.getValueAt(r, 3) != null ? model.getValueAt(r, 3).toString() : "");
-            txtDate.setDate(today != null ?  new Date(today)  : new Date());
+            txtDate.setDate(today != null ? new Date(today) : new Date());
             txtPhoneNumber.setText(model.getValueAt(r, 2) != null ? model.getValueAt(r, 2).toString() : "");
         }
         cbbLuaChon.setSelectedIndex(1);
@@ -454,7 +511,7 @@ public class EmployeeFrm extends javax.swing.JFrame {
             String phone = this.txtPhoneNumber.getText();
             Date date = txtDate.getDate();//new SimpleDateFormat("dd/MM/yyyy").parse(txtDate.getText());
             //JOptionPane.showMessageDialog(null, date);
-            EntityManager entityManager = Persistence.createEntityManagerFactory(unitName).createEntityManager();
+            //EntityManager entityManager = Persistence.createEntityManagerFactory(unitName).createEntityManager();
             tran = entityManager.getTransaction();
             Employee employee = new Employee(user, pass, name, phone, date);
             tran.begin();
@@ -476,6 +533,61 @@ public class EmployeeFrm extends javax.swing.JFrame {
     private void txtPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPasswordActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtPasswordActionPerformed
+
+    private void txtPhoneNumberFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPhoneNumberFocusLost
+        // TODO add your handling code here:
+        if(validatePhoneNumber(txtPhoneNumber.getText()))
+        {
+            lbCheck.setText("Valid");
+            lbCheck.setForeground(Color.BLUE);
+        }
+        else{
+            lbCheck.setText("Invalid");
+            lbCheck.setForeground(Color.red);
+        }
+    }//GEN-LAST:event_txtPhoneNumberFocusLost
+
+    private void txtPhoneNumberPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_txtPhoneNumberPropertyChange
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_txtPhoneNumberPropertyChange
+
+    private void txtPhoneNumberInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_txtPhoneNumberInputMethodTextChanged
+        // TODO add your handling code here:
+        if(validatePhoneNumber(txtPhoneNumber.getText()))
+        {
+            lbCheck.setText("Valid");
+            lbCheck.setForeground(Color.BLUE);
+        }
+        else{
+            lbCheck.setText("Invalid");
+            lbCheck.setForeground(Color.red);
+        }
+    }//GEN-LAST:event_txtPhoneNumberInputMethodTextChanged
+    private static boolean validatePhoneNumber(String phoneNo) {
+        if(phoneNo.matches("\\+\\d{11}"))
+        {
+            return true;
+        }
+        //validate phone numbers of format "1234567890"
+        if (phoneNo.matches("\\d{10}")) {
+            return true;
+        } //validating phone number with -, . or spaces
+        else if (phoneNo.matches("\\d{3}[-\\.\\s]\\d{3}[-\\.\\s]\\d{4}")) {
+            return true;
+        } //validating phone number with extension length from 3 to 5
+        else if (phoneNo.matches("\\d{3}-\\d{3}-\\d{4}\\s(x|(ext))\\d{3,5}")) {
+            return true;
+        } //validating phone number where area code is in braces ()
+        else if (phoneNo.matches("\\(\\d{3}\\)-\\d{3}-\\d{4}")) {
+            return true;
+        } //return false if nothing matches the input
+        else 
+        {
+            return false;
+        }
+
+    }
 
     /**
      * @param args the command line arguments
@@ -516,7 +628,7 @@ public class EmployeeFrm extends javax.swing.JFrame {
     private void setDataforTable() {
         try {
             tblEmployee.setModel(new DefaultTableModel());
-            EntityManager entityManager = Persistence.createEntityManagerFactory(unitName).createEntityManager();
+            //EntityManager entityManager = Persistence.createEntityManagerFactory(unitName).createEntityManager();
             Query query = entityManager.createNamedQuery("Employee.findAll");
             List<Employee> resultList = query.getResultList();
 
@@ -539,7 +651,7 @@ public class EmployeeFrm extends javax.swing.JFrame {
                 //oneRow.add(e.getPass());
                 oneRow.add(e.getEmpphone());
                 oneRow.add(e.getEmpname());
-                
+
                 oneRow.add(e.getEmpstartdate() != null ? e.getEmpstartdate() : "");
                 tableData.add(oneRow);
             }
@@ -576,6 +688,7 @@ public class EmployeeFrm extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lbCheck;
     private javax.swing.JPanel pnlDongY;
     private javax.swing.JTable tblEmployee;
     private com.toedter.calendar.JDateChooser txtDate;
