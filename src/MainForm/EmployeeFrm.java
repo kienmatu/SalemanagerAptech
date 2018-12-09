@@ -483,11 +483,12 @@ public class EmployeeFrm extends javax.swing.JFrame {
         if (r != -1) {
             Date date = new Date();
             DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-            String today = formatter.format(model.getValueAt(r, 4));
+            Object a = model.getValueAt(r, 4) != "" ? model.getValueAt(r, 4) : new Date();
+            String today = formatter.format(a!= "" ? a : new Date().toString());
             txtUser.setText(model.getValueAt(r, 0) != null ? model.getValueAt(r, 0).toString() : "");
             txtUser.enable(false);
             txtFullname.setText(model.getValueAt(r, 3) != null ? model.getValueAt(r, 3).toString() : "");
-            txtDate.setDate(today != null ? new Date(today) : new Date());
+            txtDate.setDate(new Date(today));
             txtPhoneNumber.setText(model.getValueAt(r, 2) != null ? model.getValueAt(r, 2).toString() : "");
         }
         cbbLuaChon.setSelectedIndex(1);
@@ -509,7 +510,7 @@ public class EmployeeFrm extends javax.swing.JFrame {
             String pass = txtPassword.getText();
             String name = txtFullname.getText();
             String phone = this.txtPhoneNumber.getText();
-            Date date = txtDate.getDate();//new SimpleDateFormat("dd/MM/yyyy").parse(txtDate.getText());
+            Date date = txtDate.getDate() != null ? txtDate.getDate() : new Date();//new SimpleDateFormat("dd/MM/yyyy").parse(txtDate.getText());
             //JOptionPane.showMessageDialog(null, date);
             //EntityManager entityManager = Persistence.createEntityManagerFactory(unitName).createEntityManager();
             tran = entityManager.getTransaction();
