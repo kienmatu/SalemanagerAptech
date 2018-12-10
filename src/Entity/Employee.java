@@ -185,7 +185,7 @@ public class Employee implements Serializable {
 
     @Override
     public String toString() {
-        return "Entity.Employee[ username=" + username + " ]";
+        return username;
     }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {

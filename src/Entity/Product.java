@@ -127,7 +127,9 @@ public class Product implements Serializable {
 
     @Override
     public String toString() {
-        return "Entity.Product[ productid=" + productid + " ]";
+        // -------------  --------------\\
+        //,"ID, NAME ,UNIT, AMOUNT , PRICE,  "
+        return "["+productid+"|"+productname+"|"+unit+"|"+amount+"|"+price+"]";
     }
     
 }

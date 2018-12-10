@@ -36,9 +36,9 @@ public class DashBoard extends javax.swing.JFrame {
         lbCheck = new javax.swing.JLabel();
         btnEmp = new javax.swing.JPanel();
         btnEmployee = new javax.swing.JLabel();
-        btnOrder = new javax.swing.JPanel();
+        btnCustomer = new javax.swing.JPanel();
         btnEmployee1 = new javax.swing.JLabel();
-        btnOrder1 = new javax.swing.JPanel();
+        btnOrder = new javax.swing.JPanel();
         btnEmployee2 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
 
@@ -87,6 +87,40 @@ public class DashBoard extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        btnCustomer.setBackground(new java.awt.Color(45, 118, 232));
+        btnCustomer.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnCustomerMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnCustomerMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnCustomerMouseExited(evt);
+            }
+        });
+
+        btnEmployee1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnEmployee1.setForeground(new java.awt.Color(255, 255, 255));
+        btnEmployee1.setText("Customer manager");
+
+        javax.swing.GroupLayout btnCustomerLayout = new javax.swing.GroupLayout(btnCustomer);
+        btnCustomer.setLayout(btnCustomerLayout);
+        btnCustomerLayout.setHorizontalGroup(
+            btnCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(btnCustomerLayout.createSequentialGroup()
+                .addGap(28, 28, 28)
+                .addComponent(btnEmployee1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        btnCustomerLayout.setVerticalGroup(
+            btnCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, btnCustomerLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnEmployee1)
+                .addContainerGap())
+        );
+
         btnOrder.setBackground(new java.awt.Color(45, 118, 232));
         btnOrder.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -100,9 +134,9 @@ public class DashBoard extends javax.swing.JFrame {
             }
         });
 
-        btnEmployee1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnEmployee1.setForeground(new java.awt.Color(255, 255, 255));
-        btnEmployee1.setText("Customer manager");
+        btnEmployee2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnEmployee2.setForeground(new java.awt.Color(255, 255, 255));
+        btnEmployee2.setText("Order manager");
 
         javax.swing.GroupLayout btnOrderLayout = new javax.swing.GroupLayout(btnOrder);
         btnOrder.setLayout(btnOrderLayout);
@@ -110,46 +144,12 @@ public class DashBoard extends javax.swing.JFrame {
             btnOrderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(btnOrderLayout.createSequentialGroup()
                 .addGap(28, 28, 28)
-                .addComponent(btnEmployee1)
+                .addComponent(btnEmployee2)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         btnOrderLayout.setVerticalGroup(
             btnOrderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, btnOrderLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnEmployee1)
-                .addContainerGap())
-        );
-
-        btnOrder1.setBackground(new java.awt.Color(45, 118, 232));
-        btnOrder1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnOrder1MouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnOrder1MouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnOrder1MouseExited(evt);
-            }
-        });
-
-        btnEmployee2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnEmployee2.setForeground(new java.awt.Color(255, 255, 255));
-        btnEmployee2.setText("Order manager");
-
-        javax.swing.GroupLayout btnOrder1Layout = new javax.swing.GroupLayout(btnOrder1);
-        btnOrder1.setLayout(btnOrder1Layout);
-        btnOrder1Layout.setHorizontalGroup(
-            btnOrder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(btnOrder1Layout.createSequentialGroup()
-                .addGap(28, 28, 28)
-                .addComponent(btnEmployee2)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        btnOrder1Layout.setVerticalGroup(
-            btnOrder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, btnOrder1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnEmployee2)
                 .addContainerGap())
@@ -161,8 +161,8 @@ public class DashBoard extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnOrder1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnOrder, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnCustomer, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnEmp, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(210, 210, 210)
@@ -182,9 +182,9 @@ public class DashBoard extends javax.swing.JFrame {
                 .addGap(35, 35, 35)
                 .addComponent(btnEmp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnOrder1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnOrder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnCustomer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(49, 49, 49)
                 .addComponent(lbCheck)
                 .addGap(197, 197, 197))
@@ -248,31 +248,35 @@ public class DashBoard extends javax.swing.JFrame {
         resetColor(btnEmp);
     }//GEN-LAST:event_btnEmpMouseExited
 
+    private void btnCustomerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCustomerMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnCustomerMouseClicked
+
+    private void btnCustomerMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCustomerMouseEntered
+        // TODO add your handling code here:
+        setColor(btnCustomer);
+    }//GEN-LAST:event_btnCustomerMouseEntered
+
+    private void btnCustomerMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCustomerMouseExited
+        // TODO add your handling code here:
+        resetColor(btnCustomer);
+    }//GEN-LAST:event_btnCustomerMouseExited
+
     private void btnOrderMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnOrderMouseClicked
         // TODO add your handling code here:
+        OrderFrm o = new OrderFrm();
+        o.setVisible(true);
     }//GEN-LAST:event_btnOrderMouseClicked
 
     private void btnOrderMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnOrderMouseEntered
         // TODO add your handling code here:
+        setColor(btnOrder);
     }//GEN-LAST:event_btnOrderMouseEntered
 
     private void btnOrderMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnOrderMouseExited
         // TODO add your handling code here:
+        resetColor(btnOrder);
     }//GEN-LAST:event_btnOrderMouseExited
-
-    private void btnOrder1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnOrder1MouseClicked
-        // TODO add your handling code here:
-        OrderFrm o = new OrderFrm();
-        o.setVisible(true);
-    }//GEN-LAST:event_btnOrder1MouseClicked
-
-    private void btnOrder1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnOrder1MouseEntered
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnOrder1MouseEntered
-
-    private void btnOrder1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnOrder1MouseExited
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnOrder1MouseExited
 
     /**
      * @param args the command line arguments
@@ -310,12 +314,12 @@ public class DashBoard extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel btnCustomer;
     private javax.swing.JPanel btnEmp;
     private javax.swing.JLabel btnEmployee;
     private javax.swing.JLabel btnEmployee1;
     private javax.swing.JLabel btnEmployee2;
     private javax.swing.JPanel btnOrder;
-    private javax.swing.JPanel btnOrder1;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
