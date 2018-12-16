@@ -5,9 +5,13 @@
  */
 package Entity;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -15,10 +19,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -30,9 +37,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "Bill.findAll", query = "SELECT b FROM Bill b")
     , @NamedQuery(name = "Bill.findByBillid", query = "SELECT b FROM Bill b WHERE b.billid = :billid")
-    , @NamedQuery(name = "Bill.findByBilldate", query = "SELECT b FROM Bill b WHERE b.billdate = :billdate")
-    , @NamedQuery(name = "Bill.findByProduct", query = "SELECT b FROM Bill b WHERE b.product = :product")})
+    , @NamedQuery(name = "Bill.findByBilldate", query = "SELECT b FROM Bill b WHERE b.billdate = :billdate")})
 public class Bill implements Serializable {
+
+    @Transient
+    private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -42,14 +51,14 @@ public class Bill implements Serializable {
     @Column(name = "BILLDATE")
     @Temporal(TemporalType.DATE)
     private Date billdate;
-    @Column(name = "PRODUCT")
-    private String product;
     @JoinColumn(name = "CUSTID", referencedColumnName = "CUSTID")
     @ManyToOne
     private Customer custid;
     @JoinColumn(name = "USERNAME", referencedColumnName = "USERNAME")
     @ManyToOne
     private Employee username;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "bill")
+    private Collection<Billdetail> billdetailCollection;
 
     public Bill() {
     }
@@ -63,7 +72,9 @@ public class Bill implements Serializable {
     }
 
     public void setBillid(Integer billid) {
+        Integer oldBillid = this.billid;
         this.billid = billid;
+        changeSupport.firePropertyChange("billid", oldBillid, billid);
     }
 
     public Date getBilldate() {
@@ -71,15 +82,9 @@ public class Bill implements Serializable {
     }
 
     public void setBilldate(Date billdate) {
+        Date oldBilldate = this.billdate;
         this.billdate = billdate;
-    }
-
-    public String getProduct() {
-        return product;
-    }
-
-    public void setProduct(String product) {
-        this.product = product;
+        changeSupport.firePropertyChange("billdate", oldBilldate, billdate);
     }
 
     public Customer getCustid() {
@@ -87,7 +92,9 @@ public class Bill implements Serializable {
     }
 
     public void setCustid(Customer custid) {
+        Customer oldCustid = this.custid;
         this.custid = custid;
+        changeSupport.firePropertyChange("custid", oldCustid, custid);
     }
 
     public Employee getUsername() {
@@ -95,7 +102,18 @@ public class Bill implements Serializable {
     }
 
     public void setUsername(Employee username) {
+        Employee oldUsername = this.username;
         this.username = username;
+        changeSupport.firePropertyChange("username", oldUsername, username);
+    }
+
+    @XmlTransient
+    public Collection<Billdetail> getBilldetailCollection() {
+        return billdetailCollection;
+    }
+
+    public void setBilldetailCollection(Collection<Billdetail> billdetailCollection) {
+        this.billdetailCollection = billdetailCollection;
     }
 
     @Override
@@ -121,6 +139,14 @@ public class Bill implements Serializable {
     @Override
     public String toString() {
         return "Entity.Bill[ billid=" + billid + " ]";
+    }
+
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        changeSupport.addPropertyChangeListener(listener);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        changeSupport.removePropertyChangeListener(listener);
     }
     
 }

@@ -311,18 +311,6 @@ public class EmployeeFrm extends javax.swing.JFrame {
         tblEmployee.setShowVerticalLines(false);
 
         org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, employeeList, tblEmployee);
-        org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${username}"));
-        columnBinding.setColumnName("Username");
-        columnBinding.setColumnClass(String.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${empphone}"));
-        columnBinding.setColumnName("Empphone");
-        columnBinding.setColumnClass(String.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${empname}"));
-        columnBinding.setColumnName("Empname");
-        columnBinding.setColumnClass(String.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${empstartdate}"));
-        columnBinding.setColumnName("Empstartdate");
-        columnBinding.setColumnClass(java.util.Date.class);
         bindingGroup.addBinding(jTableBinding);
         jTableBinding.bind();
         tblEmployee.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -497,11 +485,6 @@ public class EmployeeFrm extends javax.swing.JFrame {
 
     private void tblEmployeeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblEmployeeMouseClicked
         int r = tblEmployee.getSelectedRow();
-//        tableHeaders.add("User Name");
-//        tableHeaders.add("Is Admin");
-//        tableHeaders.add("Emp Phone");
-//        tableHeaders.add("Emp Name");
-//        tableHeaders.add("Start Date");
         TableModel model = tblEmployee.getModel();
         if (r != -1) {
             Date date = new Date();

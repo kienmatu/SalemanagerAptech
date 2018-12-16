@@ -7,14 +7,23 @@ package Entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Collection;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ColumnResult;
+import javax.persistence.ConstructorResult;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -30,10 +39,20 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "Product.findByUnit", query = "SELECT p FROM Product p WHERE p.unit = :unit")
     , @NamedQuery(name = "Product.findByAmount", query = "SELECT p FROM Product p WHERE p.amount = :amount")
     , @NamedQuery(name = "Product.findByCompany", query = "SELECT p FROM Product p WHERE p.company = :company")
-    , @NamedQuery(name = "Product.findByPrice", query = "SELECT p FROM Product p WHERE p.price = :price")})
+    , @NamedQuery(name = "Product.findByPrice", query = "SELECT p FROM Product p WHERE p.price = :price")
+    , @NamedQuery(name = "Product.findByProductcode", query = "SELECT p FROM Product p WHERE p.productcode = :productcode")
+    , @NamedQuery(name = "Product.findByDetails", query = "SELECT p FROM Product p WHERE p.details = :details")})
+//String productname, String unit, Integer billamount, float price, String productcode
+//    @SqlResultSetMapping(name="ProductViewModelMapping",classes = {
+//     @ConstructorResult(targetClass = CustomProductViewModel.class,
+//       columns = {@ColumnResult(name="PRODUCTNAME"), @ColumnResult(name="UNIT"),
+//           @ColumnResult(name="AMOUNT"), @ColumnResult(name="PRICE"), @ColumnResult(name="PRODUCTCODE")}
+//     )}
+//)
 public class Product implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
     @Id
     @Basic(optional = false)
     @Column(name = "PRODUCTID")
@@ -48,7 +67,17 @@ public class Product implements Serializable {
     private String company;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "PRICE")
-    private BigDecimal price;
+    private float price;
+    @Column(name = "PRODUCTCODE")
+    private String productcode;
+    @Column(name = "DETAILS")
+    private String details;
+    @JoinColumn(name = "CATEGORYID", referencedColumnName = "CATEGORYID")
+    @ManyToOne
+    private Category categoryid;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
+
+    private Collection<Billdetail> billdetailCollection;
 
     public Product() {
     }
@@ -97,12 +126,45 @@ public class Product implements Serializable {
         this.company = company;
     }
 
-    public BigDecimal getPrice() {
+    public float getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(float price) {
         this.price = price;
+    }
+
+    public String getProductcode() {
+        return productcode;
+    }
+
+    public void setProductcode(String productcode) {
+        this.productcode = productcode;
+    }
+
+    public String getDetails() {
+        return details;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
+    }
+
+    public Category getCategoryid() {
+        return categoryid;
+    }
+
+    public void setCategoryid(Category categoryid) {
+        this.categoryid = categoryid;
+    }
+
+    @XmlTransient
+    public Collection<Billdetail> getBilldetailCollection() {
+        return billdetailCollection;
+    }
+
+    public void setBilldetailCollection(Collection<Billdetail> billdetailCollection) {
+        this.billdetailCollection = billdetailCollection;
     }
 
     @Override
@@ -127,9 +189,7 @@ public class Product implements Serializable {
 
     @Override
     public String toString() {
-        // -------------  --------------\\
-        //,"ID, NAME ,UNIT, AMOUNT , PRICE,  "
-        return "["+productid+"|"+productname+"|"+unit+"|"+amount+"|"+price+"]";
+        return "Entity.Product[ productid=" + productid + " ]";
     }
     
 }
