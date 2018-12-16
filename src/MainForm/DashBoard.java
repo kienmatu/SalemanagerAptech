@@ -21,6 +21,11 @@ public class DashBoard extends javax.swing.JFrame {
     public DashBoard() {
         initComponents();
         this.setLocationRelativeTo(null);
+        
+        if(LoginUser.User.getIsadmin() != 1){
+            btnEmp.setVisible(false);
+        }
+        
     }
 
     /**
@@ -225,10 +230,13 @@ public class DashBoard extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnEmpMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEmpMouseClicked
-        if(LoginUser.Employee == null){
-            LoginUser.Employee = new EmployeeFrm();
-        } 
-        LoginUser.Employee.setVisible(true);
+        
+        if(LoginUser.User.getIsadmin() == 1){
+            if(LoginUser.Employee == null){
+                LoginUser.Employee = new EmployeeFrm();
+            } 
+            LoginUser.Employee.setVisible(true);
+        }
         
 //        this.setEnabled(false);
 ////        JDialog dialog = new JDialog(x, true);
