@@ -315,14 +315,14 @@ public class OrderFrm extends javax.swing.JFrame {
         TableModel model = tblOrder.getModel();
         if (r != -1) {
             String billid = (model.getValueAt(r, 1) != null ? model.getValueAt(r, 1).toString() : "");
-             String custid = (model.getValueAt(r, 2) != null ? model.getValueAt(r, 2).toString() : "");
+            String custid = (model.getValueAt(r, 2) != null ? model.getValueAt(r, 2).toString() : "");
             this.tblProduct.setModel(new DefaultTableModel());
-            setProductTable(billid,custid);
-
+            setProductTable(billid);
+            setCustomerTable(custid);
         }
 
     }//GEN-LAST:event_tblOrderMouseClicked
-    private void setProductTable(String billid,String custid) {
+    private void setProductTable(String billid) {
 
         try {
             String sql = "SELECT b.PRODUCTID, b.PRODUCTNAME,b.PRODUCTCODE,b.PRICE,b.UNIT, a.AMOUNT"
@@ -380,6 +380,36 @@ public class OrderFrm extends javax.swing.JFrame {
 //
 //            };
 //            this.tblCust.setModel(custModel);
+
+        } catch (Exception he) {
+            he.printStackTrace();
+        }
+
+    }
+
+    private void setCustomerTable(String custid) {
+
+        try {
+
+            //String sql2 = "SELECT * FROM Customer where custid = '" + custid + "' ";
+            Query query = entityManager.createNamedQuery("Customer.findByCustid");
+            query.setParameter("custid", custid);
+            Customer c = (Customer) query.getSingleResult();
+            entityManager.clear();
+            Vector<String> tableh2 = new Vector<>();
+            Vector tableData2 = new Vector();
+            tableh2.add("Customer Name");
+            tableh2.add("Customer Address");
+            tableh2.add("Customer Phone");
+            tableData2.add(c);
+            DefaultTableModel custModel = new DefaultTableModel(tableData2, tableh2) {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+
+            };
+            this.tblCust.setModel(custModel);
 
         } catch (Exception he) {
             he.printStackTrace();
