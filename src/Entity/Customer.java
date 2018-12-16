@@ -150,7 +150,7 @@ public class Customer implements Serializable {
 
     @Override
     public String toString() {
-        return "Entity.Customer[ custid=" + custid + " ]";
+        return custid.toString();
     }
     
 }

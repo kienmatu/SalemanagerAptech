@@ -9,6 +9,11 @@
             <file>file:/F:/TelephoneRepository/src/ClassData/LoginUser.java</file>
             <file>file:/F:/TelephoneRepository/src/Entity/Employee.java</file>
             <file>file:/F:/TelephoneRepository/src/Entity/hibernate.cfg.xml</file>
+            <file>file:/F:/TelephoneRepository/src/Entity/CustomProductViewModel.java</file>
+            <file>file:/F:/TelephoneRepository/src/Entity/Billdetail.java</file>
+            <file>file:/F:/TelephoneRepository/src/MainForm/OrderFrm.java</file>
+            <file>file:/F:/TelephoneRepository/src/Entity/Product.java</file>
+            <file>file:/F:/TelephoneRepository/src/MainForm/EmployeeFrm.java</file>
         </group>
     </open-files>
 </project-private>

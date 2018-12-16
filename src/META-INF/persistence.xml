@@ -6,6 +6,9 @@
     <class>Entity.Bill</class>
     <class>Entity.Employee</class>
     <class>Entity.Product</class>
+    <class>Entity.Category</class>
+    <class>Entity.Companyinfo</class>
+    <class>Entity.Billdetail</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:sqlserver://localhost:1433;databaseName=SALE"/>
       <property name="javax.persistence.jdbc.user" value="sa"/>
