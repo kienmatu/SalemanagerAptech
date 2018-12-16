@@ -5,6 +5,7 @@
  */
 package MainForm;
 
+import ClassData.LoginUser;
 import Entity.Bill;
 import Entity.CustomProductViewModel;
 import Entity.Employee;
@@ -128,6 +129,11 @@ public class OrderFrm extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -382,6 +388,11 @@ public class OrderFrm extends javax.swing.JFrame {
 //        p2.setPrice(BigDecimal.valueOf(920));
 //        JOptionPane.showMessageDialog(null,p1+"/r/n"+p2);
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        // TODO add your handling code here:
+        LoginUser.Order = null;
+    }//GEN-LAST:event_formWindowClosed
 
     /**
      * @param args the command line arguments

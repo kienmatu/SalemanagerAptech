@@ -5,6 +5,7 @@
  */
 package MainForm;
 
+import ClassData.LoginUser;
 import Entity.Employee;
 import java.awt.Color;
 //import antlr.collections.List;
@@ -579,10 +580,9 @@ public class EmployeeFrm extends javax.swing.JFrame {
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         // TODO add your handling code here:
-        
-        
-        
+        LoginUser.Employee = null;
     }//GEN-LAST:event_formWindowClosed
+    
     private static boolean validatePhoneNumber(String phoneNo) {
         if(phoneNo.matches("\\+\\d{11}"))
         {
