@@ -5,6 +5,7 @@
  */
 package MainForm;
 
+import ClassData.LoginUser;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
@@ -224,8 +225,11 @@ public class DashBoard extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnEmpMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEmpMouseClicked
-        EmployeeFrm x = new EmployeeFrm();
-        x.setVisible(true);
+        if(LoginUser.Employee == null){
+            LoginUser.Employee = new EmployeeFrm();
+        } 
+        LoginUser.Employee.setVisible(true);
+        
 //        this.setEnabled(false);
 ////        JDialog dialog = new JDialog(x, true);
 ////
@@ -264,8 +268,11 @@ public class DashBoard extends javax.swing.JFrame {
 
     private void btnOrderMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnOrderMouseClicked
         // TODO add your handling code here:
-        OrderFrm o = new OrderFrm();
-        o.setVisible(true);
+        if(LoginUser.Order == null){
+            LoginUser.Order = new OrderFrm();
+            
+        }
+        LoginUser.Order.setVisible(true);
     }//GEN-LAST:event_btnOrderMouseClicked
 
     private void btnOrderMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnOrderMouseEntered

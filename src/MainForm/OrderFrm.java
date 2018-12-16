@@ -126,7 +126,7 @@ public class OrderFrm extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         txtCost = new javax.swing.JLabel("",SwingConstants.RIGHT);
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
