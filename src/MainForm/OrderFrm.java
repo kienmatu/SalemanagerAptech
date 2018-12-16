@@ -120,7 +120,7 @@ public class OrderFrm extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
-        tblProduct1 = new javax.swing.JTable();
+        tblCust = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -213,8 +213,8 @@ public class OrderFrm extends javax.swing.JFrame {
             }
         });
 
-        tblProduct1.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
-        jScrollPane3.setViewportView(tblProduct1);
+        tblCust.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        jScrollPane3.setViewportView(tblCust);
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel2.setText("Customer Infomation:");
@@ -315,21 +315,22 @@ public class OrderFrm extends javax.swing.JFrame {
         TableModel model = tblOrder.getModel();
         if (r != -1) {
             String billid = (model.getValueAt(r, 1) != null ? model.getValueAt(r, 1).toString() : "");
-             this.tblProduct.setModel(new DefaultTableModel());
-            setProductTable(billid);
-            
+             String custid = (model.getValueAt(r, 2) != null ? model.getValueAt(r, 2).toString() : "");
+            this.tblProduct.setModel(new DefaultTableModel());
+            setProductTable(billid,custid);
+
         }
 
     }//GEN-LAST:event_tblOrderMouseClicked
-    private void setProductTable(String billid) {
-       
-        try {
-             String sql = "SELECT b.PRODUCTID, b.PRODUCTNAME,b.PRODUCTCODE,b.PRICE,b.UNIT, a.AMOUNT"
-                    + " FROM BILLDETAIL a INNER JOIN PRODUCT b ON a.PRODUCTID = b.PRODUCTID WHERE a.BILLID = '" + billid + "' ";
-             entityManager.clear();
-            Query query = entityManager.createNativeQuery(sql,Product.class);
-           List<Product> resultList1 = query.getResultList();
+    private void setProductTable(String billid,String custid) {
 
+        try {
+            String sql = "SELECT b.PRODUCTID, b.PRODUCTNAME,b.PRODUCTCODE,b.PRICE,b.UNIT, a.AMOUNT"
+                    + " FROM BILLDETAIL a INNER JOIN PRODUCT b ON a.PRODUCTID = b.PRODUCTID WHERE a.BILLID = '" + billid + "' ";
+            String sql2 = "SELECT * FROM Customer where custid = '" + custid + "' ";
+            Query query = entityManager.createNativeQuery(sql, Product.class);
+            List<Product> resultList1 = query.getResultList();
+            entityManager.clear();
             Vector<String> tableHeaders = new Vector<>();
             Vector tableData = new Vector();
             tableHeaders.add("PRODUCT NAME");
@@ -361,8 +362,27 @@ public class OrderFrm extends javax.swing.JFrame {
             };
             this.tblProduct.setModel(aModel);
             tblProduct.setAutoResizeMode(WIDTH);
+            // customer:
+//            Query query2 = entityManager.createNamedQuery("Customer.findByCustid");
+//            Customer c = (Customer)query.getSingleResult();
+//            entityManager.clear();
+//            Vector<String> tableh2 = new Vector<>();
+//            Vector tableData2 = new Vector();
+//            tableh2.add("Customer Name");
+//            tableh2.add("Customer Address");
+//            tableh2.add("Customer Phone");
+//            tableData2.add(c);
+//            DefaultTableModel custModel = new DefaultTableModel(tableData2, tableh2) {
+//                @Override
+//                public boolean isCellEditable(int row, int column) {
+//                    return false;
+//                }
+//
+//            };
+//            this.tblCust.setModel(custModel);
 
         } catch (Exception he) {
+            he.printStackTrace();
         }
 
     }
@@ -427,7 +447,7 @@ public class OrderFrm extends javax.swing.JFrame {
         });
     }
 
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.persistence.EntityManager SaleManagerProjectPUEntityManager;
     private java.util.List<Entity.Bill> billList;
@@ -446,9 +466,9 @@ public class OrderFrm extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollOrder;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTable tblCust;
     private javax.swing.JTable tblOrder;
     private javax.swing.JTable tblProduct;
-    private javax.swing.JTable tblProduct1;
     private javax.swing.JLabel txtCost;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
