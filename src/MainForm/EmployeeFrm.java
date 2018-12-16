@@ -81,8 +81,13 @@ public class EmployeeFrm extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tblEmployee = new javax.swing.JTable();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+        });
 
         bg.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -588,6 +593,13 @@ public class EmployeeFrm extends javax.swing.JFrame {
             lbCheck.setForeground(Color.red);
         }
     }//GEN-LAST:event_txtPhoneNumberInputMethodTextChanged
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        // TODO add your handling code here:
+        
+        
+        
+    }//GEN-LAST:event_formWindowClosed
     private static boolean validatePhoneNumber(String phoneNo) {
         if(phoneNo.matches("\\+\\d{11}"))
         {

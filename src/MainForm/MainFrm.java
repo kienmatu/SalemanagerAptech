@@ -5,12 +5,21 @@
  */
 package MainForm;
 
+import ClassData.LoginUser;
+import Entity.Employee;
+import javax.persistence.EntityManager;
+import javax.persistence.Persistence;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author KIENDINH
  */
 public class MainFrm extends javax.swing.JFrame {
-
+    
+    private static final String userPatten = ".+";
+    private static final String passPatten = ".+";
+    private static final EntityManager entityManager = Persistence.createEntityManagerFactory("SaleManagerProjectPU").createEntityManager();
     /**
      * Creates new form MainFrm
      */
@@ -132,9 +141,41 @@ public class MainFrm extends javax.swing.JFrame {
 
     private void jButton1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MousePressed
         // TODO add your handling code here:
-        DashBoard d = new DashBoard();
-        d.setVisible(true);
-        this.setVisible(false);
+        
+        String username = txtUser.getText();
+        String password = txtPass.getText();
+        int status = 0;
+        
+        if(username.matches(userPatten) && password.matches(passPatten)){
+            //JOptionPane.showMessageDialog(null, password, "Error", JOptionPane.INFORMATION_MESSAGE);
+            
+            Employee employee = entityManager.find(Employee.class, username);
+            if(employee == null){
+                status = 2;
+            } else {
+                if(employee.getPass() == null ? null == password : employee.getPass().equals(password)){
+                    LoginUser.User = employee;
+                } else {
+                    status = 3;
+                }
+            }
+        } else {
+            status = 1;
+        }
+        
+        
+        switch(status){
+            case 0:
+                LoginUser.Main = new DashBoard();
+                LoginUser.Main.setVisible(true);
+                this.setVisible(false);
+                break;
+            case 1:
+            case 2:
+            case 3:
+                JOptionPane.showMessageDialog(null, "Incorrect password or account", "Error", JOptionPane.ERROR_MESSAGE);
+                break;
+        }
     }//GEN-LAST:event_jButton1MousePressed
 
     /**
