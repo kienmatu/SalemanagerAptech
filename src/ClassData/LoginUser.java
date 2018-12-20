@@ -6,6 +6,7 @@
 package ClassData;
 
 import Entity.Employee;
+import MainForm.CustomerFrm;
 import MainForm.DashBoard;
 import MainForm.EmployeeFrm;
 import MainForm.OrderFrm;
@@ -19,5 +20,5 @@ public class LoginUser {
     public static DashBoard Main;
     public static EmployeeFrm Employee;
     public static OrderFrm Order;
-             
+    public static CustomerFrm Customer;         
 }

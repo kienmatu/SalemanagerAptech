@@ -261,8 +261,11 @@ public class DashBoard extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEmpMouseExited
 
     private void btnCustomerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCustomerMouseClicked
-      CustomerFrm x = new CustomerFrm();
-        x.setVisible(true);
+      if(LoginUser.Customer == null){
+            LoginUser.Customer = new CustomerFrm();
+            
+        }
+        LoginUser.Customer.setVisible(true);
     }//GEN-LAST:event_btnCustomerMouseClicked
 
     private void btnCustomerMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCustomerMouseEntered
