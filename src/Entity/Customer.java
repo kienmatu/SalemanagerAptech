@@ -5,6 +5,8 @@
  */
 package Entity;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
@@ -18,6 +20,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -37,6 +40,9 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Customer.findByCustdob", query = "SELECT c FROM Customer c WHERE c.custdob = :custdob")
     , @NamedQuery(name = "Customer.findByCustregdate", query = "SELECT c FROM Customer c WHERE c.custregdate = :custregdate")})
 public class Customer implements Serializable {
+
+    @Transient
+    private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -76,7 +82,9 @@ public class Customer implements Serializable {
     }
 
     public void setCustid(Integer custid) {
+        Integer oldCustid = this.custid;
         this.custid = custid;
+        changeSupport.firePropertyChange("custid", oldCustid, custid);
     }
 
     public String getCustname() {
@@ -84,7 +92,9 @@ public class Customer implements Serializable {
     }
 
     public void setCustname(String custname) {
+        String oldCustname = this.custname;
         this.custname = custname;
+        changeSupport.firePropertyChange("custname", oldCustname, custname);
     }
 
     public String getCustaddress() {
@@ -92,7 +102,9 @@ public class Customer implements Serializable {
     }
 
     public void setCustaddress(String custaddress) {
+        String oldCustaddress = this.custaddress;
         this.custaddress = custaddress;
+        changeSupport.firePropertyChange("custaddress", oldCustaddress, custaddress);
     }
 
     public String getCustphone() {
@@ -100,7 +112,9 @@ public class Customer implements Serializable {
     }
 
     public void setCustphone(String custphone) {
+        String oldCustphone = this.custphone;
         this.custphone = custphone;
+        changeSupport.firePropertyChange("custphone", oldCustphone, custphone);
     }
 
     public Date getCustdob() {
@@ -108,7 +122,9 @@ public class Customer implements Serializable {
     }
 
     public void setCustdob(Date custdob) {
+        Date oldCustdob = this.custdob;
         this.custdob = custdob;
+        changeSupport.firePropertyChange("custdob", oldCustdob, custdob);
     }
 
     public Date getCustregdate() {
@@ -116,7 +132,9 @@ public class Customer implements Serializable {
     }
 
     public void setCustregdate(Date custregdate) {
+        Date oldCustregdate = this.custregdate;
         this.custregdate = custregdate;
+        changeSupport.firePropertyChange("custregdate", oldCustregdate, custregdate);
     }
 
     @XmlTransient
@@ -151,6 +169,14 @@ public class Customer implements Serializable {
     @Override
     public String toString() {
         return custid.toString();
+    }
+
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        changeSupport.addPropertyChangeListener(listener);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        changeSupport.removePropertyChangeListener(listener);
     }
     
 }

@@ -5,6 +5,8 @@
  */
 package Entity;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Collection;
@@ -22,6 +24,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -41,7 +44,10 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Product.findByCompany", query = "SELECT p FROM Product p WHERE p.company = :company")
     , @NamedQuery(name = "Product.findByPrice", query = "SELECT p FROM Product p WHERE p.price = :price")
     , @NamedQuery(name = "Product.findByProductcode", query = "SELECT p FROM Product p WHERE p.productcode = :productcode")
-    , @NamedQuery(name = "Product.findByDetails", query = "SELECT p FROM Product p WHERE p.details = :details")})
+    , @NamedQuery(name = "Product.findByDetails", query = "SELECT p FROM Product p WHERE p.details = :details")
+    , @NamedQuery(name = "Product.findByCategoryid", query = "SELECT p FROM Product p WHERE p.categoryid = :categoryid")
+})
+
 //String productname, String unit, Integer billamount, float price, String productcode
 //    @SqlResultSetMapping(name="ProductViewModelMapping",classes = {
 //     @ConstructorResult(targetClass = CustomProductViewModel.class,
@@ -50,6 +56,9 @@ import javax.xml.bind.annotation.XmlTransient;
 //     )}
 //)
 public class Product implements Serializable {
+
+    @Transient
+    private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
 
     private static final long serialVersionUID = 1L;
     
@@ -91,7 +100,9 @@ public class Product implements Serializable {
     }
 
     public void setProductid(Integer productid) {
+        Integer oldProductid = this.productid;
         this.productid = productid;
+        changeSupport.firePropertyChange("productid", oldProductid, productid);
     }
 
     public String getProductname() {
@@ -99,7 +110,9 @@ public class Product implements Serializable {
     }
 
     public void setProductname(String productname) {
+        String oldProductname = this.productname;
         this.productname = productname;
+        changeSupport.firePropertyChange("productname", oldProductname, productname);
     }
 
     public String getUnit() {
@@ -107,7 +120,9 @@ public class Product implements Serializable {
     }
 
     public void setUnit(String unit) {
+        String oldUnit = this.unit;
         this.unit = unit;
+        changeSupport.firePropertyChange("unit", oldUnit, unit);
     }
 
     public Integer getAmount() {
@@ -115,7 +130,9 @@ public class Product implements Serializable {
     }
 
     public void setAmount(Integer amount) {
+        Integer oldAmount = this.amount;
         this.amount = amount;
+        changeSupport.firePropertyChange("amount", oldAmount, amount);
     }
 
     public String getCompany() {
@@ -123,7 +140,9 @@ public class Product implements Serializable {
     }
 
     public void setCompany(String company) {
+        String oldCompany = this.company;
         this.company = company;
+        changeSupport.firePropertyChange("company", oldCompany, company);
     }
 
     public float getPrice() {
@@ -131,7 +150,9 @@ public class Product implements Serializable {
     }
 
     public void setPrice(float price) {
+        float oldPrice = this.price;
         this.price = price;
+        changeSupport.firePropertyChange("price", oldPrice, price);
     }
 
     public String getProductcode() {
@@ -139,7 +160,9 @@ public class Product implements Serializable {
     }
 
     public void setProductcode(String productcode) {
+        String oldProductcode = this.productcode;
         this.productcode = productcode;
+        changeSupport.firePropertyChange("productcode", oldProductcode, productcode);
     }
 
     public String getDetails() {
@@ -147,7 +170,9 @@ public class Product implements Serializable {
     }
 
     public void setDetails(String details) {
+        String oldDetails = this.details;
         this.details = details;
+        changeSupport.firePropertyChange("details", oldDetails, details);
     }
 
     public Category getCategoryid() {
@@ -155,7 +180,9 @@ public class Product implements Serializable {
     }
 
     public void setCategoryid(Category categoryid) {
+        Category oldCategoryid = this.categoryid;
         this.categoryid = categoryid;
+        changeSupport.firePropertyChange("categoryid", oldCategoryid, categoryid);
     }
 
     @XmlTransient
@@ -190,6 +217,14 @@ public class Product implements Serializable {
     @Override
     public String toString() {
         return "Entity.Product[ productid=" + productid + " ]";
+    }
+
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        changeSupport.addPropertyChangeListener(listener);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        changeSupport.removePropertyChangeListener(listener);
     }
     
 }

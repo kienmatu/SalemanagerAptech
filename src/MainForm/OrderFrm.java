@@ -6,25 +6,24 @@
 package MainForm;
 
 import Entity.Bill;
-import Entity.CustomProductViewModel;
 import Entity.Employee;
 import Entity.Product;
 import java.awt.Color;
 import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Vector;
-import java.util.concurrent.atomic.LongAdder;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
-import javax.swing.JOptionPane;
-import javax.swing.JTable;
 import javax.swing.SwingConstants;
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
@@ -104,9 +103,6 @@ public class OrderFrm extends javax.swing.JFrame {
         billQuery = java.beans.Beans.isDesignTime() ? null : SaleManagerProjectPUEntityManager.createQuery("SELECT b FROM Bill b");
         billList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : billQuery.getResultList();
         jPanel1 = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
-        jLabel14 = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
         jScrollOrder = new javax.swing.JScrollPane();
         tblOrder = new javax.swing.JTable() {
             public boolean isCellEditable(int row, int column) {
@@ -130,36 +126,6 @@ public class OrderFrm extends javax.swing.JFrame {
         setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-
-        jPanel2.setBackground(new java.awt.Color(45, 118, 232));
-
-        jLabel14.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel14.setForeground(new java.awt.Color(255, 255, 255));
-
-        jLabel13.setFont(new java.awt.Font("Verdana", 1, 24)); // NOI18N
-        jLabel13.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel13.setText("Order Management");
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel14)
-                .addGap(226, 226, 226)
-                .addComponent(jLabel13)
-                .addGap(304, 304, 304))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel13)
-                    .addComponent(jLabel14))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
 
         jScrollOrder.setBackground(new java.awt.Color(255, 255, 255));
         //jScrollOrder.getViewport().setBackground(Color.white);
@@ -205,6 +171,11 @@ public class OrderFrm extends javax.swing.JFrame {
         jButton1.setLabel("Delete Order");
 
         jButton2.setLabel("New Order");
+        jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton2MouseClicked(evt);
+            }
+        });
 
         jButton3.setLabel("Print Order");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -232,12 +203,11 @@ public class OrderFrm extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollOrder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 540, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -246,7 +216,7 @@ public class OrderFrm extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 444, Short.MAX_VALUE)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 637, Short.MAX_VALUE)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
                                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -254,7 +224,7 @@ public class OrderFrm extends javax.swing.JFrame {
                                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 444, Short.MAX_VALUE)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 637, Short.MAX_VALUE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, Short.MAX_VALUE))
@@ -268,29 +238,28 @@ public class OrderFrm extends javax.swing.JFrame {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(63, 63, 63)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 24, Short.MAX_VALUE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 24, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 409, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtCost, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jScrollOrder))
                 .addContainerGap())
         );
 
@@ -323,35 +292,56 @@ public class OrderFrm extends javax.swing.JFrame {
 
     }//GEN-LAST:event_tblOrderMouseClicked
     private void setProductTable(String billid) {
-
+        List<Product> resultList1 = new ArrayList<Product>();
         try {
-            String sql = "SELECT b.PRODUCTID, b.PRODUCTNAME,b.PRODUCTCODE,b.PRICE,b.UNIT, a.AMOUNT"
-                    + " FROM BILLDETAIL a INNER JOIN PRODUCT b ON a.PRODUCTID = b.PRODUCTID WHERE a.BILLID = '" + billid + "' ";
-            String sql2 = "SELECT * FROM Customer where custid = '" + custid + "' ";
-            Query query = entityManager.createNativeQuery(sql, Product.class);
-            List<Product> resultList1 = query.getResultList();
-            entityManager.clear();
-            Vector<String> tableHeaders = new Vector<>();
+            String sql = "SELECT b.PRODUCTID, b.PRODUCTNAME,b.PRODUCTCODE,b.PRICE,b.UNIT, a.AMOUNT FROM BILLDETAIL a "
+                    + "INNER JOIN PRODUCT b ON a.PRODUCTID = b.PRODUCTID" +
+                            " WHERE a.BILLID = '"+billid+"'";
+            // String sql2 = "SELECT * FROM Customer where custid = '" + custid + "' ";
+//            Query query = entityManager.createNativeQuery(sql, Product.class);
+//            resultList1 = query.getResultList();
+//            entityManager.clear();
+            Connection con = DriverManager.getConnection("jdbc:sqlserver://localhost;databaseName=SALE", "sa","123456");
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            //resultList1 = rs
+            Vector<String> tableHeaders;
+            tableHeaders = new Vector<>();
             Vector tableData = new Vector();
+             tableHeaders.add("PRODUCT ID");
             tableHeaders.add("PRODUCT NAME");
             tableHeaders.add("PRODUCT CODE");
             tableHeaders.add("UNIT");
             tableHeaders.add("AMOUNT");
             tableHeaders.add("TOTAL PRICE");
             float cost = 0;
-            for (Product e : resultList1) {
-                //JOptionPane.showMessageDialog(null, e.getProductname());
+            while(rs.next())
+            {
                 Vector<Object> oneRow = new Vector<Object>();
-                float amt = e.getAmount();
-                oneRow.add(e.getProductname());
-                oneRow.add(e.getProductcode());
-                oneRow.add(e.getUnit());
+                float amt = rs.getFloat("AMOUNT");
+                oneRow.add(rs.getInt(1));
+                oneRow.add(rs.getString(2));
+                oneRow.add(rs.getString(3));
+                oneRow.add(rs.getInt(4));
                 oneRow.add(amt);
-                float price = amt * e.getPrice();
+                float price = amt * rs.getFloat("PRICE");
                 oneRow.add(price);
                 tableData.add(oneRow);
                 cost += price;
             }
+//            for (Product e : resultList1) {
+//                //JOptionPane.showMessageDialog(null, e.getProductname());
+//                Vector<Object> oneRow = new Vector<Object>();
+//                float amt = e.getAmount();
+//                oneRow.add(e.getProductname());
+//                oneRow.add(e.getProductcode());
+//                oneRow.add(e.getUnit());
+//                oneRow.add(amt);
+//                float price = amt * e.getPrice();
+//                oneRow.add(price);
+//                tableData.add(oneRow);
+//                cost += price;
+//            }
             txtCost.setText("" + cost);
             DefaultTableModel aModel = new DefaultTableModel(tableData, tableHeaders) {
                 @Override
@@ -360,27 +350,9 @@ public class OrderFrm extends javax.swing.JFrame {
                 }
 
             };
+            
             this.tblProduct.setModel(aModel);
             tblProduct.setAutoResizeMode(WIDTH);
-            // customer:
-//            Query query2 = entityManager.createNamedQuery("Customer.findByCustid");
-//            Customer c = (Customer)query.getSingleResult();
-//            entityManager.clear();
-//            Vector<String> tableh2 = new Vector<>();
-//            Vector tableData2 = new Vector();
-//            tableh2.add("Customer Name");
-//            tableh2.add("Customer Address");
-//            tableh2.add("Customer Phone");
-//            tableData2.add(c);
-//            DefaultTableModel custModel = new DefaultTableModel(tableData2, tableh2) {
-//                @Override
-//                public boolean isCellEditable(int row, int column) {
-//                    return false;
-//                }
-//
-//            };
-//            this.tblCust.setModel(custModel);
-
         } catch (Exception he) {
             he.printStackTrace();
         }
@@ -393,16 +365,20 @@ public class OrderFrm extends javax.swing.JFrame {
 
             //String sql2 = "SELECT * FROM Customer where custid = '" + custid + "' ";
             Query query = entityManager.createNamedQuery("Customer.findByCustid");
-            query.setParameter("custid", custid);
-            Customer c = (Customer) query.getSingleResult();
+            query.setParameter("custid", Integer.parseInt(custid));
+            Entity.Customer c = (Entity.Customer) query.getSingleResult();
             entityManager.clear();
-            Vector<String> tableh2 = new Vector<>();
-            Vector tableData2 = new Vector();
-            tableh2.add("Customer Name");
-            tableh2.add("Customer Address");
-            tableh2.add("Customer Phone");
-            tableData2.add(c);
-            DefaultTableModel custModel = new DefaultTableModel(tableData2, tableh2) {
+            Vector<String> row = new Vector<>();
+            Vector<Object> content = new Vector<Object>();
+            Vector tbHeader = new Vector();
+            tbHeader.add("Customer Name");
+            tbHeader.add("Customer Address");
+            tbHeader.add("Customer Phone");
+            row.add(c.getCustname());
+            row.add(c.getCustaddress());
+            row.add(c.getCustphone());
+            content.add(row);
+            DefaultTableModel custModel = new DefaultTableModel(content, tbHeader) {
                 @Override
                 public boolean isCellEditable(int row, int column) {
                     return false;
@@ -410,6 +386,7 @@ public class OrderFrm extends javax.swing.JFrame {
 
             };
             this.tblCust.setModel(custModel);
+            tblCust.setAutoResizeMode(WIDTH);
 
         } catch (Exception he) {
             he.printStackTrace();
@@ -432,6 +409,13 @@ public class OrderFrm extends javax.swing.JFrame {
 //        p2.setPrice(BigDecimal.valueOf(920));
 //        JOptionPane.showMessageDialog(null,p1+"/r/n"+p2);
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
+        // TODO add your handling code here:
+        newBill n = new newBill();
+        this.setVisible(false);
+        n.setVisible(true);
+    }//GEN-LAST:event_jButton2MouseClicked
 
     /**
      * @param args the command line arguments
@@ -486,13 +470,10 @@ public class OrderFrm extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollOrder;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
