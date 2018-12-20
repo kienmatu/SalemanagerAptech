@@ -18,6 +18,7 @@ import java.util.ListIterator;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
@@ -529,6 +530,8 @@ public class EmployeeFrm extends javax.swing.JFrame {
         EntityTransaction tran = null;
         try {
             String user = txtUser.getText();
+            Pattern pattern = Pattern.compile("[A-Za-z0-9_]+");
+            boolean valid = (user != null) && pattern.matcher(user).matches();
             String pass = txtPassword.getText();
             String name = txtFullname.getText();
             String phone = this.txtPhoneNumber.getText();
@@ -588,9 +591,6 @@ public class EmployeeFrm extends javax.swing.JFrame {
 
     }//GEN-LAST:event_formWindowClosed
     private static boolean validatePhoneNumber(String phoneNo) {
-        if (phoneNo.matches("\\+\\d{11}")) {
-            return true;
-        }
         //validate phone numbers of format "1234567890"
         if (phoneNo.matches("\\d{10}")) {
             return true;
@@ -604,11 +604,15 @@ public class EmployeeFrm extends javax.swing.JFrame {
         else if (phoneNo.matches("\\(\\d{3}\\)-\\d{3}-\\d{4}")) {
             return true;
         } //return false if nothing matches the input
+        else if (phoneNo.matches("^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*$")) {
+            return true;
+        }
         else {
             return false;
         }
 
     }
+    
 
     /**
      * @param args the command line arguments

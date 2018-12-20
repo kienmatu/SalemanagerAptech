@@ -76,6 +76,7 @@ public class CustomerFrm extends javax.swing.JFrame {
         pnlDongY = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         lbCheck = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblCustomer = new javax.swing.JTable();
 
@@ -148,6 +149,18 @@ public class CustomerFrm extends javax.swing.JFrame {
         jLabel5.setText("CUSTOMER PHONE");
 
         txtPhoneNumber.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(45, 118, 232)));
+        txtPhoneNumber.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtPhoneNumberFocusLost(evt);
+            }
+        });
+        txtPhoneNumber.addInputMethodListener(new java.awt.event.InputMethodListener() {
+            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
+            }
+            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
+                txtPhoneNumberInputMethodTextChanged(evt);
+            }
+        });
         txtPhoneNumber.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtPhoneNumberActionPerformed(evt);
@@ -157,9 +170,13 @@ public class CustomerFrm extends javax.swing.JFrame {
         jLabel6.setForeground(new java.awt.Color(102, 153, 255));
         jLabel6.setText("CUSTOMER DATE OF BIRTH");
 
+        txtDate.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(45, 118, 232)));
+
         jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 10)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(102, 153, 255));
         jLabel4.setText("CUSTOMER REGDATE");
+
+        txtDate1.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(45, 118, 232)));
 
         cbbLuaChon.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
         cbbLuaChon.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ADD", "EDIT", "DELETE", "EMPTY" }));
@@ -254,7 +271,9 @@ public class CustomerFrm extends javax.swing.JFrame {
                             .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
                             .addContainerGap()
-                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -280,7 +299,9 @@ public class CustomerFrm extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel5)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtPhoneNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -388,34 +409,40 @@ public class CustomerFrm extends javax.swing.JFrame {
         if (null != luaChon) {
             switch (luaChon) {
                 case "ADD":
+                    lockField();
                 if (addCustomer()) {
-                    JOptionPane.showMessageDialog(null, "ADD CUSTOMER " + txtCustID.getText() + " Successfully");
+                    JOptionPane.showMessageDialog(null, "ADD CUSTOMER " + txtName.getText() + " Successfully");
                     resetField();
 
                 } else {
                     JOptionPane.showMessageDialog(null, "An error occured!");
                 }
                 setDataforTable();
+                releaseField();
                 break;
                 case "EDIT":
+                    lockField();
                 if (EditCust()) {
-                    JOptionPane.showMessageDialog(null, "EDIT CUSTOMER " + txtCustID.getText() + " Successfully");
+                    JOptionPane.showMessageDialog(null, "EDIT CUSTOMER " + txtName.getText() + " Successfully");
                     resetField();
 
                 } else {
                     JOptionPane.showMessageDialog(null, "An error occured!");
                 }
                 setDataforTable();
+                releaseField();
                 break;
                 case "DELETE":
+                    lockField();
                 if (DeleteCust()) {
-                    JOptionPane.showMessageDialog(null, "DELETE CUSTOMER " + txtCustID.getText() + " Successfully");
+                    JOptionPane.showMessageDialog(null, "DELETE CUSTOMER " + txtName.getText() + " Successfully");
                     resetField();
 
                 } else {
                     JOptionPane.showMessageDialog(null, "An error occured!");
                 }
                 setDataforTable();
+                releaseField();
                 break;
                 case "EMPTY":
                 resetField();
@@ -425,8 +452,26 @@ public class CustomerFrm extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_pnlDongYMouseClicked
-
+    private void lockField(){
+        //txtCustID.setEditable(false);
+        txtName.setEditable(false);
+        txtAddress.setEditable(false);
+        txtPhoneNumber.setEditable(false);
+        txtDate.setDate(new Date());
+        txtDate1.setDate(new Date());
+    }
+    
+    private void releaseField(){
+        //txtCustID.setEditable(false);
+        txtName.setEditable(true);
+        txtAddress.setEditable(true);
+        txtPhoneNumber.setEditable(true);
+        txtDate.setDate(new Date());
+        txtDate1.setDate(new Date());
+    }
+    
     private void resetField() {
+        txtCustID.setText("");
         txtName.setText("");
         txtAddress.setText("");
         txtPhoneNumber.setText("");
@@ -471,9 +516,9 @@ private boolean addCustomer() {
     private boolean EditCust() {
         EntityTransaction tran = null;
         try {
-            String name = txtName.getText();        
+            int ID = Integer.parseInt(txtCustID.getText());   
             tran = entityManager.getTransaction();
-            Entity.Customer customer = entityManager.find(Entity.Customer.class, name);
+            Entity.Customer customer = entityManager.find(Entity.Customer.class, ID);
             tran.begin(); 
             customer.setCustaddress(txtAddress.getText());
             customer.setCustphone(txtPhoneNumber.getText());
@@ -496,10 +541,11 @@ private boolean addCustomer() {
     private boolean DeleteCust() {
         EntityTransaction tran = null;
         try {
-            String username = txtName.getText();
+            int ID = Integer.parseInt(txtCustID.getText());
+          //  String username = txtCustID.getUIClassID();
             EntityManager entityManager = Persistence.createEntityManagerFactory(unitName).createEntityManager();
             tran = entityManager.getTransaction();
-            Entity.Customer customer = entityManager.find(Entity.Customer.class, username);
+            Entity.Customer customer = entityManager.find(Entity.Customer.class, ID); // hàm này lấy theo trường PRIMARY KEY
             tran.begin();
             entityManager.remove(customer);
             tran.commit();
@@ -562,6 +608,26 @@ private boolean addCustomer() {
         // TODO add your handling code here:
     }//GEN-LAST:event_cbbLuaChonActionPerformed
 
+    private void txtPhoneNumberInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_txtPhoneNumberInputMethodTextChanged
+        if (validatePhoneNumber(txtPhoneNumber.getText())) {
+            jLabel7.setText("Valid");
+            jLabel7.setForeground(Color.BLUE);
+        } else {
+            jLabel7.setText("Invalid");
+            jLabel7.setForeground(Color.red);
+        }
+    }//GEN-LAST:event_txtPhoneNumberInputMethodTextChanged
+
+    private void txtPhoneNumberFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPhoneNumberFocusLost
+        if (validatePhoneNumber(txtPhoneNumber.getText())) {
+            jLabel7.setText("Valid");
+            jLabel7.setForeground(Color.BLUE);
+        } else {
+            jLabel7.setText("Invalid");
+            jLabel7.setForeground(Color.red);
+        }
+    }//GEN-LAST:event_txtPhoneNumberFocusLost
+
     private static boolean validatePhoneNumber(String phoneNo) {
         if(phoneNo.matches("\\+\\d{11}"))
         {
@@ -579,7 +645,11 @@ private boolean addCustomer() {
         } //validating phone number where area code is in braces ()
         else if (phoneNo.matches("\\(\\d{3}\\)-\\d{3}-\\d{4}")) {
             return true;
-        } //return false if nothing matches the input
+        } 
+        else if (phoneNo.matches("^\\+(?:[0-9] ?){6,14}[0-9]$")) {
+            return true;
+        }
+        //return false if nothing matches the input
         else 
         {
             return false;
@@ -680,6 +750,7 @@ private boolean addCustomer() {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel2;
