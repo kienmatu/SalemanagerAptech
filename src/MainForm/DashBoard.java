@@ -261,7 +261,8 @@ public class DashBoard extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEmpMouseExited
 
     private void btnCustomerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCustomerMouseClicked
-        // TODO add your handling code here:
+      CustomerFrm x = new CustomerFrm();
+        x.setVisible(true);
     }//GEN-LAST:event_btnCustomerMouseClicked
 
     private void btnCustomerMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCustomerMouseEntered

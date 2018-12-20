@@ -47,7 +47,7 @@ public class Employee implements Serializable {
     @Column(name = "PASS")
     private String pass;
     @Column(name = "ISADMIN")
-    private Integer isadmin;
+    private Integer isadmin = 0;
     @Basic(optional = false)
     @Column(name = "EMPNAME")
     private String empname;
@@ -67,9 +67,9 @@ public class Employee implements Serializable {
     }
 
     public Employee(String user, String pass, String name, String phone, Date date) {
-        this.username = username;
+        this.username = user;
         this.pass = pass;
-        this.empname = empname;
+        this.empname = name;
         this.empphone = phone;
         this.empstartdate = date;
 
