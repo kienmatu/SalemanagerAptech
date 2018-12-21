@@ -52,7 +52,6 @@ public class newBill extends javax.swing.JFrame implements ActionListener {
     JTextField textBox = new JTextField();
     String[] headerSelected = new String[]{"ID", "Product Code", "Name", "Price", "Quantity"};
     DefaultTableModel ProductSelectedModel = new DefaultTableModel(headerSelected, 0);
-    JComboBox comboBox = new JComboBox();
 
     /**
      * Creates new form newBill

@@ -5,6 +5,8 @@
  */
 package Entity;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -18,6 +20,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -37,6 +40,9 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Employee.findByEmpphone", query = "SELECT e FROM Employee e WHERE e.empphone = :empphone")
     , @NamedQuery(name = "Employee.findByEmpstartdate", query = "SELECT e FROM Employee e WHERE e.empstartdate = :empstartdate")})
 public class Employee implements Serializable {
+
+    @Transient
+    private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -86,7 +92,9 @@ public class Employee implements Serializable {
     }
 
     public void setUsername(String username) {
+        String oldUsername = this.username;
         this.username = username;
+        changeSupport.firePropertyChange("username", oldUsername, username);
     }
 
     public String getPass() {
@@ -94,7 +102,9 @@ public class Employee implements Serializable {
     }
 
     public void setPass(String pass) {
+        String oldPass = this.pass;
         this.pass = pass;
+        changeSupport.firePropertyChange("pass", oldPass, pass);
     }
 
     public Integer getIsadmin() {
@@ -102,7 +112,9 @@ public class Employee implements Serializable {
     }
 
     public void setIsadmin(Integer isadmin) {
+        Integer oldIsadmin = this.isadmin;
         this.isadmin = isadmin;
+        changeSupport.firePropertyChange("isadmin", oldIsadmin, isadmin);
     }
 
     public String getEmpname() {
@@ -110,7 +122,9 @@ public class Employee implements Serializable {
     }
 
     public void setEmpname(String empname) {
+        String oldEmpname = this.empname;
         this.empname = empname;
+        changeSupport.firePropertyChange("empname", oldEmpname, empname);
     }
 
     public String getEmpphone() {
@@ -118,7 +132,9 @@ public class Employee implements Serializable {
     }
 
     public void setEmpphone(String empphone) {
+        String oldEmpphone = this.empphone;
         this.empphone = empphone;
+        changeSupport.firePropertyChange("empphone", oldEmpphone, empphone);
     }
 
     public Date getEmpstartdate() {
@@ -126,7 +142,9 @@ public class Employee implements Serializable {
     }
 
     public void setEmpstartdate(Date empstartdate) {
+        Date oldEmpstartdate = this.empstartdate;
         this.empstartdate = empstartdate;
+        changeSupport.firePropertyChange("empstartdate", oldEmpstartdate, empstartdate);
     }
 
     @XmlTransient
@@ -160,7 +178,15 @@ public class Employee implements Serializable {
 
     @Override
     public String toString() {
-        return this.empname;
+        return this.username+". "+empname;
+    }
+
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        changeSupport.addPropertyChangeListener(listener);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        changeSupport.removePropertyChangeListener(listener);
     }
 
 }
