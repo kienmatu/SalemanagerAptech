@@ -20,5 +20,5 @@ public class LoginUser {
     public static DashBoard Main;
     public static EmployeeFrm Employee;
     public static OrderFrm Order;
-    public static CustomerFrm Customer;         
+    public static CustomerFrm Customer;       
 }

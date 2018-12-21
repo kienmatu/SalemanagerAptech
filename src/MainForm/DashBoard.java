@@ -261,7 +261,7 @@ public class DashBoard extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEmpMouseExited
 
     private void btnCustomerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCustomerMouseClicked
-      if(LoginUser.Customer == null){
+       if(LoginUser.Customer == null){
             LoginUser.Customer = new CustomerFrm();
             
         }
