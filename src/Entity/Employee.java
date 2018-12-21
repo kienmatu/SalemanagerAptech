@@ -6,8 +6,8 @@
 package Entity;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -47,7 +47,7 @@ public class Employee implements Serializable {
     @Column(name = "PASS")
     private String pass;
     @Column(name = "ISADMIN")
-    private Integer isadmin = 0;
+    private Integer isadmin;
     @Basic(optional = false)
     @Column(name = "EMPNAME")
     private String empname;
@@ -57,7 +57,7 @@ public class Employee implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date empstartdate;
     @OneToMany(mappedBy = "username")
-    private Collection<Bill> billCollection;
+    private List<Bill> billList;
 
     public Employee() {
     }
@@ -130,12 +130,12 @@ public class Employee implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Bill> getBillCollection() {
-        return billCollection;
+    public List<Bill> getBillList() {
+        return billList;
     }
 
-    public void setBillCollection(Collection<Bill> billCollection) {
-        this.billCollection = billCollection;
+    public void setBillList(List<Bill> billList) {
+        this.billList = billList;
     }
 
     @Override
@@ -160,7 +160,7 @@ public class Employee implements Serializable {
 
     @Override
     public String toString() {
-        return username;
+        return this.empname;
     }
 
 }
