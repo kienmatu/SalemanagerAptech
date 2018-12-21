@@ -1,4 +1,4 @@
-/*
+﻿/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -184,7 +184,7 @@ public class EmployeeFrm extends javax.swing.JFrame {
                             .addComponent(txtPassword, javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addComponent(cbbLuaChon, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(26, 26, 26)
+                                .addGap(18, 18, 18)
                                 .addComponent(btnOK, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(txtUser)
                             .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING)
@@ -697,28 +697,24 @@ try {
 
     private boolean checkUser() {
         String username = this.txtUser.getText(); // lay user name
-        //boolean valid = (username != null) && username.matches("[A-Za-z0-9_]+");
         Pattern pattern = Pattern.compile("^[A-Za-z0-9_-]{3,16}$");
         boolean valid = (username != null) && pattern.matcher(username).matches();
         return valid;
     }
     private boolean checkPass() {
         String Pass = this.txtPassword.getText(); // lay user name
-        //boolean valid = (username != null) && username.matches("[A-Za-z0-9_]+");
         Pattern pattern = Pattern.compile("[A-Za-z0-9_]+");
         boolean valid = (Pass != null) && pattern.matcher(Pass).matches();
         return valid;
     }
     private boolean checkPhone() {
         String number = this.txtPhoneNumber.getText(); // lay user name
-        //boolean valid = (username != null) && username.matches("[A-Za-z0-9_]+");
         Pattern pattern = Pattern.compile("^[0-9\\-\\+]{10,15}$");
         boolean valid = (number != null) && pattern.matcher(number).matches();
         return valid;
     }
     private boolean checkFullName() {
         String FullName = this.txtFullname.getText(); // lay user name
-        //boolean valid = (username != null) && username.matches("[A-Za-z0-9_]+");
         Pattern pattern = Pattern.compile("^[a-zA-Z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶ" +
             "ẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợ" +
             "ụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s]+$");

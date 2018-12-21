@@ -1,4 +1,4 @@
-/*
+﻿/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -185,25 +185,25 @@ public class CustomerFrm extends javax.swing.JFrame {
                             .addComponent(txtDate, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(txtAddress, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtCustID, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(cbbLuaChon, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
                                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(txtPhoneNumber)
+                            .addComponent(txtName)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
+                                        .addComponent(cbbLuaChon, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
                                         .addGap(30, 30, 30)
                                         .addComponent(jLabel9))
                                     .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING))
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(txtName))
+                                .addGap(0, 0, Short.MAX_VALUE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lbCheck, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(52, 52, 52))))
@@ -279,9 +279,9 @@ public class CustomerFrm extends javax.swing.JFrame {
             bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(bgLayout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 293, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 841, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 849, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         bgLayout.setVerticalGroup(
             bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -346,9 +346,9 @@ public class CustomerFrm extends javax.swing.JFrame {
     
 private boolean addCustomer() {
         EntityTransaction tran = null;
-        if(checkName() == true && checkPhone()) //  neu username ma khong co dau, tuc la chi co cac ky tu tu a-z "[A-Za-z0-9_]+"
+        if(checkName() == true && checkPhone() == true ) //  neu username ma khong co dau, tuc la chi co cac ky tu tu a-z "[A-Za-z0-9_]+"
         {
-try {
+        try {
             String name = txtName.getText();
             String address = txtAddress.getText();
             String phone = this.txtPhoneNumber.getText();           
@@ -384,8 +384,7 @@ try {
             {
             JOptionPane.showMessageDialog(null, "PLEASE CHECK NAME !");
             return false;
-            }
-     
+            }          
             else 
             {
             JOptionPane.showMessageDialog(null, "PLEASE CHECK PHONENUMBER!");
@@ -398,7 +397,7 @@ try {
     
     private boolean EditCust() {
         EntityTransaction tran = null;
-        if(checkName() == true && checkPhone()) //  neu username ma khong co dau, tuc la chi co cac ky tu tu a-z "[A-Za-z0-9_]+"
+        if(checkName() == true && checkPhone() == true) //  neu username ma khong co dau, tuc la chi co cac ky tu tu a-z "[A-Za-z0-9_]+"
         {
 try {
             int ID = Integer.parseInt(txtCustID.getText());   
@@ -704,18 +703,16 @@ try {
     private javax.swing.JTextField txtName;
     private javax.swing.JTextField txtPhoneNumber;
     // End of variables declaration//GEN-END:variables
-    private boolean checkPhone() {
-        String number = this.txtPhoneNumber.getText(); // lay user name
-        //boolean valid = (username != null) && username.matches("[A-Za-z0-9_]+");
-        Pattern pattern = Pattern.compile("^[0-9\\-\\+]{10,15}$" + "\\+\\d{11}" + "\\d{10}" + "\\d{3}[-\\.\\s]\\d{3}[-\\.\\s]\\d{4}" + "\\d{3}-\\d{3}-\\d{4}\\s(x|(ext))\\d{3,5}" + "\\(\\d{3}\\)-\\d{3}-\\d{4}" + "^\\+(?:[0-9] ?){6,14}[0-9]$");
-        boolean valid = (number != null) && pattern.matcher(number).matches();
-        return valid;
-    }
-    private boolean checkName() {
+   private boolean checkName() {
         String name = this.txtName.getText(); // lay user name
-        //boolean valid = (username != null) && username.matches("[A-Za-z0-9_]+");
         Pattern pattern = Pattern.compile("[A-Za-z0-9_]+");
         boolean valid = (name != null) && pattern.matcher(name).matches();
         return valid;
     }
+    private boolean checkPhone() {
+        String number = this.txtPhoneNumber.getText(); // lay user name
+        Pattern pattern = Pattern.compile("^[0-9\\-\\+]{10,15}$");
+        boolean valid = (number != null) && pattern.matcher(number).matches();
+        return valid;
+    }  
 }
