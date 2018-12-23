@@ -46,6 +46,8 @@ public class DashBoard extends javax.swing.JFrame {
         btnEmployee1 = new javax.swing.JLabel();
         btnOrder = new javax.swing.JPanel();
         btnEmployee2 = new javax.swing.JLabel();
+        btnProduct = new javax.swing.JPanel();
+        btnEmployee3 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -161,6 +163,40 @@ public class DashBoard extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        btnProduct.setBackground(new java.awt.Color(45, 118, 232));
+        btnProduct.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnProductMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnProductMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnProductMouseExited(evt);
+            }
+        });
+
+        btnEmployee3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnEmployee3.setForeground(new java.awt.Color(255, 255, 255));
+        btnEmployee3.setText("Product Manager");
+
+        javax.swing.GroupLayout btnProductLayout = new javax.swing.GroupLayout(btnProduct);
+        btnProduct.setLayout(btnProductLayout);
+        btnProductLayout.setHorizontalGroup(
+            btnProductLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(btnProductLayout.createSequentialGroup()
+                .addGap(28, 28, 28)
+                .addComponent(btnEmployee3)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        btnProductLayout.setVerticalGroup(
+            btnProductLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, btnProductLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnEmployee3)
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -173,7 +209,8 @@ public class DashBoard extends javax.swing.JFrame {
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(210, 210, 210)
                         .addComponent(lbCheck, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 10, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(btnProduct, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(89, 89, 89)
@@ -191,9 +228,11 @@ public class DashBoard extends javax.swing.JFrame {
                 .addComponent(btnOrder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnCustomer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(49, 49, 49)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnProduct, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(41, 41, 41)
                 .addComponent(lbCheck)
-                .addGap(197, 197, 197))
+                .addGap(293, 293, 293))
         );
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
@@ -293,6 +332,18 @@ public class DashBoard extends javax.swing.JFrame {
         resetColor(btnOrder);
     }//GEN-LAST:event_btnOrderMouseExited
 
+    private void btnProductMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnProductMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnProductMouseClicked
+
+    private void btnProductMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnProductMouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnProductMouseEntered
+
+    private void btnProductMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnProductMouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnProductMouseExited
+
     /**
      * @param args the command line arguments
      */
@@ -334,7 +385,9 @@ public class DashBoard extends javax.swing.JFrame {
     private javax.swing.JLabel btnEmployee;
     private javax.swing.JLabel btnEmployee1;
     private javax.swing.JLabel btnEmployee2;
+    private javax.swing.JLabel btnEmployee3;
     private javax.swing.JPanel btnOrder;
+    private javax.swing.JPanel btnProduct;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
