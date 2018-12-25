@@ -31,9 +31,6 @@ import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
-import org.eclipse.persistence.queries.DataReadQuery;
-import org.eclipse.persistence.queries.StoredProcedureCall;
-
 /**
  *
  * @author KIENDINH
@@ -574,7 +571,7 @@ public class newBill extends javax.swing.JFrame implements ActionListener {
                             i++;
                         }
 
-                        entityManager.close();
+                        //entityManager.close();
                         JOptionPane.showMessageDialog(null, "Successfully!");
                         resetProduct();
                     } catch (Exception e) {
