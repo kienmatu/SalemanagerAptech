@@ -10,6 +10,7 @@ import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -21,6 +22,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.NamedStoredProcedureQueries;
 import javax.persistence.NamedStoredProcedureQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SqlResultSetMapping;
@@ -50,11 +52,19 @@ import org.eclipse.persistence.annotations.Direction;
     , @NamedQuery(name = "Product.findByDetails", query = "SELECT p FROM Product p WHERE p.details = :details")
     , @NamedQuery(name = "Product.findByCategoryid", query = "SELECT p FROM Product p WHERE p.categoryid = :categoryid")
 })
-@NamedStoredProcedureQuery(name = "getProductSelected", procedureName = "getProductSelected", resultClasses = Product.class,
-        parameters = {
-            @StoredProcedureParameter(name = "product_id",type = String.class)
-        })
-
+@NamedStoredProcedureQueries({
+    @NamedStoredProcedureQuery(name = "getProductSelected", procedureName = "getProductSelected", resultClasses = Product.class,
+            parameters = {
+                @StoredProcedureParameter(name = "product_id", type = String.class)
+            })
+    ,
+    @NamedStoredProcedureQuery(name = "GetDashBoardData", procedureName = "GetDashBoardData", resultClasses = Product.class,
+            parameters = {
+                @StoredProcedureParameter(name = "startdate", type = Date.class)
+                ,
+                @StoredProcedureParameter(name = "enddate", type = Date.class)
+            })
+})
 public class Product implements Serializable {
 
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -146,7 +156,6 @@ public class Product implements Serializable {
         this.company = company;
         changeSupport.firePropertyChange("company", oldCompany, company);
     }
-
 
     public String getProductcode() {
         return productcode;

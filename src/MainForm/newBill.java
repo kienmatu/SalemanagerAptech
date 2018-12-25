@@ -31,9 +31,6 @@ import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
-import org.eclipse.persistence.queries.DataReadQuery;
-import org.eclipse.persistence.queries.StoredProcedureCall;
-
 /**
  *
  * @author KIENDINH
