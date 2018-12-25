@@ -6,11 +6,16 @@
 package MainForm;
 
 import Entity.Product;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
 import javax.swing.JMenuItem;
@@ -106,7 +111,7 @@ public class newBill extends javax.swing.JFrame implements ActionListener {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         txtCost = new javax.swing.JLabel("",SwingConstants.RIGHT);
-        cbbCategory = new javax.swing.JComboBox<>();
+        cbbCategory = new javax.swing.JComboBox<String>();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         txtName = new javax.swing.JTextField();
@@ -230,8 +235,10 @@ public class newBill extends javax.swing.JFrame implements ActionListener {
 
         }
 
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/submit.png"))); // NOI18N
         jButton1.setText("Submit");
 
+        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/printer (1).png"))); // NOI18N
         jButton3.setLabel("Print Order");
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -260,7 +267,7 @@ public class newBill extends javax.swing.JFrame implements ActionListener {
 
         txtName.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
 
-        btnSearch.setText("SEARCH");
+        btnSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/search.png"))); // NOI18N
         btnSearch.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnSearchMouseClicked(evt);
@@ -298,7 +305,7 @@ public class newBill extends javax.swing.JFrame implements ActionListener {
 
         txtCustName.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
 
-        btnSearchCust.setText("SEARCH");
+        btnSearchCust.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/search.png"))); // NOI18N
         btnSearchCust.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnSearchCustMouseClicked(evt);
@@ -342,15 +349,16 @@ public class newBill extends javax.swing.JFrame implements ActionListener {
                                 .addGap(19, 19, 19))
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                                 .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 293, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(55, 55, 55)
-                                .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(8, 8, 8))))
                     .addComponent(jScrollOrder, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -486,7 +494,10 @@ public class newBill extends javax.swing.JFrame implements ActionListener {
         // TODO add your handling code here:
         caculatePrice();
     }//GEN-LAST:event_tblProductFocusLost
-
+    /**
+     * Đổ dữ liệu ra cho bảng Customer.
+     * @param cust
+     */
     private void setCustomerData(List<Entity.Customer> cust) {
 
         String[] header = new String[]{"ID", "Name", "Phone", "Address"};
@@ -623,16 +634,18 @@ public class newBill extends javax.swing.JFrame implements ActionListener {
 
     /**
      *
-     * Add product to the selected list.
-     * if existed a product in the list, just increase the quantity .<br />
-     * Nếu đã tồn tại sản phẩm trong bảng chọn, chỉ tăng số lượng lên, không thêm row.
+     * Add product to the selected list. if existed a product in the list, just
+     * increase the quantity .<br />
+     * Nếu đã tồn tại sản phẩm trong bảng chọn, chỉ tăng số lượng lên, không
+     * thêm row.
+     *
      * @see checkRowExist()
      */
     private void addNewRow() {
         TableModel model = tblOrder.getModel();
         int r = (tblOrder.getSelectedRow());
         Object[] row = new Object[]{model.getValueAt(r, 0), model.getValueAt(r, 1), model.getValueAt(r, 2), model.getValueAt(r, 4), 1};
-        int rowduplicate = checkRowExist(model, (int)row[0]);
+        int rowduplicate = checkRowExist(model, (int) row[0]);
         if (rowduplicate == -1) {
             ProductSelectedModel.addRow(row);
             tblProduct.setModel(ProductSelectedModel);
@@ -654,13 +667,13 @@ public class newBill extends javax.swing.JFrame implements ActionListener {
      * @param model
      * @param id
      * @return -1 if not found or - nếu không tìm thấy
-     * @return the row of the list that have existed - nếu tìm thấy trả về dòng mà đã tìm thấy.
+     * @return the row of the list that have existed - nếu tìm thấy trả về dòng
+     * mà đã tìm thấy.
      * @see addNewRow()
      */
     private int checkRowExist(TableModel model, int id) {
         for (int i = 0; i < tblProduct.getModel().getRowCount(); i++) {
-            if ((int)tblProduct.getModel().getValueAt(i, 0) == id) 
-            {
+            if ((int) tblProduct.getModel().getValueAt(i, 0) == id) {
                 return i;
             }
         }
@@ -670,6 +683,7 @@ public class newBill extends javax.swing.JFrame implements ActionListener {
     /**
      * Remove the product selected in selected list
      * <br> Xóa sản phẩm vừa chọn khỏi danh sách.
+     *
      * @see removeAllRows()
      */
     private void removeCurrentRow() {
@@ -680,6 +694,7 @@ public class newBill extends javax.swing.JFrame implements ActionListener {
     /**
      * Remove all product in the selected list
      * <br> Xóa tẩ cả sản phẩm khỏi danh sách đã chọn
+     *
      * @see removeCurrentRow()
      */
     private void removeAllRows() {

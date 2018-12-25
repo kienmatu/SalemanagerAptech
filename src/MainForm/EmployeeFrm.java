@@ -1,4 +1,4 @@
-﻿/*
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -174,31 +174,34 @@ public class EmployeeFrm extends javax.swing.JFrame {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(35, 35, 35)
-                        .addComponent(jLabel9))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(txtPassword, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(cbbLuaChon, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnOK, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(txtUser)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtFullname)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtPhoneNumber)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
-                                .addComponent(jLabel5)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 78, Short.MAX_VALUE)
-                                .addComponent(lbCheck, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(8, 8, 8))
-                            .addComponent(txtDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addComponent(txtUser))
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel3Layout.createSequentialGroup()
+                            .addGap(35, 35, 35)
+                            .addComponent(jLabel9))
+                        .addGroup(jPanel3Layout.createSequentialGroup()
+                            .addContainerGap()
+                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(txtPassword, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel3Layout.createSequentialGroup()
+                                    .addComponent(cbbLuaChon, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(btnOK, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(txtFullname)
+                                .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(txtPhoneNumber)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
+                                    .addComponent(jLabel5)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 78, Short.MAX_VALUE)
+                                    .addComponent(lbCheck, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(8, 8, 8))
+                                .addComponent(txtDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
@@ -242,6 +245,7 @@ public class EmployeeFrm extends javax.swing.JFrame {
         txtDate.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
         txtDate.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, Color.white));
+        txtDate.setDate(new Date());
 
         jScrollPane1.setBackground(new java.awt.Color(255, 255, 255));
         jScrollPane1.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -476,6 +480,8 @@ try {
      */
     private boolean addEmployee() {
         EntityTransaction tran = null;
+        if(checkUserExist(txtUser.getText()))
+        {
         if(checkUser() == true && checkPass()== true && checkPhone() == true && checkFullName() == true) //  neu username ma khong co dau, tuc la chi co cac ky tu tu a-z "[A-Za-z0-9_]+"
         {
             try {
@@ -524,6 +530,12 @@ try {
               return false;
                     }
            
+        }
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(null, "USERNAME EXISTED!");
+            return false;
         }
 
     }
@@ -697,24 +709,41 @@ try {
 
     private boolean checkUser() {
         String username = this.txtUser.getText(); // lay user name
+        //boolean valid = (username != null) && username.matches("[A-Za-z0-9_]+");
+        
         Pattern pattern = Pattern.compile("^[A-Za-z0-9_-]{3,16}$");
         boolean valid = (username != null) && pattern.matcher(username).matches();
         return valid;
     }
+    private boolean checkUserExist(String username)
+    {
+        Query checkquery = entityManager.createNamedQuery("Employee.findByUsername");
+        checkquery.setParameter("username", username);
+        EntityTransaction tran = entityManager.getTransaction();
+        tran.begin();
+        if(checkquery.getResultList().isEmpty())
+        {
+            return true;
+        }
+        return false;
+    }
     private boolean checkPass() {
         String Pass = this.txtPassword.getText(); // lay user name
+        //boolean valid = (username != null) && username.matches("[A-Za-z0-9_]+");
         Pattern pattern = Pattern.compile("[A-Za-z0-9_]+");
         boolean valid = (Pass != null) && pattern.matcher(Pass).matches();
         return valid;
     }
     private boolean checkPhone() {
         String number = this.txtPhoneNumber.getText(); // lay user name
+        //boolean valid = (username != null) && username.matches("[A-Za-z0-9_]+");
         Pattern pattern = Pattern.compile("^[0-9\\-\\+]{10,15}$");
         boolean valid = (number != null) && pattern.matcher(number).matches();
         return valid;
     }
     private boolean checkFullName() {
         String FullName = this.txtFullname.getText(); // lay user name
+        //boolean valid = (username != null) && username.matches("[A-Za-z0-9_]+");
         Pattern pattern = Pattern.compile("^[a-zA-Z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶ" +
             "ẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợ" +
             "ụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s]+$");

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -198,15 +198,16 @@ public class CustomerFrm extends javax.swing.JFrame {
                                         .addGap(18, 18, 18)
                                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
-                                        .addGap(30, 30, 30)
-                                        .addComponent(jLabel9))
                                     .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING))
                                 .addGap(0, 0, Short.MAX_VALUE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lbCheck, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(52, 52, 52))))
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addComponent(jLabel9)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -404,6 +405,7 @@ try {
             tran = entityManager.getTransaction();
             Entity.Customer customer = entityManager.find(Entity.Customer.class, ID);
             tran.begin(); 
+            customer.setCustname(txtName.getText());
             customer.setCustaddress(txtAddress.getText());
             customer.setCustphone(txtPhoneNumber.getText());
             customer.setCustdob(txtDate.getDate());
@@ -669,12 +671,6 @@ try {
 
             };
             this.tblCustomer.setModel(aModel);
-            //       tblEmployee.setEnabled(false);
-//        JTableHeader header = tblEmployee.getTableHeader();
-//         tblEmployee.getTableHeader().setOpaque(false);
-//         header.setBackground(Color.WHITE);
-//         header.setForeground(Color.BLACK);
-
         } catch (Exception he) {
             he.printStackTrace();
         }
@@ -705,12 +701,14 @@ try {
     // End of variables declaration//GEN-END:variables
    private boolean checkName() {
         String name = this.txtName.getText(); // lay user name
+        //boolean valid = (username != null) && username.matches("[A-Za-z0-9_]+");
         Pattern pattern = Pattern.compile("[A-Za-z0-9_]+");
         boolean valid = (name != null) && pattern.matcher(name).matches();
         return valid;
     }
     private boolean checkPhone() {
         String number = this.txtPhoneNumber.getText(); // lay user name
+        //boolean valid = (username != null) && username.matches("[A-Za-z0-9_]+");
         Pattern pattern = Pattern.compile("^[0-9\\-\\+]{10,15}$");
         boolean valid = (number != null) && pattern.matcher(number).matches();
         return valid;

@@ -6,8 +6,20 @@
 package MainForm;
 
 import ClassData.LoginUser;
-import javax.swing.JDialog;
+import Entity.Product;
+import java.awt.BorderLayout;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.xy.IntervalXYDataset;
+import org.jfree.data.xy.XYBarDataset;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 
 /**
  *
@@ -21,11 +33,40 @@ public class DashBoard extends javax.swing.JFrame {
     public DashBoard() {
         initComponents();
         this.setLocationRelativeTo(null);
-        
-        if(LoginUser.User.getIsadmin() != 1){
-            btnEmp.setVisible(false);
+//
+//        if (LoginUser.User.getIsadmin() != 1) {
+//            btnEmp.setVisible(false);
+//        }
+        JFreeChart barChart = ChartFactory.createBarChart("Doanh thu tháng gần nhất", "Category", "Score",
+                createDataset(),
+                PlotOrientation.HORIZONTAL,
+                true, true, false);
+
+        ChartPanel chartPanel = new ChartPanel(barChart);
+        chartPanel.setPreferredSize(new java.awt.Dimension(560, 367));
+        dashPanel.setLayout(new java.awt.BorderLayout());
+        dashPanel.add(chartPanel, BorderLayout.CENTER);
+        dashPanel.validate();
+        //setContentPane(chartPanel);
+        // chart.setVisible( true ); 
+    }
+
+    private CategoryDataset createDataset() {
+        final String doanhthu = "REVENUE";
+        final String soluong = "AMOUNT";
+       
+        final String[] Product =  {"IPhone XS","GALAXY S10","GALAXY S9","DELL LATITUDE E6420"};
+        //final Product[] data = {}; 
+        final double[] data = {1.2,3.5,2,4};
+        final String GalaxyS10 = "Galaxy S10";
+        final String GalaxyS9 = "Galaxy S9";
+        final DefaultCategoryDataset dataset
+                = new DefaultCategoryDataset();
+        for(int i = 0;i<Product.length;i++)
+        {
+            dataset.addValue(data[i], doanhthu, Product[i]);
         }
-        
+        return dataset;
     }
 
     /**
@@ -46,7 +87,8 @@ public class DashBoard extends javax.swing.JFrame {
         btnEmployee1 = new javax.swing.JLabel();
         btnOrder = new javax.swing.JPanel();
         btnEmployee2 = new javax.swing.JLabel();
-        jPanel1 = new javax.swing.JPanel();
+        btnChangeProfile = new javax.swing.JButton();
+        dashPanel = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -88,7 +130,7 @@ public class DashBoard extends javax.swing.JFrame {
         btnEmpLayout.setVerticalGroup(
             btnEmpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, btnEmpLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(17, Short.MAX_VALUE)
                 .addComponent(btnEmployee)
                 .addContainerGap())
         );
@@ -122,7 +164,7 @@ public class DashBoard extends javax.swing.JFrame {
         btnCustomerLayout.setVerticalGroup(
             btnCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, btnCustomerLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(18, Short.MAX_VALUE)
                 .addComponent(btnEmployee1)
                 .addContainerGap())
         );
@@ -156,10 +198,17 @@ public class DashBoard extends javax.swing.JFrame {
         btnOrderLayout.setVerticalGroup(
             btnOrderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, btnOrderLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(17, Short.MAX_VALUE)
                 .addComponent(btnEmployee2)
                 .addContainerGap())
         );
+
+        btnChangeProfile.setText("Chane profile infomation");
+        btnChangeProfile.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnChangeProfileMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -171,14 +220,17 @@ public class DashBoard extends javax.swing.JFrame {
                     .addComponent(btnCustomer, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnEmp, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(210, 210, 210)
-                        .addComponent(lbCheck, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnChangeProfile, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel3Layout.createSequentialGroup()
+                                    .addGap(210, 210, 210)
+                                    .addComponent(lbCheck, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(jPanel3Layout.createSequentialGroup()
+                                    .addGap(89, 89, 89)
+                                    .addComponent(jLabel9))))
                         .addGap(0, 10, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(89, 89, 89)
-                .addComponent(jLabel9)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -193,19 +245,21 @@ public class DashBoard extends javax.swing.JFrame {
                 .addComponent(btnCustomer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(49, 49, 49)
                 .addComponent(lbCheck)
-                .addGap(197, 197, 197))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnChangeProfile, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(156, 156, 156))
         );
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        dashPanel.setBackground(new java.awt.Color(153, 153, 255));
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 579, Short.MAX_VALUE)
+        javax.swing.GroupLayout dashPanelLayout = new javax.swing.GroupLayout(dashPanel);
+        dashPanel.setLayout(dashPanelLayout);
+        dashPanelLayout.setHorizontalGroup(
+            dashPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 954, Short.MAX_VALUE)
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        dashPanelLayout.setVerticalGroup(
+            dashPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 0, Short.MAX_VALUE)
         );
 
@@ -215,29 +269,31 @@ public class DashBoard extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(dashPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(dashPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnEmpMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEmpMouseClicked
-        
-        if(LoginUser.User.getIsadmin() == 1){
-            if(LoginUser.Employee == null){
+
+        if (LoginUser.User.getIsadmin() == 1) {
+            if (LoginUser.Employee == null) {
                 LoginUser.Employee = new EmployeeFrm();
-            } 
+            }
             LoginUser.Employee.setVisible(true);
         }
-        
+
 //        this.setEnabled(false);
 ////        JDialog dialog = new JDialog(x, true);
 ////
@@ -261,11 +317,8 @@ public class DashBoard extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEmpMouseExited
 
     private void btnCustomerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCustomerMouseClicked
-       if(LoginUser.Customer == null){
-            LoginUser.Customer = new CustomerFrm();
-            
-        }
-        LoginUser.Customer.setVisible(true);
+        CustomerFrm x = new CustomerFrm();
+        x.setVisible(true);
     }//GEN-LAST:event_btnCustomerMouseClicked
 
     private void btnCustomerMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCustomerMouseEntered
@@ -280,9 +333,9 @@ public class DashBoard extends javax.swing.JFrame {
 
     private void btnOrderMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnOrderMouseClicked
         // TODO add your handling code here:
-        if(LoginUser.Order == null){
+        if (LoginUser.Order == null) {
             LoginUser.Order = new OrderFrm();
-            
+
         }
         LoginUser.Order.setVisible(true);
     }//GEN-LAST:event_btnOrderMouseClicked
@@ -296,6 +349,13 @@ public class DashBoard extends javax.swing.JFrame {
         // TODO add your handling code here:
         resetColor(btnOrder);
     }//GEN-LAST:event_btnOrderMouseExited
+
+    private void btnChangeProfileMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnChangeProfileMouseClicked
+        // TODO add your handling code here:
+        ProfileInformation p = new  ProfileInformation();
+        p.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        p.setVisible(true);
+    }//GEN-LAST:event_btnChangeProfileMouseClicked
 
     /**
      * @param args the command line arguments
@@ -333,15 +393,17 @@ public class DashBoard extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnChangeProfile;
     private javax.swing.JPanel btnCustomer;
     private javax.swing.JPanel btnEmp;
     private javax.swing.JLabel btnEmployee;
     private javax.swing.JLabel btnEmployee1;
     private javax.swing.JLabel btnEmployee2;
     private javax.swing.JPanel btnOrder;
+    private javax.swing.JPanel dashPanel;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JLabel lbCheck;
     // End of variables declaration//GEN-END:variables
+
 }
