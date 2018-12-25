@@ -30,6 +30,10 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "Billdetail.findByAmount", query = "SELECT b FROM Billdetail b WHERE b.amount = :amount")})
 public class Billdetail implements Serializable {
 
+    @JoinColumn(name = "PRODUCTID", referencedColumnName = "PRODUCTID", insertable = false, updatable = false)
+    @ManyToOne(optional = false)
+    private Product product;
+
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected BilldetailPK billdetailPK;
@@ -38,9 +42,6 @@ public class Billdetail implements Serializable {
     @JoinColumn(name = "BILLID", referencedColumnName = "BILLID", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Bill bill;
-    @JoinColumn(name = "PRODUCTID", referencedColumnName = "PRODUCTID", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
-    private Product product;
 
     public Billdetail() {
     }
@@ -77,14 +78,6 @@ public class Billdetail implements Serializable {
         this.bill = bill;
     }
 
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -108,6 +101,14 @@ public class Billdetail implements Serializable {
     @Override
     public String toString() {
         return "Entity.Billdetail[ billdetailPK=" + billdetailPK + " ]";
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
     }
     
 }

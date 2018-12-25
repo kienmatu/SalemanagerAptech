@@ -6,8 +6,8 @@
 package Entity;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -57,7 +57,7 @@ public class Customer implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date custregdate;
     @OneToMany(mappedBy = "custid")
-    private Collection<Bill> billCollection;
+    private List<Bill> billList;
 
     public Customer() {
     }
@@ -120,12 +120,12 @@ public class Customer implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Bill> getBillCollection() {
-        return billCollection;
+    public List<Bill> getBillList() {
+        return billList;
     }
 
-    public void setBillCollection(Collection<Bill> billCollection) {
-        this.billCollection = billCollection;
+    public void setBillList(List<Bill> billList) {
+        this.billList = billList;
     }
 
     @Override
@@ -150,7 +150,7 @@ public class Customer implements Serializable {
 
     @Override
     public String toString() {
-        return custid.toString();
+        return this.custid+"";
     }
     
 }

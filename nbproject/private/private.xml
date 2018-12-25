@@ -10,8 +10,10 @@
             <file>file:/F:/TelephoneRepository/src/ClassData/LoginUser.java</file>
             <file>file:/F:/TelephoneRepository/src/MainForm/OrderFrm.java</file>
             <file>file:/F:/TelephoneRepository/src/Entity/Employee.java</file>
+            <file>file:/F:/TelephoneRepository/src/MainForm/newBill.java</file>
             <file>file:/F:/TelephoneRepository/src/Entity/hibernate.cfg.xml</file>
             <file>file:/F:/TelephoneRepository/src/MainForm/ProductFrm.java</file>
+            <file>file:/F:/TelephoneRepository/src/MainForm/CustomerFrm.java</file>
         </group>
     </open-files>
 </project-private>
