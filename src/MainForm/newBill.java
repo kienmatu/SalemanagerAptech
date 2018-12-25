@@ -574,7 +574,7 @@ public class newBill extends javax.swing.JFrame implements ActionListener {
                             i++;
                         }
 
-                        entityManager.close();
+                        //entityManager.close();
                         JOptionPane.showMessageDialog(null, "Successfully!");
                         resetProduct();
                     } catch (Exception e) {
