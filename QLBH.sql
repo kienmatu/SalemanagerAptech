@@ -118,10 +118,13 @@ INSERT INTO BILL VALUES ('12/12/2018',1,'admin')
 INSERT INTO BILLDETAIL VALUES(1,3,1)
 INSERT INTO BILLDETAIL VALUES(1,1,1)
 -----------
-INSERT INTO BILL VALUES ('12/20/2018',2,'kiendt')
-INSERT INTO BILLDETAIL VALUES(2,1,2)
-INSERT INTO BILLDETAIL VALUES(2,2,1)
-------------------------------------
+
+
+------------------------------
+SELECT b.PRODUCTID, b.PRODUCTNAME,b.PRODUCTCODE,b.PRICE,b.UNIT, a.AMOUNT
+ FROM BILLDETAIL a INNER JOIN PRODUCT b ON a.PRODUCTID = b.PRODUCTID 
+ WHERE a.BILLID = 1
+ -------------
  GO
  CREATE PROCEDURE [getProductSelected]
     @product_id [nvarchar](max)
@@ -135,3 +138,25 @@ BEGIN
    ( SELECT N.value('.', 'varchar(10)') as value FROM @xml.nodes('X') as T(N))
 	
 	END
+	--------
+	-- DASHBOARD
+	GO
+
+CREATE PROCEDURE dbo.GetDashBoardData
+@startdate date,
+@enddate date
+AS
+BEGIN
+Select DISTINCT  top 10 p.PRODUCTID,MAX(p.PRODUCTNAME) as 'PRODUCTNAME' ,SUM(bt.AMOUNT) as 'AMOUNT'
+FROM PRODUCT p
+JOIN BILLDETAIL bt on p.PRODUCTID = bt.PRODUCTID
+JOIN BILL b on b.BILLID = bt.BILLID
+where
+(IsNull(@startdate, '') = '' and IsNull(@enddate, '') = '' or  ( IsNull(@startdate, '') <> '' and  IsNull(@enddate, '') <> '' and b.BILLDATE >= cast (@startdate as Date) and  b.BILLDATE <= cast (@enddate as Date))
+    	     			or  ((IsNull(@startdate, '') <> '' and IsNull(@enddate, '') = '' and  b.BILLDATE = cast (@startdate as Date))) 
+    	     			or  ((IsNull(@enddate, '') <> '' and IsNull(@startdate, '') = '' and  b.BILLDATE = cast (@enddate as Date))
+    	     		))
+					GROUP BY p.PRODUCTID--,p.PRODUCTNAME,bt.AMOUNT
+					ORDER BY AMOUNT DESC
+END
+GO
