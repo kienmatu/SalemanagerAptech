@@ -6,6 +6,12 @@
 package MainForm;
 
 import Entity.Employee;
+import java.util.regex.Pattern;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Persistence;
+import javax.persistence.Query;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -13,6 +19,8 @@ import Entity.Employee;
  */
 public class ProfileInformation extends javax.swing.JFrame {
 
+    private final static String unitName = "SaleManagerProjectPU";
+    private static final EntityManager entityManager = Persistence.createEntityManagerFactory(unitName).createEntityManager();
     /**
      * Creates new form ProfileInformation
      * Lấy thông tin của người dùng
@@ -22,7 +30,9 @@ public class ProfileInformation extends javax.swing.JFrame {
         //gán giá trị cho textbox
         Employee e = ClassData.LoginUser.User;
         txtUser.setText(e.getUsername());
+        txtFullname.setText(e.getEmpname());
         txtPassword.setText(e.getPass());
+        txtPhoneNumber.setText(e.getEmpphone());
         txtUser.disable();//phải disable thằng username
         
         //Anh làm tương tự
@@ -40,31 +50,52 @@ public class ProfileInformation extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jPasswordField1 = new javax.swing.JPasswordField();
+        txtPassword = new javax.swing.JPasswordField();
         btnChange = new javax.swing.JButton();
-        txtName = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        txtPassword = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        txtPhone = new javax.swing.JTextField();
+        txtFullname = new javax.swing.JTextField();
+        txtPhoneNumber = new javax.swing.JTextField();
         txtUser = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Change your information");
 
         jPanel1.setEnabled(false);
 
+        txtPassword.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPasswordActionPerformed(evt);
+            }
+        });
+
+        btnChange.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        btnChange.setForeground(new java.awt.Color(0, 153, 153));
         btnChange.setText("Change");
+        btnChange.setToolTipText("");
+        btnChange.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnChangeMouseClicked(evt);
+            }
+        });
 
-        jLabel1.setText("Full Name:");
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 10)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(102, 153, 255));
+        jLabel3.setText("USER NAME:");
 
-        jLabel2.setText("Password:");
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 10)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(102, 153, 255));
+        jLabel5.setText("FULL NAME:");
 
-        jLabel3.setText("Address:");
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 10)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(102, 153, 255));
+        jLabel6.setText("PASSWORD:");
 
-        jLabel4.setText("Phone Number:");
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 10)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(102, 153, 255));
+        jLabel7.setText("PHONE NUMBER:");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -72,42 +103,39 @@ public class ProfileInformation extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(103, 103, 103)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(txtUser, javax.swing.GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE)
-                    .addComponent(jLabel4)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(txtName)
+                        .addComponent(txtUser, javax.swing.GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE)
+                        .addComponent(txtFullname)
                         .addComponent(btnChange, javax.swing.GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE)
-                        .addComponent(jPasswordField1)
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(txtPassword)
-                        .addComponent(txtPhone)))
+                        .addComponent(txtPhoneNumber)))
                 .addContainerGap(137, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(25, 25, 25)
-                .addComponent(txtUser, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel1)
-                .addGap(18, 18, 18)
-                .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel2)
-                .addGap(8, 8, 8)
-                .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(28, 28, 28)
                 .addComponent(jLabel3)
                 .addGap(18, 18, 18)
-                .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtUser, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(txtPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(43, 43, 43)
+                .addComponent(jLabel5)
+                .addGap(18, 18, 18)
+                .addComponent(txtFullname, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel6)
+                .addGap(18, 18, 18)
+                .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(25, 25, 25)
+                .addComponent(jLabel7)
+                .addGap(18, 18, 18)
+                .addComponent(txtPhoneNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(63, 63, 63)
                 .addComponent(btnChange, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(34, Short.MAX_VALUE))
         );
@@ -129,6 +157,72 @@ public class ProfileInformation extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void txtPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPasswordActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPasswordActionPerformed
+
+    private void btnChangeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnChangeMouseClicked
+    if (EditEmp()) {
+        
+         JOptionPane.showMessageDialog(null, "EDIT USER " + txtUser.getText() + " Successfully");
+        } else {
+             JOptionPane.showMessageDialog(null, "An error occured!");
+        }
+    
+    }//GEN-LAST:event_btnChangeMouseClicked
+    private boolean EditEmp() {
+        EntityTransaction tran = null;
+        if(checkUser() == true && checkPass()== true && checkPhone() == true && checkFullName() == true) //  neu username ma khong co dau, tuc la chi co cac ky tu tu a-z "[A-Za-z0-9_]+"
+        {
+try {
+            String username = txtUser.getText();
+
+            tran = entityManager.getTransaction();
+            Employee employee = entityManager.find(Employee.class, username);
+            tran.begin();
+            employee.setEmpname(txtFullname.getText());
+            employee.setPass(txtPassword.getText());
+            employee.setEmpphone(txtPhoneNumber.getText());
+            tran.commit();
+
+            return true;
+        } catch (Exception e) {
+            if (tran != null && tran.isActive()) {
+                tran.rollback();
+                //JOptionPane.showMessageDialog(null, e);
+
+            }
+            //JOptionPane.showMessageDialog(null, e);
+            return false;
+        }
+        }
+        else
+        {
+            if(checkUser() == false)
+            {
+            JOptionPane.showMessageDialog(null, "PLEASE CHECK USERNAME !");
+            return false;
+            }
+            else if(checkPass() == false)
+            {
+              JOptionPane.showMessageDialog(null, "PLEASE CHECK PASSWORD !");
+            return false;
+            }
+            else if(checkFullName() == false)
+            {
+              JOptionPane.showMessageDialog(null, "PLEASE CHECK FULL NAME !");
+            return false;
+            }
+            else 
+                    {
+              JOptionPane.showMessageDialog(null, "PLEASE CHECK PHONENUMBER!");
+              return false;
+                    }
+           
+        }
+
+    }
+ 
     /**
      * @param args the command line arguments
      */
@@ -166,15 +260,46 @@ public class ProfileInformation extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnChange;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JTextField txtName;
-    private javax.swing.JTextField txtPassword;
-    private javax.swing.JTextField txtPhone;
+    private javax.swing.JTextField txtFullname;
+    private javax.swing.JPasswordField txtPassword;
+    private javax.swing.JTextField txtPhoneNumber;
     private javax.swing.JTextField txtUser;
     // End of variables declaration//GEN-END:variables
+private boolean checkUser() {
+        String username = this.txtUser.getText(); // lay user name
+        //boolean valid = (username != null) && username.matches("[A-Za-z0-9_]+");
+        
+        Pattern pattern = Pattern.compile("^[A-Za-z0-9_-]{3,16}$");
+        boolean valid = (username != null) && pattern.matcher(username).matches();
+        return valid;
+    }
+
+    private boolean checkPass() {
+        String Pass = this.txtPassword.getText(); // lay user name
+        //boolean valid = (username != null) && username.matches("[A-Za-z0-9_]+");
+        Pattern pattern = Pattern.compile("[A-Za-z0-9_]+");
+        boolean valid = (Pass != null) && pattern.matcher(Pass).matches();
+        return valid;
+    }
+    private boolean checkPhone() {
+        String number = this.txtPhoneNumber.getText(); // lay user name
+        //boolean valid = (username != null) && username.matches("[A-Za-z0-9_]+");
+        Pattern pattern = Pattern.compile("^[0-9\\-\\+]{10,15}$");
+        boolean valid = (number != null) && pattern.matcher(number).matches();
+        return valid;
+    }
+    private boolean checkFullName() {
+        String FullName = this.txtFullname.getText(); // lay user name
+        //boolean valid = (username != null) && username.matches("[A-Za-z0-9_]+");
+        Pattern pattern = Pattern.compile("^[a-zA-Z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶ" +
+            "ẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợ" +
+            "ụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s]+$");
+        boolean valid = (FullName != null) && pattern.matcher(FullName).matches();
+        return valid;
+    }
 }

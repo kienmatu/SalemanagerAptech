@@ -18,6 +18,6 @@ public class LoginUser {
     public static Employee User;
     public static DashBoard Main;
     public static EmployeeFrm Employee;
-    public static OrderFrm Order;
+    //public static OrderFrm Order;
              
 }

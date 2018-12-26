@@ -436,7 +436,6 @@ public class OrderFrm extends javax.swing.JFrame implements ActionListener {
         newBill n = new newBill();
         this.setVisible(false);
         n.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
         n.setVisible(true);
     }//GEN-LAST:event_jButton2MouseClicked
 
