@@ -115,8 +115,6 @@ public class DashBoard extends javax.swing.JFrame {
         btnChangeProfile.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/man (1).png"))); // NOI18N
         btnChangeProfile.setText("Chane profile infomation");
         btnChangeProfile.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        btnChangeProfile.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/image/user.png"))); // NOI18N
-        btnChangeProfile.setRolloverSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/image/user.png"))); // NOI18N
         btnChangeProfile.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnChangeProfileMouseClicked(evt);
