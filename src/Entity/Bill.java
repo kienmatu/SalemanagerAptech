@@ -5,15 +5,15 @@
  */
 package Entity;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -23,7 +23,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -40,25 +39,23 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Bill.findByBilldate", query = "SELECT b FROM Bill b WHERE b.billdate = :billdate")})
 public class Bill implements Serializable {
 
-    @Transient
-    private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
-
-    private static final long serialVersionUID = 1L;
-    @Id
-    @Basic(optional = false)
-    @Column(name = "BILLID")
-    private Integer billid;
-    @Column(name = "BILLDATE")
-    @Temporal(TemporalType.DATE)
-    private Date billdate;
     @JoinColumn(name = "CUSTID", referencedColumnName = "CUSTID")
     @ManyToOne
     private Customer custid;
     @JoinColumn(name = "USERNAME", referencedColumnName = "USERNAME")
     @ManyToOne
     private Employee username;
+    private static final long serialVersionUID = 1L;
+    @Id
+    @Basic(optional = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "BILLID")
+    private Integer billid;
+    @Column(name = "BILLDATE")
+    @Temporal(TemporalType.DATE)
+    private Date billdate;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "bill")
-    private Collection<Billdetail> billdetailCollection;
+    private List<Billdetail> billdetailList;
 
     public Bill() {
     }
@@ -72,9 +69,7 @@ public class Bill implements Serializable {
     }
 
     public void setBillid(Integer billid) {
-        Integer oldBillid = this.billid;
         this.billid = billid;
-        changeSupport.firePropertyChange("billid", oldBillid, billid);
     }
 
     public Date getBilldate() {
@@ -82,38 +77,16 @@ public class Bill implements Serializable {
     }
 
     public void setBilldate(Date billdate) {
-        Date oldBilldate = this.billdate;
         this.billdate = billdate;
-        changeSupport.firePropertyChange("billdate", oldBilldate, billdate);
-    }
-
-    public Customer getCustid() {
-        return custid;
-    }
-
-    public void setCustid(Customer custid) {
-        Customer oldCustid = this.custid;
-        this.custid = custid;
-        changeSupport.firePropertyChange("custid", oldCustid, custid);
-    }
-
-    public Employee getUsername() {
-        return username;
-    }
-
-    public void setUsername(Employee username) {
-        Employee oldUsername = this.username;
-        this.username = username;
-        changeSupport.firePropertyChange("username", oldUsername, username);
     }
 
     @XmlTransient
-    public Collection<Billdetail> getBilldetailCollection() {
-        return billdetailCollection;
+    public List<Billdetail> getBilldetailList() {
+        return billdetailList;
     }
 
-    public void setBilldetailCollection(Collection<Billdetail> billdetailCollection) {
-        this.billdetailCollection = billdetailCollection;
+    public void setBilldetailList(List<Billdetail> billdetailList) {
+        this.billdetailList = billdetailList;
     }
 
     @Override
@@ -141,12 +114,20 @@ public class Bill implements Serializable {
         return "Entity.Bill[ billid=" + billid + " ]";
     }
 
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        changeSupport.addPropertyChangeListener(listener);
+    public Customer getCustid() {
+        return custid;
     }
 
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        changeSupport.removePropertyChangeListener(listener);
+    public void setCustid(Customer custid) {
+        this.custid = custid;
     }
-    
+
+    public Employee getUsername() {
+        return username;
+    }
+
+    public void setUsername(Employee username) {
+        this.username = username;
+    }
+
 }

@@ -10,6 +10,7 @@ import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -21,12 +22,16 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.NamedStoredProcedureQueries;
+import javax.persistence.NamedStoredProcedureQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SqlResultSetMapping;
+import javax.persistence.StoredProcedureParameter;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import org.eclipse.persistence.annotations.Direction;
 
 /**
  *
@@ -47,21 +52,31 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Product.findByDetails", query = "SELECT p FROM Product p WHERE p.details = :details")
     , @NamedQuery(name = "Product.findByCategoryid", query = "SELECT p FROM Product p WHERE p.categoryid = :categoryid")
 })
-
-//String productname, String unit, Integer billamount, float price, String productcode
-//    @SqlResultSetMapping(name="ProductViewModelMapping",classes = {
-//     @ConstructorResult(targetClass = CustomProductViewModel.class,
-//       columns = {@ColumnResult(name="PRODUCTNAME"), @ColumnResult(name="UNIT"),
-//           @ColumnResult(name="AMOUNT"), @ColumnResult(name="PRICE"), @ColumnResult(name="PRODUCTCODE")}
-//     )}
-//)
+@NamedStoredProcedureQueries({
+    @NamedStoredProcedureQuery(name = "getProductSelected", procedureName = "getProductSelected", resultClasses = Product.class,
+            parameters = {
+                @StoredProcedureParameter(name = "product_id", type = String.class)
+            })
+    ,
+    @NamedStoredProcedureQuery(name = "GetDashBoardData", procedureName = "GetDashBoardData", resultClasses = Product.class,
+            parameters = {
+                @StoredProcedureParameter(name = "startdate", type = Date.class)
+                ,
+                @StoredProcedureParameter(name = "enddate", type = Date.class)
+            })
+})
 public class Product implements Serializable {
+
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Column(name = "PRICE")
+    private float price;
 
     @Transient
     private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @Basic(optional = false)
     @Column(name = "PRODUCTID")
@@ -74,9 +89,6 @@ public class Product implements Serializable {
     private Integer amount;
     @Column(name = "COMPANY")
     private String company;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-    @Column(name = "PRICE")
-    private float price;
     @Column(name = "PRODUCTCODE")
     private String productcode;
     @Column(name = "DETAILS")
@@ -143,16 +155,6 @@ public class Product implements Serializable {
         String oldCompany = this.company;
         this.company = company;
         changeSupport.firePropertyChange("company", oldCompany, company);
-    }
-
-    public float getPrice() {
-        return price;
-    }
-
-    public void setPrice(float price) {
-        float oldPrice = this.price;
-        this.price = price;
-        changeSupport.firePropertyChange("price", oldPrice, price);
     }
 
     public String getProductcode() {
@@ -226,5 +228,13 @@ public class Product implements Serializable {
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         changeSupport.removePropertyChangeListener(listener);
     }
-    
+
+    public float getPrice() {
+        return price;
+    }
+
+    public void setPrice(float price) {
+        this.price = price;
+    }
+
 }
