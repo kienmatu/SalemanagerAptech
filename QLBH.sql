@@ -1,0 +1,169 @@
+﻿----CREATE DATABASE SALE
+----USE SALE
+----GO
+------DROP DATABASE SALE
+---- KHACHANG
+----DROP TABLE EMPLOYEE
+----DROP TABLE CUSTOMER
+CREATE TABLE COMPANYINFO(
+COMPANYNAME nvarchar(300) PRIMARY KEY,
+COMPANYADDRESS nvarchar(400),
+COMPANYPHONE varchar(20),
+CONCURENCY nvarchar(10),
+
+)
+CREATE TABLE CUSTOMER(
+	CUSTID	int identity(1,1) PRIMARY KEY not null,	
+	CUSTNAME	nvarchar(40) NOT NULL,
+	CUSTADDRESS	nvarchar(50),
+	CUSTPHONE	varchar(20),
+	CUSTDOB	date, -- ngày sinh
+	CUSTREGDATE	date, -- ngày đăng ký
+)
+INSERT INTO CUSTOMER VALUES('NGUYEN HUNG DUNG','87 MINH KHAI TP VINH','+8573648373','10/20/1999','10/10/2018')
+INSERT INTO CUSTOMER VALUES('NGUYEN VAN DUNG','87 MINH KHAI TP VINH','+8573648373','10/20/1999','10/10/2018')
+INSERT INTO CUSTOMER VALUES('LE DUC HUY','87 MINH KHAI TP VINH','+8573648373','10/20/1999','10/10/2018')
+INSERT INTO CUSTOMER VALUES('HA DUC CHINH','87 MINH KHAI TP VINH','+8573648373','10/20/1999','10/10/2018')
+INSERT INTO CUSTOMER VALUES('DANG VAN LAM','87 MINH KHAI TP VINH','+8573648373','10/20/1999','10/10/2018')
+-----------------------------------------------
+-- NHANVIEN
+CREATE TABLE EMPLOYEE(
+    --EMPID	int identity(1,1) PRIMARY KEY not null,	
+	USERNAME varchar(10) not null primary key,
+	PASS varchar(30) not null,
+	ISADMIN int, -- 1 là admin, 0 hoặc null là employee
+	EMPNAME	nvarchar(40) NOT NULL,
+	EMPPHONE	nvarchar(20),
+	EMPSTARTDATE	date	
+)
+INSERT INTO EMPLOYEE VALUES('admin','aptech123',1,'admin name2','+84368273672','12/12/2018')
+INSERT INTO EMPLOYEE VALUES('kiendt','aptech123',0,'Dinh Trung Kien','+84368273672','12/12/2018')
+INSERT INTO EMPLOYEE VALUES('hungdt','aptech123',0,'Duong Thanh Hung','+8436845653','12/12/2018')
+INSERT INTO EMPLOYEE VALUES('datdq','aptech123',0,'Dat Quoc Dang','+84368245672','12/12/2018')
+INSERT INTO EMPLOYEE VALUES('tanbh','aptech123',0,'Tan Bui Huu','+843682745544','12/12/2018')
+INSERT INTO EMPLOYEE VALUES('xayasin','aptech123',0,'Phonnasane Xayasin','+84458273442','12/12/2018')
+-------CATEGORY-----------
+CREATE TABLE CATEGORY(
+CATEGORYID int identity(1,1) primary key,
+CATEGORYNAME nvarchar(4000),
+)
+------
+INSERT INTO CATEGORY VALUES('SMART PHONE')
+INSERT INTO CATEGORY  VALUES('LAPTOP')
+INSERT INTO CATEGORY  VALUES('ACCESSORIES')
+-----------------------------------------------
+-- SANPHAM
+CREATE TABLE PRODUCT(
+	PRODUCTID int identity(1,1) PRIMARY KEY not null,
+	PRODUCTNAME	nvarchar(40),
+	UNIT	nvarchar(20),
+	AMOUNT int, -- tồn kho
+	COMPANY	varchar(40),
+	PRICE	money,
+	PRODUCTCODE varchar(30),
+	[CATEGORYID] int foreign key references CATEGORY(CATEGORYID),
+	DETAILS ntext,
+	[STATUS] bit,
+)
+---
+--ALTER TABLE PRODUCT ADD  DETAILS ntext
+--ALTER TABLE PRODUCT ALTER column PRICE float
+INSERT INTO PRODUCT VALUES('GALAXY S10','PIECES',200,'SAMSUNG INC',1000,'SMART01',1,N'ĐIỆN THOẠI SAMSUNG GALAXY S10',1)
+INSERT INTO PRODUCT VALUES('GALAXY S9','PIECES',200,'SAMSUNG INC',1000,'SMART02',1,N'ĐIỆN THOẠI SAMSUNG GALAXY S9',1)
+INSERT INTO PRODUCT VALUES('GALAXY S8','PIECES',200,'SAMSUNG INC',1000,'SMART03',1,N'ĐIỆN THOẠI SAMSUNG GALAXY S8',1)
+INSERT INTO PRODUCT VALUES('IPHONE XS MAX','PIECES',200,'APPLE INC',1000,'SMART04',1,N'ĐIỆN THOẠI APPLE IPHONE XS MAX',1)
+INSERT INTO PRODUCT VALUES('IPHONE 7 PLUS','PIECES',200,'APPLE INC',1000,'SMART05',1,N'ĐIỆN THOẠI APPLE IPHONE 7 PLUS',1)
+INSERT INTO PRODUCT VALUES('IPHONE 8 PLUS','PIECES',200,'APPLE INC',1000,'SMART06',1,N'ĐIỆN THOẠI APPLE IPHONE 8 PLUS',1)
+--
+INSERT INTO PRODUCT VALUES('DELL PRECISION M4800','PIECES',200,'DELL INC',1000,'LAP01',2,N'LAPTOP DELL PRECISION M4800',1)
+INSERT INTO PRODUCT VALUES('DELL LATITUDE E6420','PIECES',200,'DELL INC',1000,'LAP02',2,N'LAPTOP DELL LATITUDE E6420',1)
+INSERT INTO PRODUCT VALUES('THINKPAD X1 EXTREME','PIECES',200,'LENOVO INC',1000,'LAP03',2,N'LAPTOP THINKPAD X1 EXTREME',1)
+INSERT INTO PRODUCT VALUES('THINKPAD T440S','PIECES',200,'LENOVO INC',1000,'LAP04',2,N'LAPTOP THINKPAD T440S',1)
+INSERT INTO PRODUCT VALUES('THINKPAD X240 GEN 4','PIECES',200,'LENOVO INC',1000,'LAP05',2,N'LAPTOP THINKPAD X240 GEN 4',1)
+-------------------------------------------
+ ----HOADON
+------------------CREATE TABLE BILL(
+------------------	BILLID	int identity(1,1) PRIMARY KEY not null,
+------------------	BILLDATE 	date,
+------------------	CUSTID INT,
+------------------	USERNAME 	varchar(10) foreign key  references EMPLOYEE(USERNAME),
+------------------	PRODUCT ntext,-- LIÊN KẾT TỚI INTERFACE PRODUCT TRONG ĐÓ, XÀI ARRAYLIST tostring.
+------------------	-- BAO GOM ID, SO LUONG, GIA TIEN,...
+------------------	----AMOUNT	money,
+------------------)
+---------------------- productid+"|"+productname+"|"+unit+"|"+amount+"|"+price
+------------------INSERT INTO BILL VALUES('10/12/2018',2,'kiendt','1|GALAXY S10|PIECES|1|1000')
+------------------INSERT INTO BILL VALUES('11/12/2018',2,'admin','2|GALAXY S9|PIECES|1|1000')
+------------------INSERT INTO BILL VALUES('12/12/2018',2,'admin','1|GALAXY S10|PIECES|1|1000,4|IPHONE XS MAX|PIECES|1|1000')
+--INSERT INTO BILL VALUES('09/12/2018',2,'admin','1|GALAXY S10|PIECES|1|1000')
+CREATE TABLE BILL(
+	BILLID	int identity(1,1) PRIMARY KEY not null,
+	BILLDATE 	date,
+	CUSTID INT,
+	USERNAME 	varchar(10) foreign key  references EMPLOYEE(USERNAME),
+	----BILLDETAILID INT foreign key references BILLDETAIL(BILLDETAILID),
+	)
+CREATE TABLE BILLDETAIL(
+BILLID INT  foreign key references BILL(BILLID),
+PRODUCTID int foreign key references PRODUCT(PRODUCTID),
+AMOUNT INT,
+constraint pk_billdetail primary key(BILLID,PRODUCTID)
+
+)
+
+ALTER TABLE BILL ADD CONSTRAINT BILLFK FOREIGN KEY(CUSTID) REFERENCES CUSTOMER(CUSTID)
+INSERT INTO COMPANYINFO VALUES('ABC MOBILE', '87 MINH KHAI ST, VINH, NGHE AN ','+84736736383','USD')
+---- 
+--DEMO DATA
+INSERT INTO BILL VALUES ('12/12/2018',1,'admin')
+
+INSERT INTO BILLDETAIL VALUES(1,3,1)
+INSERT INTO BILLDETAIL VALUES(1,1,1)
+-----------
+
+
+------------------------------
+SELECT b.PRODUCTID, b.PRODUCTNAME,b.PRODUCTCODE,b.PRICE,b.UNIT, a.AMOUNT
+ FROM BILLDETAIL a INNER JOIN PRODUCT b ON a.PRODUCTID = b.PRODUCTID 
+ WHERE a.BILLID = 1
+ -------------
+ GO
+ CREATE PROCEDURE [getProductSelected]
+    @product_id [nvarchar](max)
+AS
+BEGIN
+  DECLARE @xml AS       XML,
+    @delimiter AS char(1);
+   SET @delimiter = ',';
+  SET @xml = CAST('<X>' + REPLACE(@product_id, @delimiter, '</X><X>') + '</X>' AS XML);
+  SELECT * FROM PRODUCT WHERE PRODUCTID IN
+   ( SELECT N.value('.', 'varchar(10)') as value FROM @xml.nodes('X') as T(N))
+	
+	END
+	--------
+	-- DASHBOARD
+	GO
+
+CREATE PROCEDURE dbo.GetDashBoardData
+@startdate date,
+@enddate date
+AS
+BEGIN
+Select DISTINCT  top 10 p.PRODUCTID,MAX(p.PRODUCTNAME) as 'PRODUCTNAME' ,SUM(bt.AMOUNT) as 'AMOUNT'
+FROM PRODUCT p
+JOIN BILLDETAIL bt on p.PRODUCTID = bt.PRODUCTID
+JOIN BILL b on b.BILLID = bt.BILLID
+where
+(IsNull(@startdate, '') = '' and IsNull(@enddate, '') = '' or  ( IsNull(@startdate, '') <> '' and  IsNull(@enddate, '') <> '' and b.BILLDATE >= cast (@startdate as Date) and  b.BILLDATE <= cast (@enddate as Date))
+    	     			or  ((IsNull(@startdate, '') <> '' and IsNull(@enddate, '') = '' and  b.BILLDATE = cast (@startdate as Date))) 
+    	     			or  ((IsNull(@enddate, '') <> '' and IsNull(@startdate, '') = '' and  b.BILLDATE = cast (@enddate as Date))
+    	     		))
+					GROUP BY p.PRODUCTID--,p.PRODUCTNAME,bt.AMOUNT
+					ORDER BY AMOUNT DESC
+END
+GO
+--ALTER TABLE PRODUCT
+--ADD [STATUS] BIT
+
+SELECT p.* FROM Product p where p.[status] = 1
+SELECT p.* FROM Product p
