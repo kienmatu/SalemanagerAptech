@@ -6,29 +6,17 @@
 package MainForm;
 
 import Entity.Bill;
-import Entity.Billdetail;
-import Entity.BilldetailPK;
-import Entity.Employee;
 import Entity.Product;
-import java.awt.Color;
-import java.awt.TrayIcon;
-import java.awt.TrayIcon.MessageType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Vector;
-import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
@@ -37,15 +25,16 @@ import javax.swing.JPopupMenu;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+import org.eclipse.persistence.config.QueryHints;
 
 /**
  *
  * @author KIENDINH
  */
-public class OrderFrm extends javax.swing.JFrame implements ActionListener {
+public class OrderFrm extends javax.swing.JFrame implements ActionListener,entity {
 
-    private final static String unitName = "SaleManagerProjectPU";
-    private static final EntityManager entityManager = Persistence.createEntityManagerFactory(unitName).createEntityManager();
+//    private final static String unitName = "SaleManagerProjectPU";
+//    private static final EntityManager entityManager = Persistence.createEntityManagerFactory(unitName).createEntityManager();
     JPopupMenu popupMenu = new JPopupMenu();
     JMenuItem menuItemDelete = new JMenuItem("Delete This");
 
@@ -398,7 +387,7 @@ public class OrderFrm extends javax.swing.JFrame implements ActionListener {
         try {
 
             //String sql2 = "SELECT * FROM Customer where custid = '" + custid + "' ";
-            Query query = entityManager.createNamedQuery("Customer.findByCustid");
+            Query query = entityManager.createNamedQuery("Customer.findByCustid").setHint(QueryHints.REFRESH, true);
             query.setParameter("custid", Integer.parseInt(custid));
             Entity.Customer c = (Entity.Customer) query.getSingleResult();
             entityManager.clear();
@@ -445,7 +434,7 @@ public class OrderFrm extends javax.swing.JFrame implements ActionListener {
         String[] param = id.split("\\.");
         String pa = param[0];
         billQuery = java.beans.Beans.isDesignTime() ? null
-                : SaleManagerProjectPUEntityManager.createNativeQuery("SELECT * FROM BILL WHERE username = ?", Bill.class);
+                : SaleManagerProjectPUEntityManager.createNativeQuery("SELECT * FROM BILL WHERE username = ?", Bill.class).setHint(QueryHints.REFRESH, true);
         billQuery.setParameter(1, pa);
         billList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : billQuery.getResultList();
         setDataBill(billList);

@@ -6,19 +6,12 @@
 package MainForm;
 
 import Entity.Bill;
-import Entity.Billdetail;
-import Entity.BilldetailPK;
 import Entity.Employee;
 import Entity.Product;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -27,7 +20,6 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.swing.DefaultCellEditor;
-import javax.swing.JComboBox;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
@@ -36,15 +28,16 @@ import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
+import org.eclipse.persistence.config.QueryHints;
 
 /**
  *
  * @author KIENDINH
  */
-public class newBill extends javax.swing.JFrame implements ActionListener {
-
-    private final static String unitName = "SaleManagerProjectPU";
-    private static final EntityManager entityManager = Persistence.createEntityManagerFactory(unitName).createEntityManager();
+public class newBill extends javax.swing.JFrame implements ActionListener,entity {
+//
+//    private final static String unitName = "SaleManagerProjectPU";
+//    private static final EntityManager entityManager = Persistence.createEntityManagerFactory(unitName).createEntityManager();
     JPopupMenu popupMenu = new JPopupMenu();
     JPopupMenu popupSelect = new JPopupMenu();
     JPopupMenu popupCustomer = new JPopupMenu();
@@ -83,32 +76,33 @@ public class newBill extends javax.swing.JFrame implements ActionListener {
     }
 
     private void loadProduct() {
-//        Query q = entityManager.createNativeQuery("SELECT * FROM PRODUCT", Product.class);//.createNamedQuery("Product.findAll");
-//        List<Product> lst = (List<Product>) q.getResultList();
-        try {
-            String sql = "SELECT PRODUCTID,PRODUCTCODE,PRODUCTNAME,UNIT,PRICE,COMPANY,AMOUNT FROM PRODUCT";
-            Connection con = DriverManager.getConnection("jdbc:sqlserver://localhost;databaseName=SALE", "sa", "123456");
-            Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-
-            String[] header = new String[]{"ID", "Product Code", "Name", "UNIT", "Price", "Company", "Amount"};
-            DefaultTableModel dataModel = new DefaultTableModel(header, 0);
-            while (rs.next()) {
-                Object[] columns = new Object[]{rs.getInt(1),
-                    rs.getString(2),
-                    rs.getString(3),
-                    rs.getString(4),
-                    rs.getFloat(5),
-                    rs.getString(6),
-                    rs.getInt(7)
-                };
-                dataModel.addRow(columns);
-            }
-
-            this.tblOrder.setModel(dataModel);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Query q = entityManager.createNamedQuery("Product.findAll").setHint(QueryHints.REFRESH, true);
+        List<Product> lst = (List<Product>) q.getResultList();
+        setDataProduct(lst);
+//        try {
+//            String sql = "SELECT PRODUCTID,PRODUCTCODE,PRODUCTNAME,UNIT,PRICE,COMPANY,AMOUNT FROM PRODUCT";
+//            Connection con = DriverManager.getConnection("jdbc:sqlserver://localhost;databaseName=SALE", "sa", "123456");
+//            Statement stmt = con.createStatement();
+//            ResultSet rs = stmt.executeQuery(sql);
+//
+//            String[] header = new String[]{"ID", "Product Code", "Name", "UNIT", "Price", "Company", "Amount"};
+//            DefaultTableModel dataModel = new DefaultTableModel(header, 0);
+//            while (rs.next()) {
+//                Object[] columns = new Object[]{rs.getInt(1),
+//                    rs.getString(2),
+//                    rs.getString(3),
+//                    rs.getString(4),
+//                    rs.getFloat(5),
+//                    rs.getString(6),
+//                    rs.getInt(7)
+//                };
+//                dataModel.addRow(columns);
+//            }
+//
+//            this.tblOrder.setModel(dataModel);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     /**
@@ -511,62 +505,60 @@ public class newBill extends javax.swing.JFrame implements ActionListener {
         String id = cbbCategory.getSelectedItem().toString();
         String[] param = id.split("\\.");
         int pa = Integer.parseInt(param[0]);
-        //Query prQuery;
+        Query prQuery;
 
         List<Product> list;
         try {
-            Connection con = DriverManager.getConnection("jdbc:sqlserver://localhost;databaseName=SALE", "sa", "123456");
+            //Connection con = DriverManager.getConnection("jdbc:sqlserver://localhost;databaseName=SALE", "sa", "123456");
             if (txtName.getText() == null || "".equals(txtName.getText())) {
-                String sql = "SELECT PRODUCTID,PRODUCTCODE,PRODUCTNAME,UNIT,PRICE,COMPANY,AMOUNT FROM PRODUCT WHERE Product.categoryid = '" + pa + "'";
-                Statement stmt = con.createStatement();
-                ResultSet rs = stmt.executeQuery(sql);
-                String[] header = new String[]{"ID", "Product Code", "Name", "UNIT", "Price", "Company", "Amount"};
-                DefaultTableModel dataModel = new DefaultTableModel(header, 0);
-                while (rs.next()) {
-                    Object[] columns = new Object[]{rs.getInt(1),
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getString(4),
-                        rs.getFloat(5),
-                        rs.getString(6),
-                        rs.getInt(7)
-                    };
-                    dataModel.addRow(columns);
-                }
+//                String sql = "SELECT PRODUCTID,PRODUCTCODE,PRODUCTNAME,UNIT,PRICE,COMPANY,AMOUNT FROM PRODUCT WHERE Product.categoryid = '" + pa + "'";
+//                Statement stmt = con.createStatement();
+//                ResultSet rs = stmt.executeQuery(sql);
+//                String[] header = new String[]{"ID", "Product Code", "Name", "UNIT", "Price", "Company", "Amount"};
+//                DefaultTableModel dataModel = new DefaultTableModel(header, 0);
+//                while (rs.next()) {
+//                    Object[] columns = new Object[]{rs.getInt(1),
+//                        rs.getString(2),
+//                        rs.getString(3),
+//                        rs.getString(4),
+//                        rs.getFloat(5),
+//                        rs.getString(6),
+//                        rs.getInt(7)
+//                    };
+//                    dataModel.addRow(columns);
+//                }
+//
+//                this.tblOrder.setModel(dataModel);
 
-                this.tblOrder.setModel(dataModel);
-
-//            prQuery = java.beans.Beans.isDesignTime() ? null
-//                    : entityManager.createNativeQuery("SELECT * FROM Product WHERE Product.categoryid = ?", Product.class);
-//            prQuery.setParameter(1, pa);
-//            list = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : prQuery.getResultList();
-//            setDataProduct(list);
+            prQuery =  entityManager.createNativeQuery("SELECT * FROM Product WHERE Product.categoryid = ? and Product.Status = 1", Product.class).setHint(QueryHints.REFRESH, true);
+            prQuery.setParameter(1, pa);
+            list = prQuery.getResultList();
+            setDataProduct(list);
             } else {
-                String sql = "SELECT PRODUCTID,PRODUCTCODE,PRODUCTNAME,UNIT,PRICE,COMPANY,AMOUNT FROM PRODUCT WHERE Product.categoryid = '" + pa + "' and and Product.PRODUCTNAME LIKE LOWER(?)";
-                PreparedStatement stmt = con.prepareStatement(sql);
-                stmt.setString(1, "%" + txtName.getText().toLowerCase() + "%");
-                ResultSet rs = stmt.executeQuery(sql);
-                String[] header = new String[]{"ID", "Product Code", "Name", "UNIT", "Price", "Company", "Amount"};
-                DefaultTableModel dataModel = new DefaultTableModel(header, 0);
-                while (rs.next()) {
-                    Object[] columns = new Object[]{rs.getInt(1),
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getString(4),
-                        rs.getFloat(5),
-                        rs.getString(6),
-                        rs.getInt(7)
-                    };
-                    dataModel.addRow(columns);
-                }
-
-                this.tblOrder.setModel(dataModel);
-//                prQuery = java.beans.Beans.isDesignTime() ? null
-//                        : entityManager.createNativeQuery("SELECT * FROM Product WHERE Product.categoryid = ? and Product.PRODUCTNAME LIKE LOWER(?)", Product.class);
-//                prQuery.setParameter(1, pa);
-//                prQuery.setParameter(2, "%" + txtName.getText().toLowerCase() + "%");
-//                list = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : prQuery.getResultList();
-//                setDataProduct(list);
+//                String sql = "SELECT PRODUCTID,PRODUCTCODE,PRODUCTNAME,UNIT,PRICE,COMPANY,AMOUNT FROM PRODUCT WHERE Product.categoryid = '" + pa + "' and and Product.PRODUCTNAME LIKE LOWER(?)";
+//                PreparedStatement stmt = con.prepareStatement(sql);
+//                stmt.setString(1, "%" + txtName.getText().toLowerCase() + "%");
+//                ResultSet rs = stmt.executeQuery(sql);
+//                String[] header = new String[]{"ID", "Product Code", "Name", "UNIT", "Price", "Company", "Amount"};
+//                DefaultTableModel dataModel = new DefaultTableModel(header, 0);
+//                while (rs.next()) {
+//                    Object[] columns = new Object[]{rs.getInt(1),
+//                        rs.getString(2),
+//                        rs.getString(3),
+//                        rs.getString(4),
+//                        rs.getFloat(5),
+//                        rs.getString(6),
+//                        rs.getInt(7)
+//                    };
+//                    dataModel.addRow(columns);
+//                }
+//
+//                this.tblOrder.setModel(dataModel);
+                prQuery = entityManager.createNativeQuery("SELECT * FROM Product WHERE Product.categoryid = ? and Product.PRODUCTNAME LIKE LOWER(?) and Product.Status = 1", Product.class).setHint(QueryHints.REFRESH, true);;
+                prQuery.setParameter(1, pa);
+                prQuery.setParameter(2, "%" + txtName.getText().toLowerCase() + "%");
+                list = prQuery.getResultList();
+                setDataProduct(list);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -726,7 +718,7 @@ public class newBill extends javax.swing.JFrame implements ActionListener {
         if (prod.size() > 0) {
 
             for (Product p : prod) {
-                String[] columns = new String[]{p.getProductid().toString(), p.getProductcode(), p.getProductname(), p.getUnit(), "" + p.getPrice(), p.getCompany()};
+                Object[] columns = new Object[]{p.getProductid(), p.getProductcode(), p.getProductname(), p.getUnit(), p.getPrice(), p.getCompany()};
                 dataModel.addRow(columns);
             }
         } else {
@@ -854,7 +846,7 @@ public class newBill extends javax.swing.JFrame implements ActionListener {
         TableModel model = tblOrder.getModel();
         int r = (tblOrder.getSelectedRow());
         Object[] row = new Object[]{model.getValueAt(r, 0), model.getValueAt(r, 1), model.getValueAt(r, 2), model.getValueAt(r, 4), 1};
-        int rowduplicate = checkRowExist(model, (int) row[0]);
+        int rowduplicate = checkRowExist(model, Integer.parseInt(row[0]+""));
         if (rowduplicate == -1) {
             ProductSelectedModel.addRow(row);
             tblProduct.setModel(ProductSelectedModel);
