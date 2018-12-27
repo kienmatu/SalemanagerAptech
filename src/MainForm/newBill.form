@@ -28,24 +28,6 @@
         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;Entity.Category&gt;"/>
       </AuxValues>
     </Component>
-    <Component class="javax.persistence.Query" name="productQuery">
-      <Properties>
-        <Property name="query" type="java.lang.String" value="SELECT p FROM Product p"/>
-        <Property name="entityManager" type="java.lang.Object" editor="org.netbeans.modules.form.j2ee.J2EEPropertyModifier$EMProperty$EntityManagerEditor">
-          <ComponentRef name="SaleManagerProjectPUEntityManager"/>
-        </Property>
-      </Properties>
-    </Component>
-    <Component class="java.util.List" name="productList">
-      <Properties>
-        <Property name="query" type="java.lang.Object" editor="org.netbeans.modules.form.j2ee.J2EEPropertyModifier$QueryBeanProperty$QueryEditor">
-          <ComponentRef name="productQuery"/>
-        </Property>
-      </Properties>
-      <AuxValues>
-        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;Entity.Product&gt;"/>
-      </AuxValues>
-    </Component>
     <Component class="javax.persistence.Query" name="customerQuery">
       <Properties>
         <Property name="query" type="java.lang.String" value="SELECT c FROM Customer c"/>
@@ -143,7 +125,7 @@
                                       <Group type="102" attributes="0">
                                           <Component id="txtName" min="-2" pref="196" max="-2" attributes="0"/>
                                           <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
-                                          <Component id="btnSearch" min="-2" pref="97" max="-2" attributes="0"/>
+                                          <Component id="btnSearch" min="-2" pref="117" max="-2" attributes="0"/>
                                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                       </Group>
                                   </Group>
@@ -274,37 +256,37 @@
                 <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor" postCode="this.tblOrder.setComponentPopupMenu(popupMenu);">
                   <TableColumnModel selectionModel="0">
                     <Column maxWidth="50" minWidth="10" prefWidth="50" resizable="true">
-                      <Title/>
+                      <Title value="ID"/>
                       <Editor/>
                       <Renderer/>
                     </Column>
                     <Column maxWidth="100" minWidth="30" prefWidth="100" resizable="true">
-                      <Title/>
+                      <Title value="CODE"/>
                       <Editor/>
                       <Renderer/>
                     </Column>
                     <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                      <Title/>
+                      <Title value="NAME"/>
                       <Editor/>
                       <Renderer/>
                     </Column>
                     <Column maxWidth="70" minWidth="30" prefWidth="70" resizable="true">
-                      <Title/>
+                      <Title value="Unit"/>
                       <Editor/>
                       <Renderer/>
                     </Column>
                     <Column maxWidth="80" minWidth="40" prefWidth="70" resizable="true">
-                      <Title/>
+                      <Title value="Price"/>
                       <Editor/>
                       <Renderer/>
                     </Column>
                     <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                      <Title/>
+                      <Title value="Company"/>
                       <Editor/>
                       <Renderer/>
                     </Column>
                     <Column maxWidth="70" minWidth="30" prefWidth="70" resizable="true">
-                      <Title/>
+                      <Title value="Amount"/>
                       <Editor/>
                       <Renderer/>
                     </Column>
@@ -321,38 +303,6 @@
                   <TableHeader reorderingAllowed="false" resizingAllowed="true"/>
                 </Property>
               </Properties>
-              <BindingProperties>
-                <BindingProperty name="elements" source="productList" target="tblOrder" targetPath="elements" updateStrategy="0" immediately="true">
-                  <Subbinding sourcePath="${productid}">
-                    <BindingParameter name="NAME" value="ID"/>
-                    <BindingParameter name="javax.swing.binding.ParameterKeys.COLUMN_CLASS" value="Integer.class"/>
-                  </Subbinding>
-                  <Subbinding sourcePath="${productcode}">
-                    <BindingParameter name="NAME" value="CODE"/>
-                    <BindingParameter name="javax.swing.binding.ParameterKeys.COLUMN_CLASS" value="String.class"/>
-                  </Subbinding>
-                  <Subbinding sourcePath="${productname}">
-                    <BindingParameter name="NAME" value="NAME"/>
-                    <BindingParameter name="javax.swing.binding.ParameterKeys.COLUMN_CLASS" value="String.class"/>
-                  </Subbinding>
-                  <Subbinding sourcePath="${unit}">
-                    <BindingParameter name="NAME" value="Unit"/>
-                    <BindingParameter name="javax.swing.binding.ParameterKeys.COLUMN_CLASS" value="String.class"/>
-                  </Subbinding>
-                  <Subbinding sourcePath="${price}">
-                    <BindingParameter name="NAME" value="Price"/>
-                    <BindingParameter name="javax.swing.binding.ParameterKeys.COLUMN_CLASS" value="Float.class"/>
-                  </Subbinding>
-                  <Subbinding sourcePath="${company}">
-                    <BindingParameter name="NAME" value="Company"/>
-                    <BindingParameter name="javax.swing.binding.ParameterKeys.COLUMN_CLASS" value="String.class"/>
-                  </Subbinding>
-                  <Subbinding sourcePath="${amount}">
-                    <BindingParameter name="NAME" value="Amount"/>
-                    <BindingParameter name="javax.swing.binding.ParameterKeys.COLUMN_CLASS" value="Integer.class"/>
-                  </Subbinding>
-                </BindingProperty>
-              </BindingProperties>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JTable() {&#xa;    public boolean isCellEditable(int row, int column) {&#xa;        return false;&#xa;    };&#xa;}"/>
               </AuxValues>
@@ -402,10 +352,14 @@
         </Container>
         <Component class="javax.swing.JButton" name="btnSubmit">
           <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/image/point-of-service.png"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Submit"/>
           </Properties>
           <Events>
             <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnSubmitMouseClicked"/>
+            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnSubmitMouseEntered"/>
           </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnPrint">
@@ -489,6 +443,9 @@
         </Component>
         <Component class="javax.swing.JButton" name="btnSearch">
           <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/image/search.png"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="SEARCH"/>
           </Properties>
           <Events>
@@ -575,6 +532,9 @@
         </Component>
         <Component class="javax.swing.JButton" name="btnSearchCust">
           <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/image/search.png"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="SEARCH"/>
           </Properties>
           <Events>

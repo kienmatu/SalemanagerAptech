@@ -6,8 +6,6 @@
 package MainForm;
 
 import Entity.Bill;
-import Entity.Billdetail;
-import Entity.BilldetailPK;
 import Entity.Employee;
 import Entity.Product;
 import java.awt.event.ActionEvent;
@@ -22,7 +20,6 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.swing.DefaultCellEditor;
-import javax.swing.JComboBox;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
@@ -31,14 +28,16 @@ import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
+import org.eclipse.persistence.config.QueryHints;
+
 /**
  *
  * @author KIENDINH
  */
-public class newBill extends javax.swing.JFrame implements ActionListener {
-
-    private final static String unitName = "SaleManagerProjectPU";
-    private static final EntityManager entityManager = Persistence.createEntityManagerFactory(unitName).createEntityManager();
+public class newBill extends javax.swing.JFrame implements ActionListener,entity {
+//
+//    private final static String unitName = "SaleManagerProjectPU";
+//    private static final EntityManager entityManager = Persistence.createEntityManagerFactory(unitName).createEntityManager();
     JPopupMenu popupMenu = new JPopupMenu();
     JPopupMenu popupSelect = new JPopupMenu();
     JPopupMenu popupCustomer = new JPopupMenu();
@@ -55,6 +54,7 @@ public class newBill extends javax.swing.JFrame implements ActionListener {
      */
     public newBill() {
         initComponents();
+        loadProduct();
         this.setLocationRelativeTo(null);
         // <editor-fold defaultstate="collapsed" desc="POPUP-ITEM">   
         popupMenu.add(menuItemAdd);
@@ -75,6 +75,36 @@ public class newBill extends javax.swing.JFrame implements ActionListener {
 
     }
 
+    private void loadProduct() {
+        Query q = entityManager.createNamedQuery("Product.findAll").setHint(QueryHints.REFRESH, true);
+        List<Product> lst = (List<Product>) q.getResultList();
+        setDataProduct(lst);
+//        try {
+//            String sql = "SELECT PRODUCTID,PRODUCTCODE,PRODUCTNAME,UNIT,PRICE,COMPANY,AMOUNT FROM PRODUCT";
+//            Connection con = DriverManager.getConnection("jdbc:sqlserver://localhost;databaseName=SALE", "sa", "123456");
+//            Statement stmt = con.createStatement();
+//            ResultSet rs = stmt.executeQuery(sql);
+//
+//            String[] header = new String[]{"ID", "Product Code", "Name", "UNIT", "Price", "Company", "Amount"};
+//            DefaultTableModel dataModel = new DefaultTableModel(header, 0);
+//            while (rs.next()) {
+//                Object[] columns = new Object[]{rs.getInt(1),
+//                    rs.getString(2),
+//                    rs.getString(3),
+//                    rs.getString(4),
+//                    rs.getFloat(5),
+//                    rs.getString(6),
+//                    rs.getInt(7)
+//                };
+//                dataModel.addRow(columns);
+//            }
+//
+//            this.tblOrder.setModel(dataModel);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -88,8 +118,6 @@ public class newBill extends javax.swing.JFrame implements ActionListener {
         SaleManagerProjectPUEntityManager = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("SaleManagerProjectPU").createEntityManager();
         categoryQuery = java.beans.Beans.isDesignTime() ? null : SaleManagerProjectPUEntityManager.createQuery("SELECT c FROM Category c");
         categoryList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : categoryQuery.getResultList();
-        productQuery = java.beans.Beans.isDesignTime() ? null : SaleManagerProjectPUEntityManager.createQuery("SELECT p FROM Product p");
-        productList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : productQuery.getResultList();
         customerQuery = java.beans.Beans.isDesignTime() ? null : SaleManagerProjectPUEntityManager.createQuery("SELECT c FROM Customer c");
         customerList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : customerQuery.getResultList();
         jPanel1 = new javax.swing.JPanel();
@@ -151,48 +179,30 @@ public class newBill extends javax.swing.JFrame implements ActionListener {
         tblOrder.setShowHorizontalLines(false);
         tblOrder.setShowVerticalLines(false);
         tblOrder.getTableHeader().setReorderingAllowed(false);
-
-        org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, productList, tblOrder);
-        org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${productid}"));
-        columnBinding.setColumnName("ID");
-        columnBinding.setColumnClass(Integer.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${productcode}"));
-        columnBinding.setColumnName("CODE");
-        columnBinding.setColumnClass(String.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${productname}"));
-        columnBinding.setColumnName("NAME");
-        columnBinding.setColumnClass(String.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${unit}"));
-        columnBinding.setColumnName("Unit");
-        columnBinding.setColumnClass(String.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${price}"));
-        columnBinding.setColumnName("Price");
-        columnBinding.setColumnClass(Float.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${company}"));
-        columnBinding.setColumnName("Company");
-        columnBinding.setColumnClass(String.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${amount}"));
-        columnBinding.setColumnName("Amount");
-        columnBinding.setColumnClass(Integer.class);
-        bindingGroup.addBinding(jTableBinding);
-        jTableBinding.bind();
         jScrollOrder.setViewportView(tblOrder);
         if (tblOrder.getColumnModel().getColumnCount() > 0) {
             tblOrder.getColumnModel().getColumn(0).setMinWidth(10);
             tblOrder.getColumnModel().getColumn(0).setPreferredWidth(50);
             tblOrder.getColumnModel().getColumn(0).setMaxWidth(50);
+            tblOrder.getColumnModel().getColumn(0).setHeaderValue("ID");
             tblOrder.getColumnModel().getColumn(1).setMinWidth(30);
             tblOrder.getColumnModel().getColumn(1).setPreferredWidth(100);
             tblOrder.getColumnModel().getColumn(1).setMaxWidth(100);
+            tblOrder.getColumnModel().getColumn(1).setHeaderValue("CODE");
+            tblOrder.getColumnModel().getColumn(2).setHeaderValue("NAME");
             tblOrder.getColumnModel().getColumn(3).setMinWidth(30);
             tblOrder.getColumnModel().getColumn(3).setPreferredWidth(70);
             tblOrder.getColumnModel().getColumn(3).setMaxWidth(70);
+            tblOrder.getColumnModel().getColumn(3).setHeaderValue("Unit");
             tblOrder.getColumnModel().getColumn(4).setMinWidth(40);
             tblOrder.getColumnModel().getColumn(4).setPreferredWidth(70);
             tblOrder.getColumnModel().getColumn(4).setMaxWidth(80);
+            tblOrder.getColumnModel().getColumn(4).setHeaderValue("Price");
+            tblOrder.getColumnModel().getColumn(5).setHeaderValue("Company");
             tblOrder.getColumnModel().getColumn(6).setMinWidth(30);
             tblOrder.getColumnModel().getColumn(6).setPreferredWidth(70);
             tblOrder.getColumnModel().getColumn(6).setMaxWidth(70);
+            tblOrder.getColumnModel().getColumn(6).setHeaderValue("Amount");
         }
         this.tblOrder.setComponentPopupMenu(popupMenu);
 
@@ -237,10 +247,14 @@ public class newBill extends javax.swing.JFrame implements ActionListener {
 
         }
 
+        btnSubmit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/point-of-service.png"))); // NOI18N
         btnSubmit.setText("Submit");
         btnSubmit.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnSubmitMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnSubmitMouseEntered(evt);
             }
         });
 
@@ -272,6 +286,7 @@ public class newBill extends javax.swing.JFrame implements ActionListener {
 
         txtName.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
 
+        btnSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/search.png"))); // NOI18N
         btnSearch.setText("SEARCH");
         btnSearch.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -287,8 +302,8 @@ public class newBill extends javax.swing.JFrame implements ActionListener {
         tblCusttomer.setAutoResizeMode(javax.swing.JTable.WIDTH);
         tblCusttomer.getTableHeader().setReorderingAllowed(false);
 
-        jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, customerList, tblCusttomer);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${custid}"));
+        org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, customerList, tblCusttomer);
+        org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${custid}"));
         columnBinding.setColumnName("ID");
         columnBinding.setColumnClass(Integer.class);
         columnBinding.setEditable(false);
@@ -315,6 +330,7 @@ public class newBill extends javax.swing.JFrame implements ActionListener {
 
         txtCustName.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
 
+        btnSearchCust.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/search.png"))); // NOI18N
         btnSearchCust.setText("SEARCH");
         btnSearchCust.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -372,7 +388,7 @@ public class newBill extends javax.swing.JFrame implements ActionListener {
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(36, 36, 36)
-                                        .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(0, 0, Short.MAX_VALUE))))))
                     .addComponent(jScrollOrder, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -489,20 +505,63 @@ public class newBill extends javax.swing.JFrame implements ActionListener {
         String id = cbbCategory.getSelectedItem().toString();
         String[] param = id.split("\\.");
         int pa = Integer.parseInt(param[0]);
-        //        JOptionPane.showMessageDialog(null,id);
-        if (txtName.getText() == null || "".equals(txtName.getText())) {
-            productQuery = java.beans.Beans.isDesignTime() ? null
-                    : SaleManagerProjectPUEntityManager.createNativeQuery("SELECT * FROM Product WHERE Product.categoryid = ?", Product.class);
-            productQuery.setParameter(1, pa);
-            productList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : productQuery.getResultList();
-            setDataProduct(productList);
-        } else {
-            productQuery = java.beans.Beans.isDesignTime() ? null
-                    : SaleManagerProjectPUEntityManager.createNativeQuery("SELECT * FROM Product WHERE Product.categoryid = ? and Product.PRODUCTNAME LIKE LOWER(?)", Product.class);
-            productQuery.setParameter(1, pa);
-            productQuery.setParameter(2, "%" + txtName.getText().toLowerCase() + "%");
-            productList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : productQuery.getResultList();
-            setDataProduct(productList);
+        Query prQuery;
+
+        List<Product> list;
+        try {
+            //Connection con = DriverManager.getConnection("jdbc:sqlserver://localhost;databaseName=SALE", "sa", "123456");
+            if (txtName.getText() == null || "".equals(txtName.getText())) {
+//                String sql = "SELECT PRODUCTID,PRODUCTCODE,PRODUCTNAME,UNIT,PRICE,COMPANY,AMOUNT FROM PRODUCT WHERE Product.categoryid = '" + pa + "'";
+//                Statement stmt = con.createStatement();
+//                ResultSet rs = stmt.executeQuery(sql);
+//                String[] header = new String[]{"ID", "Product Code", "Name", "UNIT", "Price", "Company", "Amount"};
+//                DefaultTableModel dataModel = new DefaultTableModel(header, 0);
+//                while (rs.next()) {
+//                    Object[] columns = new Object[]{rs.getInt(1),
+//                        rs.getString(2),
+//                        rs.getString(3),
+//                        rs.getString(4),
+//                        rs.getFloat(5),
+//                        rs.getString(6),
+//                        rs.getInt(7)
+//                    };
+//                    dataModel.addRow(columns);
+//                }
+//
+//                this.tblOrder.setModel(dataModel);
+
+            prQuery =  entityManager.createNativeQuery("SELECT * FROM Product WHERE Product.categoryid = ? and Product.Status = 1", Product.class).setHint(QueryHints.REFRESH, true);
+            prQuery.setParameter(1, pa);
+            list = prQuery.getResultList();
+            setDataProduct(list);
+            } else {
+//                String sql = "SELECT PRODUCTID,PRODUCTCODE,PRODUCTNAME,UNIT,PRICE,COMPANY,AMOUNT FROM PRODUCT WHERE Product.categoryid = '" + pa + "' and and Product.PRODUCTNAME LIKE LOWER(?)";
+//                PreparedStatement stmt = con.prepareStatement(sql);
+//                stmt.setString(1, "%" + txtName.getText().toLowerCase() + "%");
+//                ResultSet rs = stmt.executeQuery(sql);
+//                String[] header = new String[]{"ID", "Product Code", "Name", "UNIT", "Price", "Company", "Amount"};
+//                DefaultTableModel dataModel = new DefaultTableModel(header, 0);
+//                while (rs.next()) {
+//                    Object[] columns = new Object[]{rs.getInt(1),
+//                        rs.getString(2),
+//                        rs.getString(3),
+//                        rs.getString(4),
+//                        rs.getFloat(5),
+//                        rs.getString(6),
+//                        rs.getInt(7)
+//                    };
+//                    dataModel.addRow(columns);
+//                }
+//
+//                this.tblOrder.setModel(dataModel);
+                prQuery = entityManager.createNativeQuery("SELECT * FROM Product WHERE Product.categoryid = ? and Product.PRODUCTNAME LIKE LOWER(?) and Product.Status = 1", Product.class).setHint(QueryHints.REFRESH, true);;
+                prQuery.setParameter(1, pa);
+                prQuery.setParameter(2, "%" + txtName.getText().toLowerCase() + "%");
+                list = prQuery.getResultList();
+                setDataProduct(list);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         // TODO add your handling code here:
@@ -520,7 +579,6 @@ public class newBill extends javax.swing.JFrame implements ActionListener {
      */
     private void btnSubmitMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSubmitMouseClicked
         // TODO add your handling code here:
-
         List<Product> prd = new ArrayList<>();
         TableModel model = tblProduct.getModel();
         EntityTransaction tran = null;
@@ -546,7 +604,7 @@ public class newBill extends javax.swing.JFrame implements ActionListener {
                     try {
                         tran.begin();
                         Entity.Customer cust = entityManager.find(Entity.Customer.class, Integer.parseInt(idcust));
-                        Entity.Employee emp = entityManager.find(Employee.class,ClassData.LoginUser.User.getUsername());
+                        Entity.Employee emp = entityManager.find(Employee.class, ClassData.LoginUser.User.getUsername());
                         Bill bill = new Bill();
                         bill.setBilldate(txtDate.getDate() != null ? txtDate.getDate() : new Date());
                         bill.setCustid(cust);
@@ -589,6 +647,7 @@ public class newBill extends javax.swing.JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(null, "Cart is emty !");
             }
         }
+
     }//GEN-LAST:event_btnSubmitMouseClicked
     private void resetProduct() {
         removeAllRows();
@@ -600,6 +659,10 @@ public class newBill extends javax.swing.JFrame implements ActionListener {
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnSearchActionPerformed
+
+    private void btnSubmitMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSubmitMouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnSubmitMouseEntered
     /**
      * Kiểm tra trong kho có còn hàng hay không
      *
@@ -609,15 +672,14 @@ public class newBill extends javax.swing.JFrame implements ActionListener {
     private int checkQuantityWarehouse(List<Product> list) {
 
         TableModel model = tblProduct.getModel();
+        int i = model.getRowCount() - 1;
         for (Product p : list) {
-            int i = model.getRowCount() - 1;
-            while (i >= 0) {
-                if (Integer.parseInt(model.getValueAt(i, 4) + "0") > p.getAmount()) {
-                    return i;
-                }
-                i--;
+            if (Integer.parseInt(model.getValueAt(i, 4) + "") > p.getAmount()) {
+                return p.getProductid();
             }
+            i--;
         }
+
         return -1;
     }
 
@@ -656,7 +718,7 @@ public class newBill extends javax.swing.JFrame implements ActionListener {
         if (prod.size() > 0) {
 
             for (Product p : prod) {
-                String[] columns = new String[]{p.getProductid().toString(), p.getProductcode(), p.getProductname(), p.getUnit(), "" + p.getPrice(), p.getCompany()};
+                Object[] columns = new Object[]{p.getProductid(), p.getProductcode(), p.getProductname(), p.getUnit(), p.getPrice(), p.getCompany()};
                 dataModel.addRow(columns);
             }
         } else {
@@ -729,8 +791,6 @@ public class newBill extends javax.swing.JFrame implements ActionListener {
     private javax.swing.JLabel lbAddessPhone;
     private javax.swing.JLabel lbCustID;
     private javax.swing.JLabel lbCustName;
-    private java.util.List<Entity.Product> productList;
-    private javax.persistence.Query productQuery;
     private javax.swing.JTable tblCusttomer;
     private javax.swing.JTable tblOrder;
     private javax.swing.JTable tblProduct;
@@ -786,7 +846,7 @@ public class newBill extends javax.swing.JFrame implements ActionListener {
         TableModel model = tblOrder.getModel();
         int r = (tblOrder.getSelectedRow());
         Object[] row = new Object[]{model.getValueAt(r, 0), model.getValueAt(r, 1), model.getValueAt(r, 2), model.getValueAt(r, 4), 1};
-        int rowduplicate = checkRowExist(model, (int) row[0]);
+        int rowduplicate = checkRowExist(model, Integer.parseInt(row[0]+""));
         if (rowduplicate == -1) {
             ProductSelectedModel.addRow(row);
             tblProduct.setModel(ProductSelectedModel);

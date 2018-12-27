@@ -10,15 +10,11 @@ import Entity.Employee;
 import java.awt.Color;
 //import antlr.collections.List;
 import java.awt.event.ItemEvent;
-import java.awt.event.KeyEvent;
 import java.text.DateFormat;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
@@ -26,7 +22,6 @@ import javax.persistence.Query;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
 import javax.swing.table.TableModel;
 
 /**

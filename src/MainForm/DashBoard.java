@@ -8,12 +8,9 @@ package MainForm;
 import ClassData.LoginUser;
 import Entity.Product;
 import java.awt.BorderLayout;
-import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -28,15 +25,18 @@ import org.jfree.data.category.DefaultCategoryDataset;
  *
  * @author KIENDINH
  */
-public class DashBoard extends javax.swing.JFrame {
+public class DashBoard extends javax.swing.JFrame implements entity {
 
-    private final static String unitName = "SaleManagerProjectPU";
-    private static final EntityManager entityManager = Persistence.createEntityManagerFactory(unitName).createEntityManager();
+//    private static String unitName = "SaleManagerProjectPU";
+//    private static final EntityManagerFactory factoryDash = javax.persistence.Persistence.createEntityManagerFactory(unitName);
+//    private static EntityManager entityManagerDash = factoryDash.createEntityManager();
 
     /**
      * Creates new form DashBoard
      */
     public DashBoard() {
+        //refreshEntity();
+        
         initComponents();
         this.setLocationRelativeTo(null);
         if (LoginUser.User.getIsadmin() == 1) {
@@ -58,8 +58,6 @@ public class DashBoard extends javax.swing.JFrame {
         dashPanel.setLayout(new java.awt.BorderLayout());
         dashPanel.add(chartPanel, BorderLayout.CENTER);
         dashPanel.validate();
-        //setContentPane(chartPanel);
-        // chart.setVisible( true ); 
     }
 
     /**
@@ -98,6 +96,7 @@ public class DashBoard extends javax.swing.JFrame {
         btnEmp = new javax.swing.JButton();
         btnOrder = new javax.swing.JButton();
         btnCustomer = new javax.swing.JButton();
+        btnProduct = new javax.swing.JButton();
         dashPanel = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -113,10 +112,8 @@ public class DashBoard extends javax.swing.JFrame {
 
         btnChangeProfile.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnChangeProfile.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/man (1).png"))); // NOI18N
-        btnChangeProfile.setText("Chane profile infomation");
+        btnChangeProfile.setText(" Chane profile infomation");
         btnChangeProfile.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        btnChangeProfile.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/image/user.png"))); // NOI18N
-        btnChangeProfile.setRolloverSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/image/user.png"))); // NOI18N
         btnChangeProfile.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnChangeProfileMouseClicked(evt);
@@ -125,7 +122,7 @@ public class DashBoard extends javax.swing.JFrame {
 
         btnEmp.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnEmp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/employee.png"))); // NOI18N
-        btnEmp.setText("Employee Manager");
+        btnEmp.setText(" Employee Manager");
         btnEmp.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnEmp.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -135,7 +132,7 @@ public class DashBoard extends javax.swing.JFrame {
 
         btnOrder.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnOrder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/online-shop.png"))); // NOI18N
-        btnOrder.setText("Order Manager");
+        btnOrder.setText(" Order Manager");
         btnOrder.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnOrder.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -145,7 +142,7 @@ public class DashBoard extends javax.swing.JFrame {
 
         btnCustomer.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         btnCustomer.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/service.png"))); // NOI18N
-        btnCustomer.setText("Customer Manager");
+        btnCustomer.setText(" Customer Manager");
         btnCustomer.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnCustomer.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -153,13 +150,23 @@ public class DashBoard extends javax.swing.JFrame {
             }
         });
 
+        btnProduct.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnProduct.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/logistics.png"))); // NOI18N
+        btnProduct.setText(" Product Manager");
+        btnProduct.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        btnProduct.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnProductMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGap(210, 210, 210)
@@ -171,18 +178,17 @@ public class DashBoard extends javax.swing.JFrame {
                                 .addContainerGap()
                                 .addComponent(btnChangeProfile, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnProduct, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnEmp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(btnCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btnCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btnOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(btnOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -195,11 +201,13 @@ public class DashBoard extends javax.swing.JFrame {
                 .addComponent(btnOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(25, 25, 25)
                 .addComponent(btnEmp, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lbCheck)
-                .addGap(250, 250, 250))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(193, 193, 193))
         );
 
         dashPanel.setBackground(new java.awt.Color(153, 153, 255));
@@ -246,13 +254,6 @@ public class DashBoard extends javax.swing.JFrame {
         p.setVisible(true);
     }//GEN-LAST:event_btnChangeProfileMouseClicked
 
-    private void btnEmpMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEmpMouseClicked
-        // TODO add your handling code here:
-        EmployeeFrm x = new EmployeeFrm();
-        x.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        x.setVisible(true);
-    }//GEN-LAST:event_btnEmpMouseClicked
-
     private void btnOrderMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnOrderMouseClicked
         // TODO add your handling code here:
         OrderFrm x = new OrderFrm();
@@ -266,6 +267,21 @@ public class DashBoard extends javax.swing.JFrame {
         x.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         x.setVisible(true);
     }//GEN-LAST:event_btnCustomerMouseClicked
+
+    private void btnEmpMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEmpMouseClicked
+        // TODO add your handling code here:
+        EmployeeFrm x = new EmployeeFrm();
+        x.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        x.setVisible(true);
+    }//GEN-LAST:event_btnEmpMouseClicked
+
+    private void btnProductMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnProductMouseClicked
+        // TODO add your handling code here:
+        //entityManagerDash.close();
+        ProductManager p = new ProductManager();
+        p.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        p.setVisible(true);
+    }//GEN-LAST:event_btnProductMouseClicked
 
     /**
      * @param args the command line arguments
@@ -307,10 +323,17 @@ public class DashBoard extends javax.swing.JFrame {
     private javax.swing.JButton btnCustomer;
     private javax.swing.JButton btnEmp;
     private javax.swing.JButton btnOrder;
+    private javax.swing.JButton btnProduct;
     private javax.swing.JPanel dashPanel;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JLabel lbCheck;
     // End of variables declaration//GEN-END:variables
+
+   
+    public void refreshEntity() {
+      entityManager.getEntityManagerFactory().getCache().evictAll();
+
+    }
 
 }
