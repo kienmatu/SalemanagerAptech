@@ -94,23 +94,11 @@ public class DashBoard extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         lbCheck = new javax.swing.JLabel();
-<<<<<<< HEAD
-        btnEmp = new javax.swing.JPanel();
-        btnEmployee = new javax.swing.JLabel();
-        btnCustomer = new javax.swing.JPanel();
-        btnEmployee1 = new javax.swing.JLabel();
-        btnOrder = new javax.swing.JPanel();
-        btnEmployee2 = new javax.swing.JLabel();
-        btnProduct = new javax.swing.JPanel();
-        btnEmployee3 = new javax.swing.JLabel();
-        jPanel1 = new javax.swing.JPanel();
-=======
         btnChangeProfile = new javax.swing.JButton();
         btnEmp = new javax.swing.JButton();
         btnOrder = new javax.swing.JButton();
         btnCustomer = new javax.swing.JButton();
         dashPanel = new javax.swing.JPanel();
->>>>>>> d0ccc107c75013a2b07fac43c638df0609111c42
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -165,40 +153,6 @@ public class DashBoard extends javax.swing.JFrame {
             }
         });
 
-        btnProduct.setBackground(new java.awt.Color(45, 118, 232));
-        btnProduct.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnProductMouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnProductMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnProductMouseExited(evt);
-            }
-        });
-
-        btnEmployee3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnEmployee3.setForeground(new java.awt.Color(255, 255, 255));
-        btnEmployee3.setText("Product Manager");
-
-        javax.swing.GroupLayout btnProductLayout = new javax.swing.GroupLayout(btnProduct);
-        btnProduct.setLayout(btnProductLayout);
-        btnProductLayout.setHorizontalGroup(
-            btnProductLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(btnProductLayout.createSequentialGroup()
-                .addGap(28, 28, 28)
-                .addComponent(btnEmployee3)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        btnProductLayout.setVerticalGroup(
-            btnProductLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, btnProductLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnEmployee3)
-                .addContainerGap())
-        );
-
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -206,12 +160,6 @@ public class DashBoard extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-<<<<<<< HEAD
-                        .addGap(210, 210, 210)
-                        .addComponent(lbCheck, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(btnProduct, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-=======
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGap(210, 210, 210)
@@ -230,7 +178,6 @@ public class DashBoard extends javax.swing.JFrame {
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addComponent(btnCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, Short.MAX_VALUE)))))
->>>>>>> d0ccc107c75013a2b07fac43c638df0609111c42
                 .addContainerGap())
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
@@ -242,19 +189,6 @@ public class DashBoard extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(64, 64, 64)
                 .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-<<<<<<< HEAD
-                .addGap(35, 35, 35)
-                .addComponent(btnEmp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnOrder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnCustomer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnProduct, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(41, 41, 41)
-                .addComponent(lbCheck)
-                .addGap(293, 293, 293))
-=======
                 .addGap(18, 18, 18)
                 .addComponent(btnChangeProfile, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
@@ -266,7 +200,6 @@ public class DashBoard extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(lbCheck)
                 .addGap(250, 250, 250))
->>>>>>> d0ccc107c75013a2b07fac43c638df0609111c42
         );
 
         dashPanel.setBackground(new java.awt.Color(153, 153, 255));
@@ -334,18 +267,6 @@ public class DashBoard extends javax.swing.JFrame {
         x.setVisible(true);
     }//GEN-LAST:event_btnCustomerMouseClicked
 
-    private void btnProductMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnProductMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnProductMouseClicked
-
-    private void btnProductMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnProductMouseEntered
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnProductMouseEntered
-
-    private void btnProductMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnProductMouseExited
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnProductMouseExited
-
     /**
      * @param args the command line arguments
      */
@@ -382,22 +303,11 @@ public class DashBoard extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-<<<<<<< HEAD
-    private javax.swing.JPanel btnCustomer;
-    private javax.swing.JPanel btnEmp;
-    private javax.swing.JLabel btnEmployee;
-    private javax.swing.JLabel btnEmployee1;
-    private javax.swing.JLabel btnEmployee2;
-    private javax.swing.JLabel btnEmployee3;
-    private javax.swing.JPanel btnOrder;
-    private javax.swing.JPanel btnProduct;
-=======
     private javax.swing.JButton btnChangeProfile;
     private javax.swing.JButton btnCustomer;
     private javax.swing.JButton btnEmp;
     private javax.swing.JButton btnOrder;
     private javax.swing.JPanel dashPanel;
->>>>>>> d0ccc107c75013a2b07fac43c638df0609111c42
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JLabel lbCheck;

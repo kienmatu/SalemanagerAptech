@@ -250,7 +250,7 @@ public class ProductFrm extends javax.swing.JFrame {
                         .addComponent(jLabel5)
                         .addGap(0, 0, 0)
                         .addComponent(txtPhoneNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(80, 80, 80)
+                        .addGap(71, 71, 71)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(pnlDongY, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(cbbLuaChon)))
@@ -274,11 +274,6 @@ public class ProductFrm extends javax.swing.JFrame {
         tblEmployee.setRowMargin(5);
         tblEmployee.setShowHorizontalLines(false);
         tblEmployee.setShowVerticalLines(false);
-        tblEmployee.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tblEmployeeMouseClicked(evt);
-            }
-        });
         jScrollPane1.setViewportView(tblEmployee);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -304,23 +299,6 @@ public class ProductFrm extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void tblEmployeeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblEmployeeMouseClicked
-        int r = tblEmployee.getSelectedRow();
-        TableModel model = tblEmployee.getModel();
-        if (r != -1) {
-            Date date = new Date();
-            DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-            Object a = model.getValueAt(r, 4) != "" ? model.getValueAt(r, 4) : new Date();
-            String today = formatter.format(a!= "" ? a : new Date().toString());
-            txtUser.setText(model.getValueAt(r, 0) != null ? model.getValueAt(r, 0).toString() : "");
-            txtUser.enable(false);
-            txtFullname.setText(model.getValueAt(r, 3) != null ? model.getValueAt(r, 3).toString() : "");
-            txtDate.setDate(new Date(today));
-            txtPhoneNumber.setText(model.getValueAt(r, 2) != null ? model.getValueAt(r, 2).toString() : "");
-        }
-        cbbLuaChon.setSelectedIndex(1);
-    }//GEN-LAST:event_tblEmployeeMouseClicked
 
     private void txtPhoneNumberFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPhoneNumberFocusLost
         // TODO add your handling code here:
