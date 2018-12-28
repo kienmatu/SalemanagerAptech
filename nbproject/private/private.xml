@@ -3,8 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/KIENDINH/Documents/NetBeansProjects/TelephoneRepository/src/MainForm/newBill.java</file>
-            <file>file:/C:/Users/KIENDINH/Documents/NetBeansProjects/TelephoneRepository/src/MainForm/OrderFrm.java</file>
+            <file>file:/C:/Users/KIENDINH/Documents/NetBeansProjects/TelephoneRepository/src/MainForm/CustomerFrm.java</file>
+            <file>file:/C:/Users/KIENDINH/Documents/NetBeansProjects/TelephoneRepository/src/MainForm/ProductManager.java</file>
+            <file>file:/C:/Users/KIENDINH/Documents/NetBeansProjects/TelephoneRepository/src/Entity/Product.java</file>
         </group>
     </open-files>
 </project-private>

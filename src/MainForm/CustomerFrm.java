@@ -64,7 +64,7 @@ public class CustomerFrm extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        cbbLuaChon = new javax.swing.JComboBox<String>();
+        cbbLuaChon = new javax.swing.JComboBox<>();
         lbCheck = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         txtCustID = new javax.swing.JTextField();
@@ -78,6 +78,7 @@ public class CustomerFrm extends javax.swing.JFrame {
         tblCustomer = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Customer Manager");
 
         bg.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -129,6 +130,7 @@ public class CustomerFrm extends javax.swing.JFrame {
 
         txtCustID.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/check.png"))); // NOI18N
         jButton1.setText("OK");
         jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -213,7 +215,7 @@ public class CustomerFrm extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE)
+                .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -245,7 +247,7 @@ public class CustomerFrm extends javax.swing.JFrame {
                 .addGap(33, 33, 33)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cbbLuaChon, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE))
+                    .addComponent(cbbLuaChon))
                 .addContainerGap())
         );
 

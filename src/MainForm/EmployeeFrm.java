@@ -56,9 +56,6 @@ public class EmployeeFrm extends javax.swing.JFrame {
         employeeQuery = java.beans.Beans.isDesignTime() ? null : SaleManagerProjectPUEntityManager.createQuery("SELECT e FROM Employee e");
         employeeList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : employeeQuery.getResultList();
         bg = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
-        jLabel14 = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         txtUser = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
@@ -68,13 +65,12 @@ public class EmployeeFrm extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         txtPhoneNumber = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        cbbLuaChon = new javax.swing.JComboBox<String>();
-        pnlDongY = new javax.swing.JPanel();
-        jLabel8 = new javax.swing.JLabel();
+        cbbLuaChon = new javax.swing.JComboBox<>();
         jLabel9 = new javax.swing.JLabel();
         txtPassword = new javax.swing.JPasswordField();
         txtDate = new com.toedter.calendar.JDateChooser();
         lbCheck = new javax.swing.JLabel();
+        btnOK = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblEmployee = new javax.swing.JTable();
 
@@ -87,36 +83,6 @@ public class EmployeeFrm extends javax.swing.JFrame {
         });
 
         bg.setBackground(new java.awt.Color(255, 255, 255));
-
-        jPanel2.setBackground(new java.awt.Color(45, 118, 232));
-
-        jLabel14.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel14.setForeground(new java.awt.Color(255, 255, 255));
-
-        jLabel13.setFont(new java.awt.Font("Verdana", 1, 24)); // NOI18N
-        jLabel13.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel13.setText("Employee Manager");
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel14)
-                .addGap(112, 112, 112)
-                .addComponent(jLabel13)
-                .addGap(308, 308, 308))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel13)
-                    .addComponent(jLabel14))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -176,40 +142,6 @@ public class EmployeeFrm extends javax.swing.JFrame {
             }
         });
 
-        pnlDongY.setBackground(new java.awt.Color(45, 118, 232));
-        pnlDongY.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                pnlDongYMouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                pnlDongYMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                pnlDongYMouseExited(evt);
-            }
-        });
-
-        jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel8.setText("OK");
-
-        javax.swing.GroupLayout pnlDongYLayout = new javax.swing.GroupLayout(pnlDongY);
-        pnlDongY.setLayout(pnlDongYLayout);
-        pnlDongYLayout.setHorizontalGroup(
-            pnlDongYLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlDongYLayout.createSequentialGroup()
-                .addGap(32, 32, 32)
-                .addComponent(jLabel8)
-                .addContainerGap(34, Short.MAX_VALUE))
-        );
-        pnlDongYLayout.setVerticalGroup(
-            pnlDongYLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDongYLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel8)
-                .addContainerGap())
-        );
-
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(102, 153, 255));
         jLabel9.setText("ENTER INFORMATION");
@@ -223,6 +155,15 @@ public class EmployeeFrm extends javax.swing.JFrame {
         lbCheck.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         lbCheck.setForeground(new java.awt.Color(255, 0, 51));
 
+        btnOK.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnOK.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/check.png"))); // NOI18N
+        btnOK.setText("OK");
+        btnOK.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnOKMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -235,9 +176,9 @@ public class EmployeeFrm extends javax.swing.JFrame {
                                 .addContainerGap()
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addGroup(jPanel3Layout.createSequentialGroup()
-                                        .addComponent(cbbLuaChon, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(pnlDongY, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(cbbLuaChon, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(btnOK, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addComponent(txtUser, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
                                     .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING)
@@ -264,7 +205,7 @@ public class EmployeeFrm extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE)
+                .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -286,12 +227,12 @@ public class EmployeeFrm extends javax.swing.JFrame {
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel5)
                         .addGap(0, 0, 0)
-                        .addComponent(txtPhoneNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(80, 80, 80)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(pnlDongY, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cbbLuaChon)))
+                        .addComponent(txtPhoneNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(lbCheck))
+                .addGap(74, 74, 74)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnOK, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cbbLuaChon))
                 .addGap(35, 35, 35))
         );
 
@@ -330,24 +271,17 @@ public class EmployeeFrm extends javax.swing.JFrame {
             bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bgLayout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(bgLayout.createSequentialGroup()
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 651, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 651, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         bgLayout.setVerticalGroup(
             bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(bgLayout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(bgLayout.createSequentialGroup()
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1))
-                .addGap(0, 0, 0))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 589, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -376,47 +310,6 @@ public class EmployeeFrm extends javax.swing.JFrame {
             luaChon = "EMPTY";
         }
     }//GEN-LAST:event_cbbLuaChonItemStateChanged
-    private void pnlDongYMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlDongYMouseClicked
-        if (null != luaChon) {
-            switch (luaChon) {
-                case "ADD":
-                    if (addEmployee()) {
-                        JOptionPane.showMessageDialog(null, "ADD USER " + txtUser.getText() + " Successfully");
-                        resetField();
-
-                    } else {
-                        JOptionPane.showMessageDialog(null, "An error occured!");
-                    }
-                    setDataforTable();
-                    break;
-                case "EDIT":
-                    if (EditEmp()) {
-                        JOptionPane.showMessageDialog(null, "EDIT USER " + txtUser.getText() + " Successfully");
-                        resetField();
-
-                    } else {
-                        JOptionPane.showMessageDialog(null, "An error occured!");
-                    }
-                    setDataforTable();
-                    break;
-                case "DELETE":
-                    if (DeleteEmp()) {
-                        JOptionPane.showMessageDialog(null, "DELETE USER " + txtUser.getText() + " Successfully");
-                        resetField();
-
-                    } else {
-                        JOptionPane.showMessageDialog(null, "An error occured!");
-                    }
-                    setDataforTable();
-                    break;
-                case "EMPTY":
-                    resetField();
-                    break;
-                default:
-                    break;
-            }
-        }
-    }//GEN-LAST:event_pnlDongYMouseClicked
     private boolean EditEmp() {
         EntityTransaction tran = null;
         try {
@@ -476,16 +369,6 @@ public class EmployeeFrm extends javax.swing.JFrame {
     private void resetColor(JPanel panel) {
         panel.setBackground(new java.awt.Color(45, 118, 232));
     }
-    private void pnlDongYMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlDongYMouseEntered
-        // TODO add your handling code here:
-        setColor(pnlDongY);
-    }//GEN-LAST:event_pnlDongYMouseEntered
-
-    private void pnlDongYMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlDongYMouseExited
-        // TODO add your handling code here:
-        resetColor(pnlDongY);
-    }//GEN-LAST:event_pnlDongYMouseExited
-
     private void tblEmployeeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblEmployeeMouseClicked
         int r = tblEmployee.getSelectedRow();
         TableModel model = tblEmployee.getModel();
@@ -582,6 +465,49 @@ public class EmployeeFrm extends javax.swing.JFrame {
 
 
     }//GEN-LAST:event_formWindowClosed
+
+    private void btnOKMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnOKMouseClicked
+        // TODO add your handling code here: if (null != luaChon) {
+        switch (luaChon) {
+            case "ADD":
+                if (addEmployee()) {
+                    JOptionPane.showMessageDialog(null, "ADD USER " + txtUser.getText() + " Successfully");
+                    resetField();
+
+                } else {
+                    JOptionPane.showMessageDialog(null, "An error occured!");
+                }
+                setDataforTable();
+                break;
+            case "EDIT":
+                if (EditEmp()) {
+                    JOptionPane.showMessageDialog(null, "EDIT USER " + txtUser.getText() + " Successfully");
+                    resetField();
+
+                } else {
+                    JOptionPane.showMessageDialog(null, "An error occured!");
+                }
+                setDataforTable();
+                break;
+            case "DELETE":
+                if (DeleteEmp()) {
+                    JOptionPane.showMessageDialog(null, "DELETE USER " + txtUser.getText() + " Successfully");
+                    resetField();
+
+                } else {
+                    JOptionPane.showMessageDialog(null, "An error occured!");
+                }
+                setDataforTable();
+                break;
+            case "EMPTY":
+                resetField();
+                break;
+            default:
+                break;
+        }
+
+
+    }//GEN-LAST:event_btnOKMouseClicked
     private static boolean validatePhoneNumber(String phoneNo) {
         if (phoneNo.matches("\\+\\d{11}")) {
             return true;
@@ -692,23 +618,19 @@ public class EmployeeFrm extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.persistence.EntityManager SaleManagerProjectPUEntityManager;
     private javax.swing.JPanel bg;
+    private javax.swing.JButton btnOK;
     private javax.swing.JComboBox<String> cbbLuaChon;
     private java.util.List<Entity.Employee> employeeList;
     private javax.persistence.Query employeeQuery;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lbCheck;
-    private javax.swing.JPanel pnlDongY;
     private javax.swing.JTable tblEmployee;
     private com.toedter.calendar.JDateChooser txtDate;
     private javax.swing.JTextField txtFullname;

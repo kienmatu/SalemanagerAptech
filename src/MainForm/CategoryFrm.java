@@ -50,7 +50,7 @@ private String luaChon = "ADD";
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
-        cbbLuaChon = new javax.swing.JComboBox<String>();
+        cbbLuaChon = new javax.swing.JComboBox<>();
         lbCheck = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
         txtCategoryID = new javax.swing.JTextField();
@@ -96,6 +96,7 @@ private String luaChon = "ADD";
         txtCategoryID.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
         jButton1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/check.png"))); // NOI18N
         jButton1.setText("OK");
         jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
