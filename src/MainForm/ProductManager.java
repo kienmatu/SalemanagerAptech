@@ -8,6 +8,7 @@ package MainForm;
 import Entity.Category;
 import Entity.Product;
 import Services.ImagePreviewPanel;
+import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -244,6 +245,11 @@ public class ProductManager extends javax.swing.JFrame implements entity, Action
         jLabel11.setText("Amount:");
 
         btnOpenImage.setText("Open Folder");
+        btnOpenImage.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnOpenImageMouseClicked(evt);
+            }
+        });
 
         btnNewProduct.setText("Add");
         btnNewProduct.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -402,14 +408,12 @@ public class ProductManager extends javax.swing.JFrame implements entity, Action
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(67, 67, 67))
+                                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addGap(65, 65, 65)
                                         .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                        .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
                         .addComponent(listImage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -649,6 +653,16 @@ public class ProductManager extends javax.swing.JFrame implements entity, Action
             }
         }
     }//GEN-LAST:event_tblProductMouseClicked
+
+    private void btnOpenImageMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnOpenImageMouseClicked
+        // TODO add your handling code here:
+        String FolderName = "C:/Salemanager/image/"+txtID.getText();//Write your complete path here
+        try {
+           Desktop.getDesktop().open(new File(FolderName));
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error !");
+        }
+    }//GEN-LAST:event_btnOpenImageMouseClicked
     private void resetField() {
         btnOpenImage.setVisible(false);
         this.btnSelectImage.setVisible(true);
