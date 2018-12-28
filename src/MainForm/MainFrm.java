@@ -25,7 +25,7 @@ public class MainFrm extends javax.swing.JFrame {
     /**
      * Creates new form MainFrm
      */
-    public MainFrm() {
+    public  MainFrm() {
         initComponents();
         this.setLocationRelativeTo(null);
     }

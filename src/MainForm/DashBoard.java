@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.Query;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -30,22 +31,19 @@ public class DashBoard extends javax.swing.JFrame implements entity {
 //    private static String unitName = "SaleManagerProjectPU";
 //    private static final EntityManagerFactory factoryDash = javax.persistence.Persistence.createEntityManagerFactory(unitName);
 //    private static EntityManager entityManagerDash = factoryDash.createEntityManager();
-
     /**
      * Creates new form DashBoard
      */
     public DashBoard() {
         //refreshEntity();
-        
+
         initComponents();
         this.setLocationRelativeTo(null);
-        if (LoginUser.User.getIsadmin() == 1) {
+        if (LoginUser.User.getIsadmin() == 1 || LoginUser.User.getIsadmin() == null) {
             btnEmp.setVisible(true);
             this.btnChangeProfile.setVisible(false);
-        }
-        else
-        {
-              btnEmp.setVisible(false);
+        } else {
+            btnEmp.setVisible(false);
             this.btnChangeProfile.setVisible(true);
         }
         JFreeChart barChart = ChartFactory.createBarChart("Latest Month Report", "Product", "Quantity Sold",
@@ -62,6 +60,7 @@ public class DashBoard extends javax.swing.JFrame implements entity {
 
     /**
      * Lấy 10 sản phẩm bán chạy từ đầu tháng ra để cho vào dashboard.
+     *
      * @return DefaultCategoryDataset
      */
     private CategoryDataset createDataset() {
@@ -98,6 +97,8 @@ public class DashBoard extends javax.swing.JFrame implements entity {
         btnCustomer = new javax.swing.JButton();
         btnProduct = new javax.swing.JButton();
         dashPanel = new javax.swing.JPanel();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -197,7 +198,7 @@ public class DashBoard extends javax.swing.JFrame implements entity {
                 .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnChangeProfile, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -223,6 +224,18 @@ public class DashBoard extends javax.swing.JFrame implements entity {
             .addGap(0, 0, Short.MAX_VALUE)
         );
 
+        jMenuBar1.setBackground(new java.awt.Color(255, 255, 255));
+
+        jMenu1.setText("Logout");
+        jMenu1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu1MouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(jMenu1);
+
+        setJMenuBar(jMenuBar1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -235,7 +248,7 @@ public class DashBoard extends javax.swing.JFrame implements entity {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(dashPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -283,6 +296,19 @@ public class DashBoard extends javax.swing.JFrame implements entity {
         p.setVisible(true);
     }//GEN-LAST:event_btnProductMouseClicked
 
+    private void jMenu1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu1MouseClicked
+        // TODO add your handling code here:
+        int c = JOptionPane.showConfirmDialog(null, "Are you sure to logout ?");
+        if (c == JOptionPane.OK_OPTION) {
+            this.dispose();
+            MainFrm login = new MainFrm();
+            login.setLocationRelativeTo(null);
+            login.setVisible(true);
+            ClassData.LoginUser.disposeAll();
+
+        }
+    }//GEN-LAST:event_jMenu1MouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -326,13 +352,14 @@ public class DashBoard extends javax.swing.JFrame implements entity {
     private javax.swing.JButton btnProduct;
     private javax.swing.JPanel dashPanel;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JLabel lbCheck;
     // End of variables declaration//GEN-END:variables
 
-   
     public void refreshEntity() {
-      entityManager.getEntityManagerFactory().getCache().evictAll();
+        entityManager.getEntityManagerFactory().getCache().evictAll();
 
     }
 
