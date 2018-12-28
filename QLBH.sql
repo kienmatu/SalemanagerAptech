@@ -1,17 +1,17 @@
-﻿----CREATE DATABASE SALE
-----USE SALE
-----GO
+﻿CREATE DATABASE SALE
+USE SALE
+GO
 ------DROP DATABASE SALE
 ---- KHACHANG
 ----DROP TABLE EMPLOYEE
 ----DROP TABLE CUSTOMER
-CREATE TABLE COMPANYINFO(
-COMPANYNAME nvarchar(300) PRIMARY KEY,
-COMPANYADDRESS nvarchar(400),
-COMPANYPHONE varchar(20),
-CONCURENCY nvarchar(10),
+----CREATE TABLE COMPANYINFO(
+----COMPANYNAME nvarchar(300) PRIMARY KEY,
+----COMPANYADDRESS nvarchar(400),
+----COMPANYPHONE varchar(20),
+----CONCURENCY nvarchar(10),
 
-)
+----)
 CREATE TABLE CUSTOMER(
 	CUSTID	int identity(1,1) PRIMARY KEY not null,	
 	CUSTNAME	nvarchar(40) NOT NULL,
@@ -55,11 +55,11 @@ INSERT INTO CATEGORY  VALUES('ACCESSORIES')
 -- SANPHAM
 CREATE TABLE PRODUCT(
 	PRODUCTID int identity(1,1) PRIMARY KEY not null,
-	PRODUCTNAME	nvarchar(40),
+	PRODUCTNAME	nvarchar(40) not null,
 	UNIT	nvarchar(20),
-	AMOUNT int, -- tồn kho
+	AMOUNT int not null, -- tồn kho
 	COMPANY	varchar(40),
-	PRICE	money,
+	PRICE	money not null ,
 	PRODUCTCODE varchar(30),
 	[CATEGORYID] int foreign key references CATEGORY(CATEGORYID),
 	DETAILS ntext,
@@ -104,9 +104,9 @@ CREATE TABLE BILL(
 	----BILLDETAILID INT foreign key references BILLDETAIL(BILLDETAILID),
 	)
 CREATE TABLE BILLDETAIL(
-BILLID INT  foreign key references BILL(BILLID),
-PRODUCTID int foreign key references PRODUCT(PRODUCTID),
-AMOUNT INT,
+BILLID INT  foreign key references BILL(BILLID) not null,
+PRODUCTID int foreign key references PRODUCT(PRODUCTID) not null,
+AMOUNT INT not null,
 constraint pk_billdetail primary key(BILLID,PRODUCTID)
 
 )
@@ -162,8 +162,3 @@ where
 					ORDER BY AMOUNT DESC
 END
 GO
---ALTER TABLE PRODUCT
---ADD [STATUS] BIT
-
-SELECT p.* FROM Product p where p.[status] = 1
-SELECT p.* FROM Product p
