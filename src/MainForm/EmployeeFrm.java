@@ -5,13 +5,17 @@
  */
 package MainForm;
 
+import Services.PaginationController;
 import Entity.Employee;
+import static MainForm.entity.factory;
+import Services.JPAPaginController;
 import java.awt.Color;
 //import antlr.collections.List;
 import java.awt.event.ItemEvent;
 import java.text.DateFormat;
 import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 import javax.persistence.EntityManager;
@@ -20,18 +24,23 @@ import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+import org.eclipse.persistence.config.QueryHints;
 
 /**
  *
  * @author KIENDINH
  */
-public class EmployeeFrm extends javax.swing.JFrame {
+public class EmployeeFrm extends javax.swing.JFrame implements entity {
 
+    JPAPaginController controller = new JPAPaginController(factory,Employee.class);
+    PaginationController pagination;
+    private List<Employee> lst;
     private String luaChon = "ADD";
-    private final static String unitName = "SaleManagerProjectPU";
-    private static final EntityManager entityManager = Persistence.createEntityManagerFactory(unitName).createEntityManager();
+//    private final static String unitName = "SaleManagerProjectPU";
+//    private static final EntityManager entityManager = Persistence.createEntityManagerFactory(unitName).createEntityManager();
 
     /**
      * Creates new form Manage
@@ -39,7 +48,11 @@ public class EmployeeFrm extends javax.swing.JFrame {
     public EmployeeFrm() {
         initComponents();
         this.setLocationRelativeTo(null);
-        setDataforTable();
+        //setDataforTable();
+        int size = Integer.parseInt(this.cbbPage.getSelectedItem().toString());
+        pagination = new PaginationController(size, controller.getCount());
+        this.refreshTable();
+
     }
 
     /**
@@ -73,6 +86,11 @@ public class EmployeeFrm extends javax.swing.JFrame {
         btnOK = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblEmployee = new javax.swing.JTable();
+        btnLast = new javax.swing.JButton();
+        btnNext = new javax.swing.JButton();
+        cbbPage = new javax.swing.JComboBox();
+        btnPrev = new javax.swing.JButton();
+        btnFirst = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -265,22 +283,77 @@ public class EmployeeFrm extends javax.swing.JFrame {
         tblEmployee.getTableHeader().setReorderingAllowed(false);
         tblEmployee.getTableHeader().setOpaque(false);
 
+        btnLast.setText("Last");
+        btnLast.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLastActionPerformed(evt);
+            }
+        });
+
+        btnNext.setText(">");
+        btnNext.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNextActionPerformed(evt);
+            }
+        });
+
+        cbbPage.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "2", "3", "50" }));
+        cbbPage.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbbPageItemStateChanged(evt);
+            }
+        });
+
+        btnPrev.setText("<");
+        btnPrev.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPrevActionPerformed(evt);
+            }
+        });
+
+        btnFirst.setText("First");
+        btnFirst.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFirstActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout bgLayout = new javax.swing.GroupLayout(bg);
         bg.setLayout(bgLayout);
         bgLayout.setHorizontalGroup(
             bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bgLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
+                .addGap(0, 4, Short.MAX_VALUE)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 651, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 651, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(bgLayout.createSequentialGroup()
+                        .addComponent(btnFirst)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnPrev)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cbbPage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnNext)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnLast))))
         );
         bgLayout.setVerticalGroup(
             bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(bgLayout.createSequentialGroup()
                 .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 589, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(bgLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnFirst)
+                            .addComponent(btnPrev)
+                            .addComponent(cbbPage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnNext)
+                            .addComponent(btnLast))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 549, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -369,23 +442,7 @@ public class EmployeeFrm extends javax.swing.JFrame {
     private void resetColor(JPanel panel) {
         panel.setBackground(new java.awt.Color(45, 118, 232));
     }
-    private void tblEmployeeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblEmployeeMouseClicked
-        int r = tblEmployee.getSelectedRow();
-        TableModel model = tblEmployee.getModel();
-        if (r != -1) {
-            Date date = new Date();
-            DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-            Object a = model.getValueAt(r, 4) != "" ? model.getValueAt(r, 4) : new Date();
-            String today = formatter.format(a != "" ? a : new Date().toString());
-            txtUser.setText(model.getValueAt(r, 0) != null ? model.getValueAt(r, 0).toString() : "");
-            txtUser.enable(false);
-            txtFullname.setText(model.getValueAt(r, 3) != null ? model.getValueAt(r, 3).toString() : "");
-            txtDate.setDate(new Date(today));
-            txtPhoneNumber.setText(model.getValueAt(r, 2) != null ? model.getValueAt(r, 2).toString() : "");
-        }
-        cbbLuaChon.setSelectedIndex(1);
 
-    }//GEN-LAST:event_tblEmployeeMouseClicked
     /**
      * Reset text boxes
      */
@@ -408,16 +465,18 @@ public class EmployeeFrm extends javax.swing.JFrame {
         try {
             String user = txtUser.getText();
             String pass = txtPassword.getText();
-            String name = txtFullname.getText();
-            String phone = this.txtPhoneNumber.getText();
-            Date date = txtDate.getDate() != null ? txtDate.getDate() : new Date();
-            tran = entityManager.getTransaction();
-            Employee employee = new Employee(user, pass, name, phone, date);
-            tran.begin();
-            entityManager.persist(employee);
-            tran.commit();
-
-            return true;
+            if (user != null && !"".equals(user) && pass != null && !"".equals(pass)) {
+                String name = txtFullname.getText();
+                String phone = this.txtPhoneNumber.getText();
+                Date date = txtDate.getDate() != null ? txtDate.getDate() : new Date();
+                tran = entityManager.getTransaction();
+                Employee employee = new Employee(user, pass, name, phone, date);
+                tran.begin();
+                entityManager.persist(employee);
+                tran.commit();
+                return true;
+            }
+            return false;
         } catch (Exception e) {
             if (tran != null && tran.isActive()) {
                 tran.rollback();
@@ -477,7 +536,7 @@ public class EmployeeFrm extends javax.swing.JFrame {
                 } else {
                     JOptionPane.showMessageDialog(null, "An error occured!");
                 }
-                setDataforTable();
+                refreshTable();
                 break;
             case "EDIT":
                 if (EditEmp()) {
@@ -487,7 +546,7 @@ public class EmployeeFrm extends javax.swing.JFrame {
                 } else {
                     JOptionPane.showMessageDialog(null, "An error occured!");
                 }
-                setDataforTable();
+                refreshTable();
                 break;
             case "DELETE":
                 if (DeleteEmp()) {
@@ -497,7 +556,7 @@ public class EmployeeFrm extends javax.swing.JFrame {
                 } else {
                     JOptionPane.showMessageDialog(null, "An error occured!");
                 }
-                setDataforTable();
+                refreshTable();
                 break;
             case "EMPTY":
                 resetField();
@@ -508,6 +567,69 @@ public class EmployeeFrm extends javax.swing.JFrame {
 
 
     }//GEN-LAST:event_btnOKMouseClicked
+
+    private void tblEmployeeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblEmployeeMouseClicked
+        int r = tblEmployee.getSelectedRow();
+        TableModel model = tblEmployee.getModel();
+        if (r != -1) {
+            Date date = new Date();
+            DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            Object a = model.getValueAt(r, 4) != "" ? model.getValueAt(r, 4) : new Date();
+            String today = formatter.format(a != "" ? a : new Date().toString());
+            txtUser.setText(model.getValueAt(r, 0) != null ? model.getValueAt(r, 0).toString() : "");
+            txtUser.enable(false);
+            txtFullname.setText(model.getValueAt(r, 3) != null ? model.getValueAt(r, 3).toString() : "");
+            txtDate.setDate(new Date(today));
+            txtPhoneNumber.setText(model.getValueAt(r, 2) != null ? model.getValueAt(r, 2).toString() : "");
+        }
+        cbbLuaChon.setSelectedIndex(1);
+    }//GEN-LAST:event_tblEmployeeMouseClicked
+
+    private void btnLastActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLastActionPerformed
+        // TODO add your handling code here:
+        pagination.lastPage();
+        refreshTable();
+    }//GEN-LAST:event_btnLastActionPerformed
+
+    private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
+        // TODO add your handling code here:
+        pagination.nextPage();
+        refreshTable();
+    }//GEN-LAST:event_btnNextActionPerformed
+
+    private void cbbPageItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbbPageItemStateChanged
+        // TODO add your handling code here:
+        int size = Integer.parseInt(cbbPage.getSelectedItem().toString());
+        pagination = new PaginationController(size, lst.size());
+        refreshTable();
+    }//GEN-LAST:event_cbbPageItemStateChanged
+
+    private void btnPrevActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrevActionPerformed
+        // TODO add your handling code here:
+        pagination.prevPage();
+        refreshTable();
+    }//GEN-LAST:event_btnPrevActionPerformed
+
+    private void btnFirstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFirstActionPerformed
+        // TODO add your handling code here:
+        pagination.firstPage();
+        refreshTable();
+    }//GEN-LAST:event_btnFirstActionPerformed
+    private void refreshTable() {
+        if (lst == null) {
+            lst = controller.findSortEntities(pagination.getPageSize(), pagination.getCurrentItem());
+        }
+        lst.clear();
+        lst.addAll(controller.findSortEntities(pagination.getPageSize(), pagination.getCurrentItem()));
+        //tblPegawai.updateUI();
+        tblEmployee.setModel(new DefaultTableModel());
+        setDataforTable(lst);
+        btnFirst.setEnabled(pagination.isHasPrevPage());
+        btnPrev.setEnabled(pagination.isHasPrevPage());
+        btnNext.setEnabled(pagination.isHasNextPage());
+        btnLast.setEnabled(pagination.isHasNextPage());
+    }
+
     private static boolean validatePhoneNumber(String phoneNo) {
         if (phoneNo.matches("\\+\\d{11}")) {
             return true;
@@ -567,12 +689,12 @@ public class EmployeeFrm extends javax.swing.JFrame {
         });
     }
 
-    private void setDataforTable() {
+    private void setDataforTable(List<Employee> resultList) {
         try {
             tblEmployee.setModel(new DefaultTableModel());
             //EntityManager entityManager = Persistence.createEntityManagerFactory(unitName).createEntityManager();
-            Query query = entityManager.createNamedQuery("Employee.findAll");
-            List<Employee> resultList = query.getResultList();
+//            Query query = entityManager.createNamedQuery("Employee.findAll");
+//            List<Employee> resultList = query.getResultList();
 
             Vector<String> tableHeaders = new Vector<String>();
             Vector tableData = new Vector();
@@ -589,7 +711,9 @@ public class EmployeeFrm extends javax.swing.JFrame {
                 Vector<Object> oneRow = new Vector<Object>();
                 //String strDate = new SimpleDateFormat("MM/dd/yyyy").format((Date));
                 oneRow.add(e.getUsername());
-                oneRow.add((e.getIsadmin() == 1 ? " YES " : " NO "));
+                if (e.getIsadmin() != null) {
+                    oneRow.add((e.getIsadmin() == 1 ? " YES " : " NO "));
+                }
                 //oneRow.add(e.getPass());
                 oneRow.add(e.getEmpphone());
                 oneRow.add(e.getEmpname());
@@ -618,8 +742,13 @@ public class EmployeeFrm extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.persistence.EntityManager SaleManagerProjectPUEntityManager;
     private javax.swing.JPanel bg;
+    private javax.swing.JButton btnFirst;
+    private javax.swing.JButton btnLast;
+    private javax.swing.JButton btnNext;
     private javax.swing.JButton btnOK;
+    private javax.swing.JButton btnPrev;
     private javax.swing.JComboBox<String> cbbLuaChon;
+    private javax.swing.JComboBox cbbPage;
     private java.util.List<Entity.Employee> employeeList;
     private javax.persistence.Query employeeQuery;
     private javax.swing.JLabel jLabel1;

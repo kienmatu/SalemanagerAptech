@@ -7,6 +7,9 @@ package MainForm;
 
 import Entity.Bill;
 import Entity.Product;
+import static MainForm.entity.factory;
+import Services.JPAPaginController;
+import Services.PaginationController;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -31,10 +34,11 @@ import org.eclipse.persistence.config.QueryHints;
  *
  * @author KIENDINH
  */
-public class OrderFrm extends javax.swing.JFrame implements ActionListener,entity {
+public class OrderFrm extends javax.swing.JFrame implements ActionListener, entity {
 
-//    private final static String unitName = "SaleManagerProjectPU";
-//    private static final EntityManager entityManager = Persistence.createEntityManagerFactory(unitName).createEntityManager();
+    JPAPaginController controller = new JPAPaginController(factory, Entity.Bill.class);
+    PaginationController pagination;
+    List<Bill> lst;
     JPopupMenu popupMenu = new JPopupMenu();
     JMenuItem menuItemDelete = new JMenuItem("Delete This");
 
@@ -46,50 +50,36 @@ public class OrderFrm extends javax.swing.JFrame implements ActionListener,entit
         setLocationRelativeTo(null);
         popupMenu.add(menuItemDelete);
         menuItemDelete.addActionListener(this);
-        //this.tblOrder.setGridColor(Color.GRAY);
-        //setData();
+        int size = Integer.parseInt(this.cbbPage.getSelectedItem().toString());
+        pagination = new PaginationController(size, controller.getCount());
+        refreshTable();
     }
 
-    private void setData() {
-        try {
-            tblOrder.setModel(new DefaultTableModel());
-            //EntityManager entityManager = Persistence.createEntityManagerFactory(unitName).createEntityManager();
-            Query query = entityManager.createNamedQuery("Bill.findAll");
-            List<Bill> resultList = query.getResultList();
+    private void refreshTable() {
+        if (lst == null) {
+            lst = controller.findSortEntities(pagination.getPageSize(), pagination.getCurrentItem());
+        } else {
+            lst.clear();
+            lst.addAll(controller.findSortEntities(pagination.getPageSize(), pagination.getCurrentItem()));
+            setDataBill(lst);
+            btnFirst.setEnabled(pagination.isHasPrevPage());
+            btnPrev.setEnabled(pagination.isHasPrevPage());
+            btnNext.setEnabled(pagination.isHasNextPage());
+            btnLast.setEnabled(pagination.isHasNextPage());
 
-            Vector<String> tableHeaders = new Vector<>();
-            Vector tableData = new Vector();
-
-            tableHeaders.add("BILL ID");
-            tableHeaders.add("BILL DATE");
-            tableHeaders.add("EMPLOYEE");
-            //tableHeaders.add("PRODUCT");
-
-            for (Bill e : resultList) {
-                Vector<Object> oneRow = new Vector<Object>();
-                oneRow.add(e.getBillid());
-                oneRow.add(e.getBilldate());
-                oneRow.add(e.getUsername());
-                //oneRow.add(e.getProduct());
-                tableData.add(oneRow);
-            }
-            DefaultTableModel aModel = new DefaultTableModel(tableData, tableHeaders) {
-                @Override
-                public boolean isCellEditable(int row, int column) {
-                    return false;
-                }
-
-            };
-            this.tblOrder.setModel(aModel);
-
-            //       tblOrder.setEnabled(false);
-//        JTableHeader header = tblOrder.getTableHeader();
-//         tblEmployee.getTableHeader().setOpaque(false);
-//         header.setBackground(Color.WHITE);
-//         header.setForeground(Color.BLACK);
-        } catch (Exception he) {
-            he.printStackTrace();
         }
+    }
+
+    private void setDataBill(List<Bill> list) {
+        String[] header = new String[]{"DATE", "ID", "CUSTOMER ID", "EMPLOYEE"};
+        DefaultTableModel dataModel = new DefaultTableModel(header, 0);
+        if (list.size() > 0) {
+            for (Bill p : list) {
+                Object[] columns = new Object[]{p.getBilldate(), p.getBillid(), p.getCustid(), p.getUsername()};
+                dataModel.addRow(columns);
+            }
+        }
+        this.tblOrder.setModel(dataModel);
 
     }
 
@@ -128,6 +118,11 @@ public class OrderFrm extends javax.swing.JFrame implements ActionListener,entit
         txtCost = new javax.swing.JLabel("",SwingConstants.RIGHT);
         cbbEmp = new javax.swing.JComboBox<>();
         btnFilter = new javax.swing.JButton();
+        btnFirst = new javax.swing.JButton();
+        btnPrev = new javax.swing.JButton();
+        cbbPage = new javax.swing.JComboBox();
+        btnLast = new javax.swing.JButton();
+        btnNext = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("ORDER MANAGER");
@@ -148,25 +143,6 @@ public class OrderFrm extends javax.swing.JFrame implements ActionListener,entit
         tblOrder.setShowHorizontalLines(false);
         tblOrder.setShowVerticalLines(false);
         tblOrder.getTableHeader().setReorderingAllowed(false);
-
-        org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, billList, tblOrder);
-        org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${billdate}"));
-        columnBinding.setColumnName("Date");
-        columnBinding.setColumnClass(java.util.Date.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${billid}"));
-        columnBinding.setColumnName("ID");
-        columnBinding.setColumnClass(Integer.class);
-        columnBinding.setEditable(false);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${custid}"));
-        columnBinding.setColumnName("CUSTOMER ID");
-        columnBinding.setColumnClass(Entity.Customer.class);
-        columnBinding.setEditable(false);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${username}"));
-        columnBinding.setColumnName("EMPLOYEE");
-        columnBinding.setColumnClass(Entity.Employee.class);
-        columnBinding.setEditable(false);
-        bindingGroup.addBinding(jTableBinding);
-        jTableBinding.bind();
         tblOrder.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tblOrderMouseClicked(evt);
@@ -237,6 +213,41 @@ public class OrderFrm extends javax.swing.JFrame implements ActionListener,entit
             }
         });
 
+        btnFirst.setText("First");
+        btnFirst.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFirstActionPerformed(evt);
+            }
+        });
+
+        btnPrev.setText("<");
+        btnPrev.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPrevActionPerformed(evt);
+            }
+        });
+
+        cbbPage.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "5", "10", "50" }));
+        cbbPage.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbbPageItemStateChanged(evt);
+            }
+        });
+
+        btnLast.setText("Last");
+        btnLast.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLastActionPerformed(evt);
+            }
+        });
+
+        btnNext.setText(">");
+        btnNext.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNextActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -247,9 +258,22 @@ public class OrderFrm extends javax.swing.JFrame implements ActionListener,entit
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 540, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(cbbEmp, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(46, 46, 46)
-                        .addComponent(btnFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(cbbEmp, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(46, 46, 46))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(btnFirst)
+                                .addGap(14, 14, 14)
+                                .addComponent(btnPrev)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(cbbPage, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnNext)
+                                .addGap(10, 10, 10)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnLast))))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 637, Short.MAX_VALUE)
@@ -281,7 +305,7 @@ public class OrderFrm extends javax.swing.JFrame implements ActionListener,entit
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 285, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -298,8 +322,15 @@ public class OrderFrm extends javax.swing.JFrame implements ActionListener,entit
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(cbbEmp)
                             .addComponent(btnFilter, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
-                        .addComponent(jScrollOrder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnFirst)
+                            .addComponent(btnPrev)
+                            .addComponent(cbbPage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnNext)
+                            .addComponent(btnLast))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 388, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
 
@@ -433,26 +464,51 @@ public class OrderFrm extends javax.swing.JFrame implements ActionListener,entit
         String id = cbbEmp.getSelectedItem().toString();
         String[] param = id.split("\\.");
         String pa = param[0];
-        billQuery = java.beans.Beans.isDesignTime() ? null
-                : SaleManagerProjectPUEntityManager.createNativeQuery("SELECT * FROM BILL WHERE username = ?", Bill.class).setHint(QueryHints.REFRESH, true);
+        billQuery = SaleManagerProjectPUEntityManager.createNativeQuery("SELECT * FROM BILL WHERE username = ?", Bill.class).setHint(QueryHints.REFRESH, true);
         billQuery.setParameter(1, pa);
-        billList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : billQuery.getResultList();
+        billList = billQuery.getResultList();
+
+        lst.clear();
+        //lst.addAll(billList);
         setDataBill(billList);
+        btnFirst.setEnabled(pagination.isHasPrevPage());
+        btnPrev.setEnabled(pagination.isHasPrevPage());
+        btnNext.setEnabled(pagination.isHasNextPage());
+        btnLast.setEnabled(pagination.isHasNextPage());
+
+
     }//GEN-LAST:event_btnFilterMouseClicked
-    private void setDataBill(List<Bill> list) {
-        String[] header = new String[]{"DATE", "ID", "CUSTOMER ID", "EMPLOYEE"};
-        DefaultTableModel dataModel = new DefaultTableModel(header, 0);
-        if (list.size() > 0) {
 
-            for (Bill p : list) {
-                Object[] columns = new Object[]{p.getBilldate(), p.getBillid(), p.getCustid(), p.getUsername()};
-                dataModel.addRow(columns);
-            }
-        }
+    private void btnFirstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFirstActionPerformed
+        // TODO add your handling code here:
+        pagination.firstPage();
+        refreshTable();
+    }//GEN-LAST:event_btnFirstActionPerformed
 
-        this.tblOrder.setModel(dataModel);
+    private void btnPrevActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrevActionPerformed
+        // TODO add your handling code here:
+        pagination.prevPage();
+        refreshTable();
+    }//GEN-LAST:event_btnPrevActionPerformed
 
-    }
+    private void cbbPageItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbbPageItemStateChanged
+        // TODO add your handling code here:
+        int size = Integer.parseInt(cbbPage.getSelectedItem().toString());
+        pagination = new PaginationController(size, lst.size());
+        refreshTable();
+    }//GEN-LAST:event_cbbPageItemStateChanged
+
+    private void btnLastActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLastActionPerformed
+        // TODO add your handling code here:
+        pagination.lastPage();
+        refreshTable();
+    }//GEN-LAST:event_btnLastActionPerformed
+
+    private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
+        // TODO add your handling code here:
+        pagination.nextPage();
+        refreshTable();
+    }//GEN-LAST:event_btnNextActionPerformed
 
     /**
      * @param args the command line arguments
@@ -592,7 +648,12 @@ public class OrderFrm extends javax.swing.JFrame implements ActionListener,entit
     private java.util.List<Entity.Bill> billList;
     private javax.persistence.Query billQuery;
     private javax.swing.JButton btnFilter;
+    private javax.swing.JButton btnFirst;
+    private javax.swing.JButton btnLast;
+    private javax.swing.JButton btnNext;
+    private javax.swing.JButton btnPrev;
     private javax.swing.JComboBox<String> cbbEmp;
+    private javax.swing.JComboBox cbbPage;
     private java.util.List<Entity.Employee> employeeList;
     private javax.persistence.Query employeeQuery;
     private javax.swing.JButton jButton2;

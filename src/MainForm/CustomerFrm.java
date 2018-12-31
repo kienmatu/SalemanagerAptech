@@ -5,45 +5,49 @@
  */
 package MainForm;
 //import Entity.CustomerFrm;
-import Entity.Employee;
+
+import Entity.Customer;
+import static MainForm.entity.factory;
+import Services.JPAPaginController;
+import Services.PaginationController;
 import java.awt.Color;
-//import antlr.collections.List;
 import java.awt.event.ItemEvent;
-import java.awt.event.KeyEvent;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
-import javax.persistence.Query;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
 import javax.swing.table.TableModel;
+
 /**
  *
  * @author KIENDINH
  */
-public class CustomerFrm extends javax.swing.JFrame {
+public class CustomerFrm extends javax.swing.JFrame implements entity {
+
+    JPAPaginController controller = new JPAPaginController(factory, Entity.Customer.class);
     private String luaChon = "ADD";
-    private final static String unitName = "SaleManagerProjectPU";
-    private static final EntityManager entityManager = Persistence.createEntityManagerFactory(unitName).createEntityManager();
+    PaginationController pagination;
+    List<Customer> lst;// = controller.findSortEntities(pagination.getPageSize(), pagination.getCurrentItem());
+//    private final static String unitName = "SaleManagerProjectPU";
+//    private static final EntityManager entityManager = Persistence.createEntityManagerFactory(unitName).createEntityManager();
+
     /**
      * Creates new form Customer
      */
     public CustomerFrm() {
         initComponents();
         this.setLocationRelativeTo(null);
-        setDataforTable();
+        int size = Integer.parseInt(this.cbbPage.getSelectedItem().toString());
+        pagination = new PaginationController(size, controller.getCount());
+        refreshTable();
     }
 
     /**
@@ -76,6 +80,11 @@ public class CustomerFrm extends javax.swing.JFrame {
         txtName = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblCustomer = new javax.swing.JTable();
+        btnLast = new javax.swing.JButton();
+        btnNext = new javax.swing.JButton();
+        cbbPage = new javax.swing.JComboBox();
+        btnPrev = new javax.swing.JButton();
+        btnFirst = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Customer Manager");
@@ -276,6 +285,41 @@ public class CustomerFrm extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(tblCustomer);
 
+        btnLast.setText("Last");
+        btnLast.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLastActionPerformed(evt);
+            }
+        });
+
+        btnNext.setText(">");
+        btnNext.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNextActionPerformed(evt);
+            }
+        });
+
+        cbbPage.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "2", "3", "50" }));
+        cbbPage.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbbPageItemStateChanged(evt);
+            }
+        });
+
+        btnPrev.setText("<");
+        btnPrev.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPrevActionPerformed(evt);
+            }
+        });
+
+        btnFirst.setText("First");
+        btnFirst.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFirstActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout bgLayout = new javax.swing.GroupLayout(bg);
         bg.setLayout(bgLayout);
         bgLayout.setHorizontalGroup(
@@ -284,14 +328,34 @@ public class CustomerFrm extends javax.swing.JFrame {
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 849, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 849, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(bgLayout.createSequentialGroup()
+                        .addComponent(btnFirst)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnPrev)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cbbPage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnNext)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnLast))))
         );
         bgLayout.setVerticalGroup(
             bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(bgLayout.createSequentialGroup()
                 .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1))
+                    .addGroup(bgLayout.createSequentialGroup()
+                        .addGap(0, 11, Short.MAX_VALUE)
+                        .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnFirst)
+                            .addComponent(btnPrev)
+                            .addComponent(cbbPage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnNext)
+                            .addComponent(btnLast))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 527, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(0, 0, 0))
         );
 
@@ -320,7 +384,7 @@ public class CustomerFrm extends javax.swing.JFrame {
             luaChon = "EMPTY";
         }
     }//GEN-LAST:event_cbbLuaChonItemStateChanged
-    private void lockField(){
+    private void lockField() {
         //txtCustID.setEditable(false);
         txtName.setEditable(false);
         txtAddress.setEditable(false);
@@ -328,8 +392,8 @@ public class CustomerFrm extends javax.swing.JFrame {
         txtDate.setDate(new Date());
         txtDate1.setDate(new Date());
     }
-    
-    private void releaseField(){
+
+    private void releaseField() {
         //txtCustID.setEditable(false);
         txtName.setEditable(true);
         txtAddress.setEditable(true);
@@ -337,7 +401,7 @@ public class CustomerFrm extends javax.swing.JFrame {
         txtDate.setDate(new Date());
         txtDate1.setDate(new Date());
     }
-    
+
     private void resetField() {
         txtCustID.setText("");
         txtName.setText("");
@@ -346,108 +410,97 @@ public class CustomerFrm extends javax.swing.JFrame {
         txtDate.setDate(new Date());
         txtDate1.setDate(new Date());
     }
-    
-private boolean addCustomer() {
-        EntityTransaction tran = null;
-        if(checkName() == true && checkPhone() == true ) //  neu username ma khong co dau, tuc la chi co cac ky tu tu a-z "[A-Za-z0-9_]+"
-        {
-        try {
-            String name = txtName.getText();
-            String address = txtAddress.getText();
-            String phone = this.txtPhoneNumber.getText();           
-            Date date = txtDate.getDate() != null ? txtDate.getDate() : new Date();//new SimpleDateFormat("dd/MM/yyyy").parse(txtDate.getText());
-            Date date1 = txtDate1.getDate() != null ? txtDate1.getDate() : new Date();
-            //JOptionPane.showMessageDialog(null, date);
-            //EntityManager entityManager = Persistence.createEntityManagerFactory(unitName).createEntityManager();
-            tran = entityManager.getTransaction();
-            Entity.Customer customer = new Entity.Customer();
-            customer.setCustname(name);
-            customer.setCustaddress(address);
-            customer.setCustphone(phone);
-            customer.setCustdob(date);
-            customer.setCustregdate(date1);
-            tran.begin();
-            entityManager.persist(customer);
-            tran.commit();
 
-            return true;
-        } catch (Exception e) {
-            if (tran != null && tran.isActive()) {
-                tran.rollback();
+    private boolean addCustomer() {
+        EntityTransaction tran = null;
+        if (checkName() == true && checkPhone() == true) //  neu username ma khong co dau, tuc la chi co cac ky tu tu a-z "[A-Za-z0-9_]+"
+        {
+            try {
+                String name = txtName.getText();
+                String address = txtAddress.getText();
+                String phone = this.txtPhoneNumber.getText();
+                Date date = txtDate.getDate() != null ? txtDate.getDate() : new Date();//new SimpleDateFormat("dd/MM/yyyy").parse(txtDate.getText());
+                Date date1 = txtDate1.getDate() != null ? txtDate1.getDate() : new Date();
+                //JOptionPane.showMessageDialog(null, date);
+                //EntityManager entityManager = Persistence.createEntityManagerFactory(unitName).createEntityManager();
+                tran = entityManager.getTransaction();
+                Entity.Customer customer = new Entity.Customer();
+                customer.setCustname(name);
+                customer.setCustaddress(address);
+                customer.setCustphone(phone);
+                customer.setCustdob(date);
+                customer.setCustregdate(date1);
+                tran.begin();
+                entityManager.persist(customer);
+                tran.commit();
+
+                return true;
+            } catch (Exception e) {
+                if (tran != null && tran.isActive()) {
+                    tran.rollback();
 //                JOptionPane.showMessageDialog(null, e);
 
+                }
+                //JOptionPane.showMessageDialog(null, e);
+                return false;
             }
-            //JOptionPane.showMessageDialog(null, e);
-            return false;
-        }
-        }
-        else
-        {
-            if(checkName() == false)
-            {
-            JOptionPane.showMessageDialog(null, "PLEASE CHECK NAME !");
-            return false;
-            }          
-            else 
-            {
-            JOptionPane.showMessageDialog(null, "PLEASE CHECK PHONENUMBER!");
-            return false;
+        } else {
+            if (checkName() == false) {
+                JOptionPane.showMessageDialog(null, "PLEASE CHECK NAME !");
+                return false;
+            } else {
+                JOptionPane.showMessageDialog(null, "PLEASE CHECK PHONENUMBER!");
+                return false;
             }
-           
+
         }
 
-    }   
-    
+    }
+
     private boolean EditCust() {
         EntityTransaction tran = null;
-        if(checkName() == true && checkPhone() == true) //  neu username ma khong co dau, tuc la chi co cac ky tu tu a-z "[A-Za-z0-9_]+"
+        if (checkName() == true && checkPhone() == true) //  neu username ma khong co dau, tuc la chi co cac ky tu tu a-z "[A-Za-z0-9_]+"
         {
-try {
-            int ID = Integer.parseInt(txtCustID.getText());   
-            tran = entityManager.getTransaction();
-            Entity.Customer customer = entityManager.find(Entity.Customer.class, ID);
-            tran.begin(); 
-            customer.setCustname(txtName.getText());
-            customer.setCustaddress(txtAddress.getText());
-            customer.setCustphone(txtPhoneNumber.getText());
-            customer.setCustdob(txtDate.getDate());
-            customer.setCustregdate(txtDate1.getDate());
-            tran.commit();
+            try {
+                int ID = Integer.parseInt(txtCustID.getText());
+                tran = entityManager.getTransaction();
+                Entity.Customer customer = entityManager.find(Entity.Customer.class, ID);
+                tran.begin();
+                customer.setCustname(txtName.getText());
+                customer.setCustaddress(txtAddress.getText());
+                customer.setCustphone(txtPhoneNumber.getText());
+                customer.setCustdob(txtDate.getDate());
+                customer.setCustregdate(txtDate1.getDate());
+                tran.commit();
 
-            return true;
-        } catch (Exception e) {
-            if (tran != null && tran.isActive()) {
-                tran.rollback();
+                return true;
+            } catch (Exception e) {
+                if (tran != null && tran.isActive()) {
+                    tran.rollback();
+                    //JOptionPane.showMessageDialog(null, e);
+
+                }
                 //JOptionPane.showMessageDialog(null, e);
+                return false;
+            }
+        } else {
+            if (checkName() == false) {
+                JOptionPane.showMessageDialog(null, "PLEASE CHECK NAME !");
+                return false;
+            } else {
+                JOptionPane.showMessageDialog(null, "PLEASE CHECK PHONENUMBER!");
+                return false;
+            }
 
-            }
-            //JOptionPane.showMessageDialog(null, e);
-            return false;
-        }
-        }
-        else
-        {
-            if(checkName() == false)
-            {
-            JOptionPane.showMessageDialog(null, "PLEASE CHECK NAME !");
-            return false;
-            }
-     
-            else 
-            {
-            JOptionPane.showMessageDialog(null, "PLEASE CHECK PHONENUMBER!");
-            return false;
-            }
-           
         }
 
-    }  
-    
+    }
+
     private boolean DeleteCust() {
         EntityTransaction tran = null;
         try {
             int ID = Integer.parseInt(txtCustID.getText());
-          //  String username = txtCustID.getUIClassID();
+            //  String username = txtCustID.getUIClassID();
             EntityManager entityManager = Persistence.createEntityManagerFactory(unitName).createEntityManager();
             tran = entityManager.getTransaction();
             Entity.Customer customer = entityManager.find(Entity.Customer.class, ID); // hàm này lấy theo trường PRIMARY KEY
@@ -466,7 +519,8 @@ try {
             return false;
         }
     }
-     private void setColor(JPanel panel) {
+
+    private void setColor(JPanel panel) {
         panel.setBackground(new java.awt.Color(0, 51, 255));
     }
 
@@ -480,9 +534,9 @@ try {
             Date date = new Date();
             DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
             Object a = model.getValueAt(r, 4) != "" ? model.getValueAt(r, 4) : new Date();
-            String dob = formatter.format(a!= "" ? a : new Date().toString());
-             Object b = model.getValueAt(r, 5) != "" ? model.getValueAt(r, 5) : new Date();
-            String reg = formatter.format(a!= "" ? b : new Date().toString());
+            String dob = formatter.format(a != "" ? a : new Date().toString());
+            Object b = model.getValueAt(r, 5) != "" ? model.getValueAt(r, 5) : new Date();
+            String reg = formatter.format(a != "" ? b : new Date().toString());
             txtCustID.setText(model.getValueAt(r, 0) != null ? model.getValueAt(r, 0).toString() : "");
             txtCustID.enable(false);
             txtName.setText(model.getValueAt(r, 1) != null ? model.getValueAt(r, 1).toString() : "");
@@ -490,7 +544,7 @@ try {
             txtPhoneNumber.setText(model.getValueAt(r, 3) != null ? model.getValueAt(r, 3).toString() : "");
             txtDate.setDate(new Date(dob));
             txtDate1.setDate(new Date(reg));
-           
+
         }
         cbbLuaChon.setSelectedIndex(1);
     }//GEN-LAST:event_tblCustomerMouseClicked
@@ -500,49 +554,49 @@ try {
     }//GEN-LAST:event_cbbLuaChonActionPerformed
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-       if (null != luaChon) {
+        if (null != luaChon) {
             switch (luaChon) {
                 case "ADD":
-                lockField();
-                if (addCustomer()) {
-                    JOptionPane.showMessageDialog(null, "ADD CUSTOMER " + txtName.getText() + " Successfully");
-                    resetField();
+                    lockField();
+                    if (addCustomer()) {
+                        JOptionPane.showMessageDialog(null, "ADD CUSTOMER " + txtName.getText() + " Successfully");
+                        resetField();
 
-                } else {
-                    JOptionPane.showMessageDialog(null, "An error occured!");
-                }
-                setDataforTable();
-                releaseField();
-                break;
+                    } else {
+                        JOptionPane.showMessageDialog(null, "An error occured!");
+                    }
+                    refreshTable();
+                    releaseField();
+                    break;
                 case "EDIT":
-                lockField();
-                if (EditCust()) {
-                    JOptionPane.showMessageDialog(null, "EDIT CUSTOMER " + txtName.getText() + " Successfully");
-                    resetField();
+                    lockField();
+                    if (EditCust()) {
+                        JOptionPane.showMessageDialog(null, "EDIT CUSTOMER " + txtName.getText() + " Successfully");
+                        resetField();
 
-                } else {
-                    JOptionPane.showMessageDialog(null, "An error occured!");
-                }
-                setDataforTable();
-                releaseField();
-                break;
+                    } else {
+                        JOptionPane.showMessageDialog(null, "An error occured!");
+                    }
+                    refreshTable();
+                    releaseField();
+                    break;
                 case "DELETE":
-                lockField();
-                if (DeleteCust()) {
-                    JOptionPane.showMessageDialog(null, "DELETE CUSTOMER " + txtName.getText() + " Successfully");
-                    resetField();
+                    lockField();
+                    if (DeleteCust()) {
+                        JOptionPane.showMessageDialog(null, "DELETE CUSTOMER " + txtName.getText() + " Successfully");
+                        resetField();
 
-                } else {
-                    JOptionPane.showMessageDialog(null, "An error occured!");
-                }
-                setDataforTable();
-                releaseField();
-                break;
+                    } else {
+                        JOptionPane.showMessageDialog(null, "An error occured!");
+                    }
+                    refreshTable();
+                    releaseField();
+                    break;
                 case "EMPTY":
-                resetField();
-                break;
+                    resetField();
+                    break;
                 default:
-                break;
+                    break;
             }
         }
     }//GEN-LAST:event_jButton1MouseClicked
@@ -573,12 +627,41 @@ try {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtPhoneNumberPropertyChange
 
+    private void btnLastActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLastActionPerformed
+        // TODO add your handling code here:
+        pagination.lastPage();
+        refreshTable();
+    }//GEN-LAST:event_btnLastActionPerformed
+
+    private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
+        // TODO add your handling code here:
+        pagination.nextPage();
+        refreshTable();
+    }//GEN-LAST:event_btnNextActionPerformed
+
+    private void cbbPageItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbbPageItemStateChanged
+        // TODO add your handling code here:
+        int size = Integer.parseInt(cbbPage.getSelectedItem().toString());
+        pagination = new PaginationController(size, lst.size());
+        refreshTable();
+    }//GEN-LAST:event_cbbPageItemStateChanged
+
+    private void btnPrevActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrevActionPerformed
+        // TODO add your handling code here:
+        pagination.prevPage();
+        refreshTable();
+    }//GEN-LAST:event_btnPrevActionPerformed
+
+    private void btnFirstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFirstActionPerformed
+        // TODO add your handling code here:
+        pagination.firstPage();
+        refreshTable();
+    }//GEN-LAST:event_btnFirstActionPerformed
+
     private static boolean validatePhoneNumber(String phoneNo) {
-        if(phoneNo.matches("\\+\\d{11}"))
-        {
+        if (phoneNo.matches("\\+\\d{11}")) {
             return true;
-        }
-        //validate phone numbers of format "1234567890"
+        } //validate phone numbers of format "1234567890"
         else if (phoneNo.matches("\\d{10}")) {
             return true;
         } //validating phone number with -, . or spaces
@@ -590,13 +673,10 @@ try {
         } //validating phone number where area code is in braces ()
         else if (phoneNo.matches("\\(\\d{3}\\)-\\d{3}-\\d{4}")) {
             return true;
-        } 
-        else if (phoneNo.matches("^\\+(?:[0-9] ?){6,14}[0-9]$")) {
+        } else if (phoneNo.matches("^\\+(?:[0-9] ?){6,14}[0-9]$")) {
             return true;
-        }
-        //return false if nothing matches the input
-        else 
-        {
+        } //return false if nothing matches the input
+        else {
             return false;
         }
 
@@ -637,12 +717,28 @@ try {
             }
         });
     }
-    private void setDataforTable() {
+
+    private void refreshTable() {
+        if (lst == null) {
+            lst = controller.findSortEntities(pagination.getPageSize(), pagination.getCurrentItem());
+        } else {
+            lst.clear();
+            lst.addAll(controller.findSortEntities(pagination.getPageSize(), pagination.getCurrentItem()));
+        }
+        setDataforTable(lst);
+        btnFirst.setEnabled(pagination.isHasPrevPage());
+        btnPrev.setEnabled(pagination.isHasPrevPage());
+        btnNext.setEnabled(pagination.isHasNextPage());
+        btnLast.setEnabled(pagination.isHasNextPage());
+
+    }
+
+    private void setDataforTable(List<Entity.Customer> resultList) {
         try {
             tblCustomer.setModel(new DefaultTableModel());
             //EntityManager entityManager = Persistence.createEntityManagerFactory(unitName).createEntityManager();
-            Query query = entityManager.createNamedQuery("Customer.findAll");
-            List<Entity.Customer> resultList = query.getResultList();
+//            Query query = entityManager.createNamedQuery("Customer.findAll");
+//            List<Entity.Customer> resultList = query.getResultList();
 
             Vector<String> tableHeaders = new Vector<String>();
             Vector tableData = new Vector();
@@ -658,7 +754,7 @@ try {
                 Vector<Object> oneRow = new Vector<Object>();
                 //String strDate = new SimpleDateFormat("MM/dd/yyyy").format((Date));
                 oneRow.add(e.getCustid());
-                oneRow.add((e.getCustname()));               
+                oneRow.add((e.getCustname()));
                 oneRow.add(e.getCustaddress());
                 oneRow.add(e.getCustphone());
                 oneRow.add(e.getCustdob() != null ? e.getCustdob() : "");
@@ -680,7 +776,12 @@ try {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel bg;
+    private javax.swing.JButton btnFirst;
+    private javax.swing.JButton btnLast;
+    private javax.swing.JButton btnNext;
+    private javax.swing.JButton btnPrev;
     private javax.swing.JComboBox<String> cbbLuaChon;
+    private javax.swing.JComboBox cbbPage;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -708,11 +809,12 @@ try {
         boolean valid = (name != null) && pattern.matcher(name).matches();
         return valid;
     }
+
     private boolean checkPhone() {
         String number = this.txtPhoneNumber.getText(); // lay user name
         //boolean valid = (username != null) && username.matches("[A-Za-z0-9_]+");
         Pattern pattern = Pattern.compile("^[0-9\\-\\+]{10,15}$");
         boolean valid = (number != null) && pattern.matcher(number).matches();
         return valid;
-    }  
+    }
 }

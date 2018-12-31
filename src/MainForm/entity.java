@@ -5,6 +5,8 @@
  */
 package MainForm;
 
+import Services.JPAPaginController;
+import Services.PaginationController;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
@@ -13,8 +15,9 @@ import javax.persistence.EntityManagerFactory;
  * @author KIENDINH
  */
 public interface entity {
-     static String unitName = "SaleManagerProjectPU";
-     static EntityManagerFactory factory = javax.persistence.Persistence.createEntityManagerFactory(unitName);
-     static EntityManager entityManager = factory.createEntityManager();
-     //void refreshEntity();
+
+    static String unitName = "SaleManagerProjectPU";
+    static EntityManagerFactory factory = javax.persistence.Persistence.createEntityManagerFactory(unitName);
+    static EntityManager entityManager = factory.createEntityManager();
+    
 }

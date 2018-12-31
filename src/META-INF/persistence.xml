@@ -16,15 +16,4 @@
       <property name="javax.persistence.jdbc.password" value="123456"/>
     </properties>
   </persistence-unit>
-  <persistence-unit name="localhost;databaseName=SALEPU" transaction-type="RESOURCE_LOCAL">
-    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-    <class>Entity.Product</class>
-    <class>Entity.Category</class>
-    <properties>
-      <property name="javax.persistence.jdbc.url" value="jdbc:sqlserver://localhost;databaseName=SALE"/>
-      <property name="javax.persistence.jdbc.user" value="sa"/>
-      <property name="javax.persistence.jdbc.driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
-      <property name="javax.persistence.jdbc.password" value="123456"/>
-    </properties>
-  </persistence-unit>
 </persistence>
