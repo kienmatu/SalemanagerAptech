@@ -5,6 +5,7 @@
  */
 package MainForm;
 
+import Services.entity;
 import ClassData.LoginUser;
 import Entity.Product;
 import java.awt.BorderLayout;

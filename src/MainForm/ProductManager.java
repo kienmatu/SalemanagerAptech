@@ -5,6 +5,7 @@
  */
 package MainForm;
 
+import Services.entity;
 import Entity.Category;
 import Entity.Product;
 import Services.ImagePreviewPanel;

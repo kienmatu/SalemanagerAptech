@@ -5,9 +5,10 @@
  */
 package MainForm;
 
+import Services.entity;
 import Services.PaginationController;
 import Entity.Employee;
-import static MainForm.entity.factory;
+import static Services.entity.factory;
 import Services.JPAPaginController;
 import java.awt.Color;
 //import antlr.collections.List;

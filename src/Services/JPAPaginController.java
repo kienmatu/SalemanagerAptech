@@ -5,12 +5,16 @@
  */
 package Services;
 
+import Entity.Employee;
+import static Services.entity.entityManager;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Root;
 
 /**
@@ -52,7 +56,33 @@ public class JPAPaginController<T> implements Serializable {
             em.close();
         }
     }
-    
+
+    private  List<T> findAllEntityByUser(String user, boolean all, int maxResults, int firstResult) {
+        EntityManager em = getEntityManager();
+        try {
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+            Root<T> c = cq.from(genericClass);
+            cq.select(c);
+            Employee e = entityManager.find(Employee.class,user);
+            //ParameterExpression<Entity.Employee> p = cb.parameter(e);
+           cq.where(cb.equal(c.get("username"), e));
+            Query q = em.createQuery(cq);
+            if (!all) {
+                q.setMaxResults(maxResults);
+                q.setFirstResult(firstResult);
+            }
+            List<T> x = q.getResultList();
+            return q.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    public List<T> findSortUserEntities(String user, int maxResults, int firstResult) {
+        return findAllEntityByUser(user, false, maxResults, firstResult);
+    }
+
     public List<T> findSortEntities(int maxResults, int firstResult) {
         return findAllEntities(false, maxResults, firstResult);
     }

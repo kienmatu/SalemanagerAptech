@@ -6,8 +6,9 @@
 package MainForm;
 
 import Entity.Bill;
+import Entity.Employee;
 import Entity.Product;
-import static MainForm.entity.factory;
+import Services.entity;
 import Services.JPAPaginController;
 import Services.PaginationController;
 import java.awt.event.ActionEvent;
@@ -52,22 +53,55 @@ public class OrderFrm extends javax.swing.JFrame implements ActionListener, enti
         menuItemDelete.addActionListener(this);
         int size = Integer.parseInt(this.cbbPage.getSelectedItem().toString());
         pagination = new PaginationController(size, controller.getCount());
+        setCate();
         refreshTable();
     }
 
+    private void setCate() {
+        Query employeeQuery = SaleManagerProjectPUEntityManager.createQuery("SELECT e FROM Employee e");
+        List<Employee> lstEmp = employeeQuery.getResultList();
+        this.cbbEmp.addItem("All");
+        for (Employee e : lstEmp) {
+            this.cbbEmp.addItem(e.toString());
+        }
+    }
+
     private void refreshTable() {
-        if (lst == null) {
-            lst = controller.findSortEntities(pagination.getPageSize(), pagination.getCurrentItem());
-        } else {
-            lst.clear();
-            lst.addAll(controller.findSortEntities(pagination.getPageSize(), pagination.getCurrentItem()));
+        if (this.cbbEmp.getSelectedItem() == "All") {
+            if (lst == null) {
+                lst = controller.findSortEntities(pagination.getPageSize(), pagination.getCurrentItem());
+            } else {
+                lst.clear();
+                lst.addAll(controller.findSortEntities(pagination.getPageSize(), pagination.getCurrentItem()));
+            }
             setDataBill(lst);
             btnFirst.setEnabled(pagination.isHasPrevPage());
             btnPrev.setEnabled(pagination.isHasPrevPage());
             btnNext.setEnabled(pagination.isHasNextPage());
             btnLast.setEnabled(pagination.isHasNextPage());
-
+        } else {
+            String id = cbbEmp.getSelectedItem().toString();
+            String[] param = id.split("\\.");
+            String pa = param[0];
+            refreshTable(pa);
         }
+
+    }
+
+    private void refreshTable(String user) {
+
+        if (lst == null) {
+            lst = controller.findSortUserEntities(user, pagination.getPageSize(), pagination.getCurrentItem());
+        } else {
+            lst.clear();
+            lst.addAll(controller.findSortUserEntities(user, pagination.getPageSize(), pagination.getCurrentItem()));
+        }
+        setDataBill(lst);
+        btnFirst.setEnabled(pagination.isHasPrevPage());
+        btnPrev.setEnabled(pagination.isHasPrevPage());
+        btnNext.setEnabled(pagination.isHasNextPage());
+        btnLast.setEnabled(pagination.isHasNextPage());
+
     }
 
     private void setDataBill(List<Bill> list) {
@@ -91,13 +125,10 @@ public class OrderFrm extends javax.swing.JFrame implements ActionListener, enti
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
         SaleManagerProjectPUEntityManager = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("SaleManagerProjectPU").createEntityManager();
         billQuery = java.beans.Beans.isDesignTime() ? null : SaleManagerProjectPUEntityManager.createQuery("SELECT b FROM Bill b");
         billList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : billQuery.getResultList();
-        employeeQuery = java.beans.Beans.isDesignTime() ? null : SaleManagerProjectPUEntityManager.createQuery("SELECT e FROM Employee e");
-        employeeList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : employeeQuery.getResultList();
         jPanel1 = new javax.swing.JPanel();
         jScrollOrder = new javax.swing.JScrollPane();
         tblOrder = new javax.swing.JTable() {
@@ -200,9 +231,6 @@ public class OrderFrm extends javax.swing.JFrame implements ActionListener, enti
         txtCost.setText("0.0000");
 
         cbbEmp.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-
-        org.jdesktop.swingbinding.JComboBoxBinding jComboBoxBinding = org.jdesktop.swingbinding.SwingBindings.createJComboBoxBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, employeeList, cbbEmp);
-        bindingGroup.addBinding(jComboBoxBinding);
 
         btnFilter.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         btnFilter.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/filter.png"))); // NOI18N
@@ -345,8 +373,6 @@ public class OrderFrm extends javax.swing.JFrame implements ActionListener, enti
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        bindingGroup.bind();
-
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -461,21 +487,23 @@ public class OrderFrm extends javax.swing.JFrame implements ActionListener, enti
 
     private void btnFilterMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnFilterMouseClicked
         // TODO add your handling code here:
-        String id = cbbEmp.getSelectedItem().toString();
-        String[] param = id.split("\\.");
-        String pa = param[0];
-        billQuery = SaleManagerProjectPUEntityManager.createNativeQuery("SELECT * FROM BILL WHERE username = ?", Bill.class).setHint(QueryHints.REFRESH, true);
-        billQuery.setParameter(1, pa);
-        billList = billQuery.getResultList();
-
-        lst.clear();
+        // if ("All".equals(this.cbbEmp.getSelectedItem().toString())) {
+        refreshTable();
+//        } else {
+//           
+////            billQuery = SaleManagerProjectPUEntityManager.createNativeQuery("SELECT * FROM BILL WHERE username = ?", Bill.class).setHint(QueryHints.REFRESH, true);
+////            billQuery.setParameter(1, pa);
+////            billList = billQuery.getResultList();
+//            refreshTable(pa);
+//
+//        }
+        //lst.clear();
         //lst.addAll(billList);
-        setDataBill(billList);
-        btnFirst.setEnabled(pagination.isHasPrevPage());
-        btnPrev.setEnabled(pagination.isHasPrevPage());
-        btnNext.setEnabled(pagination.isHasNextPage());
-        btnLast.setEnabled(pagination.isHasNextPage());
-
+//        setDataBill(billList);
+//        btnFirst.setEnabled(pagination.isHasPrevPage());
+//        btnPrev.setEnabled(pagination.isHasPrevPage());
+//        btnNext.setEnabled(pagination.isHasNextPage());
+//        btnLast.setEnabled(pagination.isHasNextPage());
 
     }//GEN-LAST:event_btnFilterMouseClicked
 
@@ -654,8 +682,6 @@ public class OrderFrm extends javax.swing.JFrame implements ActionListener, enti
     private javax.swing.JButton btnPrev;
     private javax.swing.JComboBox<String> cbbEmp;
     private javax.swing.JComboBox cbbPage;
-    private java.util.List<Entity.Employee> employeeList;
-    private javax.persistence.Query employeeQuery;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
@@ -670,6 +696,5 @@ public class OrderFrm extends javax.swing.JFrame implements ActionListener, enti
     private javax.swing.JTable tblOrder;
     private javax.swing.JTable tblProduct;
     private javax.swing.JLabel txtCost;
-    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 }

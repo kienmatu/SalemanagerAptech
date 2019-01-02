@@ -6,8 +6,9 @@
 package MainForm;
 //import Entity.CustomerFrm;
 
+import Services.entity;
 import Entity.Customer;
-import static MainForm.entity.factory;
+import static Services.entity.factory;
 import Services.JPAPaginController;
 import Services.PaginationController;
 import java.awt.Color;
