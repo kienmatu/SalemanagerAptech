@@ -50,6 +50,21 @@ public class CustomerFrm extends javax.swing.JFrame implements entity {
         refreshTable();
     }
 
+    private void refreshTable() {
+        if (lst == null) {
+            lst = controller.findSortEntities(pagination.getPageSize(), pagination.getCurrentItem());
+        } else {
+            lst.clear();
+            lst.addAll(controller.findSortEntities(pagination.getPageSize(), pagination.getCurrentItem()));
+        }
+        setDataforTable(lst);
+        btnFirst.setEnabled(pagination.isHasPrevPage());
+        btnPrev.setEnabled(pagination.isHasPrevPage());
+        btnNext.setEnabled(pagination.isHasNextPage());
+        btnLast.setEnabled(pagination.isHasNextPage());
+
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -716,21 +731,6 @@ public class CustomerFrm extends javax.swing.JFrame implements entity {
 //                 JOptionPane.showMessageDialog(null, passvar);
             }
         });
-    }
-
-    private void refreshTable() {
-        if (lst == null) {
-            lst = controller.findSortEntities(pagination.getPageSize(), pagination.getCurrentItem());
-        } else {
-            lst.clear();
-            lst.addAll(controller.findSortEntities(pagination.getPageSize(), pagination.getCurrentItem()));
-        }
-        setDataforTable(lst);
-        btnFirst.setEnabled(pagination.isHasPrevPage());
-        btnPrev.setEnabled(pagination.isHasPrevPage());
-        btnNext.setEnabled(pagination.isHasNextPage());
-        btnLast.setEnabled(pagination.isHasNextPage());
-
     }
 
     private void setDataforTable(List<Entity.Customer> resultList) {
