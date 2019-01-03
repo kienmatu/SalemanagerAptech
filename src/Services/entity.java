@@ -11,7 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 /**
- *
+ * Chứa các biến entity
  * @author KIENDINH
  */
 public interface entity {

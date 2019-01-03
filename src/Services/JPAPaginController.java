@@ -5,6 +5,7 @@
  */
 package Services;
 
+import Entity.Category;
 import Entity.Employee;
 import static Services.entity.entityManager;
 import java.io.Serializable;
@@ -57,27 +58,71 @@ public class JPAPaginController<T> implements Serializable {
         }
     }
 
-    private  List<T> findAllEntityByUser(String user, boolean all, int maxResults, int firstResult) {
+    private List<T> findAllEntityByUser(String user, boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaBuilder cb = em.getCriteriaBuilder();
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
             Root<T> c = cq.from(genericClass);
             cq.select(c);
-            Employee e = entityManager.find(Employee.class,user);
+            Employee e = entityManager.find(Employee.class, user);
             //ParameterExpression<Entity.Employee> p = cb.parameter(e);
-           cq.where(cb.equal(c.get("username"), e));
+            cq.where(cb.equal(c.get("username"), e));
             Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
                 q.setFirstResult(firstResult);
             }
-            List<T> x = q.getResultList();
+            //List<T> x = q.getResultList();
             return q.getResultList();
         } finally {
             em.close();
         }
     }
+
+    private List<T> findAllEntityProduct(String cat, String name, boolean all, int maxResults, int firstResult) {
+        EntityManager em = getEntityManager();
+        try {
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+            Root<T> c = cq.from(genericClass);
+            cq.select(c);
+            //ParameterExpression<Entity.Employee> p = cb.parameter(e);
+            if (cat != null) {
+                Category ct = entityManager.find(Category.class, Integer.parseInt(cat));
+                if (name != null) {
+                    cq.where(cb.equal(c.get("categoryid"), ct),
+                            cb.like(c.get("productname"),  "%"+name+"%")
+                    );
+                } else {
+                    cq.where(cb.equal(c.get("categoryid"), ct)
+                    // cb.like(c.get("PRODUCTNAME"), name)
+                    );
+                }
+            } else {
+                cq.where(//cb.equal(c.get("CategoryID"), ct),
+                        cb.like(c.get("productname"), "%"+name+"%")
+                );
+            }
+            Query q = em.createQuery(cq);
+            if (!all) {
+                q.setMaxResults(maxResults);
+                q.setFirstResult(firstResult);
+            }
+             List<T> x = q.getResultList();
+            return q.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+
+
+
+    public List<T> findSortEntitiesProduct(String cat, String name, int maxResults, int firstResult) {
+        return findAllEntityProduct(cat, name, false, maxResults, firstResult);
+    }
+
 
     public List<T> findSortUserEntities(String user, int maxResults, int firstResult) {
         return findAllEntityByUser(user, false, maxResults, firstResult);

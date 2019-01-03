@@ -7,8 +7,12 @@ package MainForm;
 
 import Services.entity;
 import Entity.Bill;
+import Entity.Category;
 import Entity.Employee;
 import Entity.Product;
+import Services.JPAPaginController;
+import Services.PaginationController;
+import static Services.entity.factory;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -35,10 +39,11 @@ import org.eclipse.persistence.config.QueryHints;
  *
  * @author KIENDINH
  */
-public class newBill extends javax.swing.JFrame implements ActionListener,entity {
-//
-//    private final static String unitName = "SaleManagerProjectPU";
-//    private static final EntityManager entityManager = Persistence.createEntityManagerFactory(unitName).createEntityManager();
+public class newBill extends javax.swing.JFrame implements ActionListener, entity {
+
+    JPAPaginController controller = new JPAPaginController(factory, Entity.Product.class);
+    PaginationController pagination;
+    List<Product> lst;
     JPopupMenu popupMenu = new JPopupMenu();
     JPopupMenu popupSelect = new JPopupMenu();
     JPopupMenu popupCustomer = new JPopupMenu();
@@ -55,7 +60,9 @@ public class newBill extends javax.swing.JFrame implements ActionListener,entity
      */
     public newBill() {
         initComponents();
-        loadProduct();
+        //loadProduct();
+        int size = Integer.parseInt(this.cbbPage.getSelectedItem().toString());
+        pagination = new PaginationController(size, controller.getCount());
         this.setLocationRelativeTo(null);
         // <editor-fold defaultstate="collapsed" desc="POPUP-ITEM">   
         popupMenu.add(menuItemAdd);
@@ -67,6 +74,9 @@ public class newBill extends javax.swing.JFrame implements ActionListener,entity
         menuItemRemoveAll.addActionListener(this);
         menuItemSelect.addActionListener(this);
         //</editor-fold>
+        setCate();
+        refreshTable();
+
         textBox.addFocusListener(new java.awt.event.FocusAdapter() {
             @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -76,10 +86,71 @@ public class newBill extends javax.swing.JFrame implements ActionListener,entity
 
     }
 
+    private void setCate() {
+        Query CQuery = SaleManagerProjectPUEntityManager.createQuery("SELECT c FROM Category c");
+        List<Category> lstEmp = CQuery.getResultList();
+        this.cbbCategory.addItem("All");
+        for (Category e : lstEmp) {
+            this.cbbCategory.addItem(e.toString());
+        }
+    }
+
+    private void refreshTable() {
+        if (this.cbbCategory.getSelectedItem() == "All") {
+            
+            if ("".equals(txtName.getText())) {
+                if (lst == null) {
+                    lst = controller.findSortEntities(pagination.getPageSize(), pagination.getCurrentItem());
+                } else {
+                    lst.clear();
+                    lst.addAll(controller.findSortEntities(pagination.getPageSize(), pagination.getCurrentItem()));
+                }
+                setDataProduct(lst);
+                btnFirst.setEnabled(pagination.isHasPrevPage());
+                btnPrev.setEnabled(pagination.isHasPrevPage());
+                btnNext.setEnabled(pagination.isHasNextPage());
+                btnLast.setEnabled(pagination.isHasNextPage());
+            } else {
+                refreshTable(null, this.txtName.getText());
+            }
+        } else {
+            String a = txtName.getText();
+            String id = cbbCategory.getSelectedItem().toString();
+            String[] param = id.split("\\.");
+            String pa = param[0];
+            if (!"".equals(txtName.getText())) {
+                refreshTable(pa, this.txtName.getText());
+            }
+            else
+            {
+                 refreshTable(pa, null);
+            }
+            
+        }
+
+    }
+
+    private void refreshTable(String cat, String name) {
+
+        if (lst == null) {
+            lst = controller.findSortEntitiesProduct(cat, name, pagination.getPageSize(), pagination.getCurrentItem());
+        } else {
+            lst.clear();
+            lst.addAll(controller.findSortEntitiesProduct(cat, name, pagination.getPageSize(), pagination.getCurrentItem()));
+        }
+        setDataProduct(lst);
+        btnFirst.setEnabled(pagination.isHasPrevPage());
+        btnPrev.setEnabled(pagination.isHasPrevPage());
+        btnNext.setEnabled(pagination.isHasNextPage());
+        btnLast.setEnabled(pagination.isHasNextPage());
+
+    }
+
     private void loadProduct() {
         Query q = entityManager.createNamedQuery("Product.findAll").setHint(QueryHints.REFRESH, true);
         List<Product> lst = (List<Product>) q.getResultList();
         setDataProduct(lst);
+        // <editor-fold defaultstate="collapsed" desc="NATIVE CODE">   
 //        try {
 //            String sql = "SELECT PRODUCTID,PRODUCTCODE,PRODUCTNAME,UNIT,PRICE,COMPANY,AMOUNT FROM PRODUCT";
 //            Connection con = DriverManager.getConnection("jdbc:sqlserver://localhost;databaseName=SALE", "sa", "123456");
@@ -104,6 +175,7 @@ public class newBill extends javax.swing.JFrame implements ActionListener,entity
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
+//</editor-fold>
     }
 
     /**
@@ -117,8 +189,6 @@ public class newBill extends javax.swing.JFrame implements ActionListener,entity
         bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
         SaleManagerProjectPUEntityManager = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("SaleManagerProjectPU").createEntityManager();
-        categoryQuery = java.beans.Beans.isDesignTime() ? null : SaleManagerProjectPUEntityManager.createQuery("SELECT c FROM Category c");
-        categoryList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : categoryQuery.getResultList();
         customerQuery = java.beans.Beans.isDesignTime() ? null : SaleManagerProjectPUEntityManager.createQuery("SELECT c FROM Customer c");
         customerList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : customerQuery.getResultList();
         jPanel1 = new javax.swing.JPanel();
@@ -281,9 +351,6 @@ public class newBill extends javax.swing.JFrame implements ActionListener,entity
 
         cbbCategory.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
 
-        org.jdesktop.swingbinding.JComboBoxBinding jComboBoxBinding = org.jdesktop.swingbinding.SwingBindings.createJComboBoxBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, categoryList, cbbCategory);
-        bindingGroup.addBinding(jComboBoxBinding);
-
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel5.setText("Category:");
 
@@ -408,9 +475,7 @@ public class newBill extends javax.swing.JFrame implements ActionListener,entity
                                     .addComponent(cbbCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(32, 32, 32)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(232, 232, 232))
+                                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(36, 36, 36)
@@ -492,16 +557,17 @@ public class newBill extends javax.swing.JFrame implements ActionListener,entity
                             .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(cbbCategory)
-                            .addComponent(txtName)
-                            .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(btnFirst)
                                 .addComponent(btnPrev)
                                 .addComponent(cbbPage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(btnNext)
-                                .addComponent(btnLast)))
+                                .addComponent(btnLast))
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(cbbCategory)
+                                .addComponent(txtName)
+                                .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                 .addComponent(jScrollOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -569,67 +635,72 @@ public class newBill extends javax.swing.JFrame implements ActionListener,entity
      * @param evt
      */
     private void btnSearchMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSearchMouseClicked
-        String id = cbbCategory.getSelectedItem().toString();
-        String[] param = id.split("\\.");
-        int pa = Integer.parseInt(param[0]);
-        Query prQuery;
-
-        List<Product> list;
-        try {
-            //Connection con = DriverManager.getConnection("jdbc:sqlserver://localhost;databaseName=SALE", "sa", "123456");
-            if (txtName.getText() == null || "".equals(txtName.getText())) {
-//                String sql = "SELECT PRODUCTID,PRODUCTCODE,PRODUCTNAME,UNIT,PRICE,COMPANY,AMOUNT FROM PRODUCT WHERE Product.categoryid = '" + pa + "'";
-//                Statement stmt = con.createStatement();
-//                ResultSet rs = stmt.executeQuery(sql);
-//                String[] header = new String[]{"ID", "Product Code", "Name", "UNIT", "Price", "Company", "Amount"};
-//                DefaultTableModel dataModel = new DefaultTableModel(header, 0);
-//                while (rs.next()) {
-//                    Object[] columns = new Object[]{rs.getInt(1),
-//                        rs.getString(2),
-//                        rs.getString(3),
-//                        rs.getString(4),
-//                        rs.getFloat(5),
-//                        rs.getString(6),
-//                        rs.getInt(7)
-//                    };
-//                    dataModel.addRow(columns);
-//                }
+        refreshTable();
+//        String id = cbbCategory.getSelectedItem().toString();
+//        String[] param = id.split("\\.");
+//        int pa = Integer.parseInt(param[0]);
+//        Query prQuery;
 //
-//                this.tblOrder.setModel(dataModel);
-
-            prQuery =  entityManager.createNativeQuery("SELECT * FROM Product WHERE Product.categoryid = ? and Product.Status = 1", Product.class).setHint(QueryHints.REFRESH, true);
-            prQuery.setParameter(1, pa);
-            list = prQuery.getResultList();
-            setDataProduct(list);
-            } else {
-//                String sql = "SELECT PRODUCTID,PRODUCTCODE,PRODUCTNAME,UNIT,PRICE,COMPANY,AMOUNT FROM PRODUCT WHERE Product.categoryid = '" + pa + "' and and Product.PRODUCTNAME LIKE LOWER(?)";
-//                PreparedStatement stmt = con.prepareStatement(sql);
-//                stmt.setString(1, "%" + txtName.getText().toLowerCase() + "%");
-//                ResultSet rs = stmt.executeQuery(sql);
-//                String[] header = new String[]{"ID", "Product Code", "Name", "UNIT", "Price", "Company", "Amount"};
-//                DefaultTableModel dataModel = new DefaultTableModel(header, 0);
-//                while (rs.next()) {
-//                    Object[] columns = new Object[]{rs.getInt(1),
-//                        rs.getString(2),
-//                        rs.getString(3),
-//                        rs.getString(4),
-//                        rs.getFloat(5),
-//                        rs.getString(6),
-//                        rs.getInt(7)
-//                    };
-//                    dataModel.addRow(columns);
-//                }
+//        List<Product> list;
+//        try {
+//            //Connection con = DriverManager.getConnection("jdbc:sqlserver://localhost;databaseName=SALE", "sa", "123456");
+//            if (txtName.getText() == null || "".equals(txtName.getText())) {
+//                // <editor-fold defaultstate="collapsed" desc="NATIVE CODE">   
+////                String sql = "SELECT PRODUCTID,PRODUCTCODE,PRODUCTNAME,UNIT,PRICE,COMPANY,AMOUNT FROM PRODUCT WHERE Product.categoryid = '" + pa + "'";
+////                Statement stmt = con.createStatement();
+////                ResultSet rs = stmt.executeQuery(sql);
+////                String[] header = new String[]{"ID", "Product Code", "Name", "UNIT", "Price", "Company", "Amount"};
+////                DefaultTableModel dataModel = new DefaultTableModel(header, 0);
+////                while (rs.next()) {
+////                    Object[] columns = new Object[]{rs.getInt(1),
+////                        rs.getString(2),
+////                        rs.getString(3),
+////                        rs.getString(4),
+////                        rs.getFloat(5),
+////                        rs.getString(6),
+////                        rs.getInt(7)
+////                    };
+////                    dataModel.addRow(columns);
+////                }
+////
+////                this.tblOrder.setModel(dataModel);
+////</editor-fold>
+//                prQuery = entityManager.createNativeQuery("SELECT * FROM Product WHERE Product.categoryid = ? and Product.Status = 1", Product.class).setHint(QueryHints.REFRESH, true);
+//                prQuery.setParameter(1, pa);
+//                list = prQuery.getResultList();
+//                setDataProduct(list);
+//            } else {
+//                // <editor-fold defaultstate="collapsed" desc="NATIVE CODE">   
 //
-//                this.tblOrder.setModel(dataModel);
-                prQuery = entityManager.createNativeQuery("SELECT * FROM Product WHERE Product.categoryid = ? and Product.PRODUCTNAME LIKE LOWER(?) and Product.Status = 1", Product.class).setHint(QueryHints.REFRESH, true);;
-                prQuery.setParameter(1, pa);
-                prQuery.setParameter(2, "%" + txtName.getText().toLowerCase() + "%");
-                list = prQuery.getResultList();
-                setDataProduct(list);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+////                String sql = "SELECT PRODUCTID,PRODUCTCODE,PRODUCTNAME,UNIT,PRICE,COMPANY,AMOUNT FROM PRODUCT WHERE Product.categoryid = '" + pa + "' and and Product.PRODUCTNAME LIKE LOWER(?)";
+////                PreparedStatement stmt = con.prepareStatement(sql);
+////                stmt.setString(1, "%" + txtName.getText().toLowerCase() + "%");
+////                ResultSet rs = stmt.executeQuery(sql);
+////                String[] header = new String[]{"ID", "Product Code", "Name", "UNIT", "Price", "Company", "Amount"};
+////                DefaultTableModel dataModel = new DefaultTableModel(header, 0);
+////                while (rs.next()) {
+////                    Object[] columns = new Object[]{rs.getInt(1),
+////                        rs.getString(2),
+////                        rs.getString(3),
+////                        rs.getString(4),
+////                        rs.getFloat(5),
+////                        rs.getString(6),
+////                        rs.getInt(7)
+////                    };
+////                    dataModel.addRow(columns);
+////                }
+////
+////                this.tblOrder.setModel(dataModel);
+////</editor-fold>
+//                prQuery = entityManager.createNativeQuery("SELECT * FROM Product WHERE Product.categoryid = ? and Product.PRODUCTNAME LIKE LOWER(?) and Product.Status = 1", Product.class).setHint(QueryHints.REFRESH, true);;
+//                prQuery.setParameter(1, pa);
+//                prQuery.setParameter(2, "%" + txtName.getText().toLowerCase() + "%");
+//                list = prQuery.getResultList();
+//                setDataProduct(list);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
         // TODO add your handling code here:
     }//GEN-LAST:event_btnSearchMouseClicked
@@ -874,8 +945,6 @@ public class newBill extends javax.swing.JFrame implements ActionListener,entity
     private javax.swing.JButton btnSearch;
     private javax.swing.JButton btnSearchCust;
     private javax.swing.JButton btnSubmit;
-    private java.util.List<Entity.Category> categoryList;
-    private javax.persistence.Query categoryQuery;
     private javax.swing.JComboBox<String> cbbCategory;
     private javax.swing.JComboBox cbbPage;
     private java.util.List<Entity.Customer> customerList;
@@ -949,7 +1018,7 @@ public class newBill extends javax.swing.JFrame implements ActionListener,entity
         TableModel model = tblOrder.getModel();
         int r = (tblOrder.getSelectedRow());
         Object[] row = new Object[]{model.getValueAt(r, 0), model.getValueAt(r, 1), model.getValueAt(r, 2), model.getValueAt(r, 4), 1};
-        int rowduplicate = checkRowExist(model, Integer.parseInt(row[0]+""));
+        int rowduplicate = checkRowExist(model, Integer.parseInt(row[0] + ""));
         if (rowduplicate == -1) {
             ProductSelectedModel.addRow(row);
             tblProduct.setModel(ProductSelectedModel);

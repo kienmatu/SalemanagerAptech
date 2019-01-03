@@ -7,27 +7,6 @@
         <Property name="persistenceUnit" type="java.lang.String" value="SaleManagerProjectPU"/>
       </Properties>
     </Component>
-    <Component class="javax.persistence.Query" name="categoryQuery">
-      <Properties>
-        <Property name="query" type="java.lang.String" value="SELECT c FROM Category c"/>
-        <Property name="entityManager" type="java.lang.Object" editor="org.netbeans.modules.form.j2ee.J2EEPropertyModifier$EMProperty$EntityManagerEditor">
-          <ComponentRef name="SaleManagerProjectPUEntityManager"/>
-        </Property>
-      </Properties>
-      <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="java.beans.Beans.isDesignTime() ? null : SaleManagerProjectPUEntityManager.createQuery(&quot;SELECT c FROM Category c&quot;)"/>
-      </AuxValues>
-    </Component>
-    <Component class="java.util.List" name="categoryList">
-      <Properties>
-        <Property name="query" type="java.lang.Object" editor="org.netbeans.modules.form.j2ee.J2EEPropertyModifier$QueryBeanProperty$QueryEditor">
-          <ComponentRef name="categoryQuery"/>
-        </Property>
-      </Properties>
-      <AuxValues>
-        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;Entity.Category&gt;"/>
-      </AuxValues>
-    </Component>
     <Component class="javax.persistence.Query" name="customerQuery">
       <Properties>
         <Property name="query" type="java.lang.String" value="SELECT c FROM Customer c"/>
@@ -102,10 +81,7 @@
                                   </Group>
                                   <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Group type="102" alignment="0" attributes="0">
-                                          <Component id="jLabel6" min="-2" pref="117" max="-2" attributes="0"/>
-                                          <EmptySpace min="232" pref="232" max="-2" attributes="0"/>
-                                      </Group>
+                                      <Component id="jLabel6" alignment="0" min="-2" pref="117" max="-2" attributes="0"/>
                                       <Group type="102" alignment="0" attributes="0">
                                           <Component id="txtName" min="-2" pref="196" max="-2" attributes="0"/>
                                           <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
@@ -212,16 +188,18 @@
                               <Component id="jLabel6" alignment="3" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="cbbCategory" alignment="3" max="32767" attributes="0"/>
-                              <Component id="txtName" alignment="3" max="32767" attributes="0"/>
-                              <Component id="btnSearch" alignment="3" min="-2" pref="32" max="-2" attributes="0"/>
-                              <Group type="103" alignment="3" groupAlignment="3" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                                   <Component id="btnFirst" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="btnPrev" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="cbbPage" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="btnNext" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="btnLast" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="cbbCategory" alignment="3" max="32767" attributes="0"/>
+                                  <Component id="txtName" alignment="3" max="32767" attributes="0"/>
+                                  <Component id="btnSearch" alignment="3" min="-2" pref="32" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
@@ -445,9 +423,6 @@
               <Font name="Tahoma" size="12" style="0"/>
             </Property>
           </Properties>
-          <BindingProperties>
-            <BindingProperty name="elements" source="categoryList" target="cbbCategory" targetPath="elements" updateStrategy="0" immediately="false"/>
-          </BindingProperties>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
           </AuxValues>
