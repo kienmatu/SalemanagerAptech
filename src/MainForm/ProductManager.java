@@ -9,6 +9,9 @@ import Services.entity;
 import Entity.Category;
 import Entity.Product;
 import Services.ImagePreviewPanel;
+import Services.JPAPaginController;
+import Services.PaginationController;
+import static Services.entity.factory;
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -45,6 +48,9 @@ public class ProductManager extends javax.swing.JFrame implements entity, Action
     JFileChooser chooser = new JFileChooser();
     JPopupMenu popupMenu = new JPopupMenu();
     JMenuItem menuItemDelete = new JMenuItem("Delete This");
+    JPAPaginController controller = new JPAPaginController(factory, Entity.Product.class);
+    PaginationController pagination;
+    List<Product> lst;
 
     /**
      * Creates new form ProductManager
@@ -55,8 +61,71 @@ public class ProductManager extends javax.swing.JFrame implements entity, Action
         this.setLocationRelativeTo(null);
         popupMenu.add(menuItemDelete);
         menuItemDelete.addActionListener(this);
-        loadData();
+        //loadData();
         btnOpenImage.setVisible(false);
+        int size = Integer.parseInt(this.cbbPage.getSelectedItem().toString());
+        pagination = new PaginationController(size, controller.getCount());
+        setCate();
+        refreshTable();
+
+    }
+
+    private void setCate() {
+        Query CQuery = this.entityManager.createQuery("SELECT c FROM Category c").setHint(QueryHints.REFRESH, true);
+        List<Category> lstEmp = CQuery.getResultList();
+        this.cbbCategory.addItem("All");
+        for (Category e : lstEmp) {
+            this.cbbCategory.addItem(e.toString());
+        }
+    }
+
+    private void refreshTable() {
+        if (this.cbbCategory.getSelectedItem() == "All") {
+
+            if ("".equals(txtName.getText())) {
+                if (lst == null) {
+                    lst = controller.findSortEntities(pagination.getPageSize(), pagination.getCurrentItem());
+                } else {
+                    lst.clear();
+                    lst.addAll(controller.findSortEntities(pagination.getPageSize(), pagination.getCurrentItem()));
+                }
+                setDataProduct(lst);
+                btnFirst.setEnabled(pagination.isHasPrevPage());
+                btnPrev.setEnabled(pagination.isHasPrevPage());
+                btnNext.setEnabled(pagination.isHasNextPage());
+                btnLast.setEnabled(pagination.isHasNextPage());
+            } else {
+                refreshTable(null, this.txtName.getText());
+            }
+        } else {
+            String a = txtName.getText();
+            String id = cbbCategory.getSelectedItem().toString();
+            String[] param = id.split("\\.");
+            String pa = param[0];
+            if (!"".equals(txtName.getText())) {
+                refreshTable(pa, this.txtName.getText());
+            } else {
+                refreshTable(pa, null);
+            }
+
+        }
+
+    }
+
+    private void refreshTable(String cat, String name) {
+
+        if (lst == null) {
+            lst = controller.findSortEntitiesProduct(cat, name, pagination.getPageSize(), pagination.getCurrentItem());
+        } else {
+            lst.clear();
+            lst.addAll(controller.findSortEntitiesProduct(cat, name, pagination.getPageSize(), pagination.getCurrentItem()));
+        }
+        setDataProduct(lst);
+        btnFirst.setEnabled(pagination.isHasPrevPage());
+        btnPrev.setEnabled(pagination.isHasPrevPage());
+        btnNext.setEnabled(pagination.isHasNextPage());
+        btnLast.setEnabled(pagination.isHasNextPage());
+
     }
 
     private void loadData() {
@@ -97,11 +166,7 @@ public class ProductManager extends javax.swing.JFrame implements entity, Action
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
-        entityManager0 = factory.createEntityManager();
-        categoryQuery = java.beans.Beans.isDesignTime() ? null : entityManager0.createQuery("SELECT c FROM Category c");
-        categoryList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : categoryQuery.getResultList();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblProduct =  new javax.swing.JTable() {
@@ -140,6 +205,11 @@ public class ProductManager extends javax.swing.JFrame implements entity, Action
         jScrollPane2 = new javax.swing.JScrollPane();
         txtDetail = new javax.swing.JTextArea();
         listImage = new java.awt.List();
+        btnFirst = new javax.swing.JButton();
+        btnPrev = new javax.swing.JButton();
+        cbbPage = new javax.swing.JComboBox();
+        btnNext = new javax.swing.JButton();
+        btnLast = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("PRODUCT MANAGER");
@@ -170,9 +240,6 @@ public class ProductManager extends javax.swing.JFrame implements entity, Action
         this.tblProduct.setComponentPopupMenu(popupMenu);
 
         cbbCategory.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-
-        org.jdesktop.swingbinding.JComboBoxBinding jComboBoxBinding = org.jdesktop.swingbinding.SwingBindings.createJComboBoxBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, categoryList, cbbCategory);
-        bindingGroup.addBinding(jComboBoxBinding);
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel5.setText("Category:");
@@ -287,6 +354,41 @@ public class ProductManager extends javax.swing.JFrame implements entity, Action
         txtDetail.setRows(5);
         jScrollPane2.setViewportView(txtDetail);
 
+        btnFirst.setText("First");
+        btnFirst.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFirstActionPerformed(evt);
+            }
+        });
+
+        btnPrev.setText("<");
+        btnPrev.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPrevActionPerformed(evt);
+            }
+        });
+
+        cbbPage.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "5", "10", "50" }));
+        cbbPage.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbbPageItemStateChanged(evt);
+            }
+        });
+
+        btnNext.setText(">");
+        btnNext.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNextActionPerformed(evt);
+            }
+        });
+
+        btnLast.setText("Last");
+        btnLast.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLastActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -298,9 +400,9 @@ public class ProductManager extends javax.swing.JFrame implements entity, Action
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(10, 10, 10)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -311,8 +413,20 @@ public class ProductManager extends javax.swing.JFrame implements entity, Action
                                 .addGap(62, 62, 62)
                                 .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(5, 5, 5)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 684, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(5, 5, 5)
+                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 684, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(btnFirst)
+                                        .addGap(14, 14, 14)
+                                        .addComponent(btnPrev)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(cbbPage, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(btnNext)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btnLast)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -350,7 +464,7 @@ public class ProductManager extends javax.swing.JFrame implements entity, Action
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addComponent(btnReset, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 84, Short.MAX_VALUE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 74, Short.MAX_VALUE)
                                         .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(18, 18, 18)
                                         .addComponent(btnNewProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -439,8 +553,16 @@ public class ProductManager extends javax.swing.JFrame implements entity, Action
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(15, 15, 15)
                                 .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 451, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnFirst)
+                            .addComponent(btnPrev)
+                            .addComponent(cbbPage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnNext)
+                            .addComponent(btnLast))
+                        .addGap(10, 10, 10)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 411, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(24, 24, 24))
         );
 
@@ -454,8 +576,6 @@ public class ProductManager extends javax.swing.JFrame implements entity, Action
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
-
-        bindingGroup.bind();
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -605,31 +725,31 @@ public class ProductManager extends javax.swing.JFrame implements entity, Action
     }//GEN-LAST:event_btnSearchActionPerformed
 
     private void btnSearchMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSearchMouseClicked
-        String id = cbbCategory.getSelectedItem().toString();
-        String[] param = id.split("\\.");
-        int pa = Integer.parseInt(param[0]);
-        //Query prQuery;
-
-        List<Product> list;
-        try {
-            if (txtName.getText() == null || "".equals(txtName.getText())) {
-
-                Query q = entityManager.createNativeQuery("SELECT * FROM Product WHERE Product.categoryid = ? and Product.Status = 1", Product.class);
-                q.setParameter(1, pa);
-                list = q.getResultList();
-                setDataProduct(list);
-            } else {
-                Query q = java.beans.Beans.isDesignTime() ? null
-                        : entityManager.createNativeQuery("SELECT * FROM Product WHERE Product.categoryid = ? and Product.PRODUCTNAME LIKE LOWER(?) and Product.Status = 1", Product.class);
-                q.setParameter(1, pa);
-                q.setParameter(2, "%" + txtName.getText().toLowerCase() + "%");
-                list = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : q.getResultList();
-                setDataProduct(list);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+//        String id = cbbCategory.getSelectedItem().toString();
+//        String[] param = id.split("\\.");
+//        int pa = Integer.parseInt(param[0]);
+//        //Query prQuery;
+//
+//        List<Product> list;
+//        try {
+//            if (txtName.getText() == null || "".equals(txtName.getText())) {
+//
+//                Query q = entityManager.createNativeQuery("SELECT * FROM Product WHERE Product.categoryid = ? and Product.Status = 1", Product.class);
+//                q.setParameter(1, pa);
+//                list = q.getResultList();
+//                setDataProduct(list);
+//            } else {
+//                Query q = java.beans.Beans.isDesignTime() ? null
+//                        : entityManager.createNativeQuery("SELECT * FROM Product WHERE Product.categoryid = ? and Product.PRODUCTNAME LIKE LOWER(?) and Product.Status = 1", Product.class);
+//                q.setParameter(1, pa);
+//                q.setParameter(2, "%" + txtName.getText().toLowerCase() + "%");
+//                list = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : q.getResultList();
+//                setDataProduct(list);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+        refreshTable();
         // TODO add your handling code here:
     }//GEN-LAST:event_btnSearchMouseClicked
 
@@ -657,13 +777,44 @@ public class ProductManager extends javax.swing.JFrame implements entity, Action
 
     private void btnOpenImageMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnOpenImageMouseClicked
         // TODO add your handling code here:
-        String FolderName = "C:/Salemanager/image/"+txtID.getText();//Write your complete path here
+        String FolderName = "C:/Salemanager/image/" + txtID.getText();//Write your complete path here
         try {
-           Desktop.getDesktop().open(new File(FolderName));
+            Desktop.getDesktop().open(new File(FolderName));
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Error !");
         }
     }//GEN-LAST:event_btnOpenImageMouseClicked
+
+    private void btnFirstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFirstActionPerformed
+        // TODO add your handling code here:
+        pagination.firstPage();
+        refreshTable();
+    }//GEN-LAST:event_btnFirstActionPerformed
+
+    private void btnPrevActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrevActionPerformed
+        // TODO add your handling code here:
+        pagination.prevPage();
+        refreshTable();
+    }//GEN-LAST:event_btnPrevActionPerformed
+
+    private void cbbPageItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbbPageItemStateChanged
+        // TODO add your handling code here:
+        int size = Integer.parseInt(cbbPage.getSelectedItem().toString());
+        pagination = new PaginationController(size, lst.size());
+        refreshTable();
+    }//GEN-LAST:event_cbbPageItemStateChanged
+
+    private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
+        // TODO add your handling code here:
+        pagination.nextPage();
+        refreshTable();
+    }//GEN-LAST:event_btnNextActionPerformed
+
+    private void btnLastActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLastActionPerformed
+        // TODO add your handling code here:
+        pagination.lastPage();
+        refreshTable();
+    }//GEN-LAST:event_btnLastActionPerformed
     private void resetField() {
         btnOpenImage.setVisible(false);
         this.btnSelectImage.setVisible(true);
@@ -759,16 +910,18 @@ public class ProductManager extends javax.swing.JFrame implements entity, Action
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEdit;
+    private javax.swing.JButton btnFirst;
+    private javax.swing.JButton btnLast;
     private javax.swing.JButton btnNewProduct;
+    private javax.swing.JButton btnNext;
     private javax.swing.JButton btnOpenImage;
+    private javax.swing.JButton btnPrev;
     private javax.swing.JButton btnReset;
     private javax.swing.JButton btnSearch;
     private javax.swing.JButton btnSelectImage;
-    private java.util.List<Entity.Category> categoryList;
-    private javax.persistence.Query categoryQuery;
     private javax.swing.JComboBox<String> cbbCate;
     private javax.swing.JComboBox<String> cbbCategory;
-    private javax.persistence.EntityManager entityManager0;
+    private javax.swing.JComboBox cbbPage;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -795,7 +948,6 @@ public class ProductManager extends javax.swing.JFrame implements entity, Action
     private javax.swing.JTextField txtProductCode;
     private javax.swing.JTextField txtProductName;
     private javax.swing.JTextField txtUnit;
-    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 
     public void refreshEntity() {

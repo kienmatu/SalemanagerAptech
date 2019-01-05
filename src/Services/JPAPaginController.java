@@ -17,6 +17,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Root;
+import org.eclipse.persistence.config.QueryHints;
 
 /**
  *
@@ -46,7 +47,7 @@ public class JPAPaginController<T> implements Serializable {
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
             cq.select(cq.from(genericClass));
-            Query q = em.createQuery(cq);
+            Query q = em.createQuery(cq).setHint(QueryHints.REFRESH, true);
             if (!all) {
                 q.setMaxResults(maxResults);
                 q.setFirstResult(firstResult);
@@ -68,7 +69,7 @@ public class JPAPaginController<T> implements Serializable {
             Employee e = entityManager.find(Employee.class, user);
             //ParameterExpression<Entity.Employee> p = cb.parameter(e);
             cq.where(cb.equal(c.get("username"), e));
-            Query q = em.createQuery(cq);
+            Query q = em.createQuery(cq).setHint(QueryHints.REFRESH, true);
             if (!all) {
                 q.setMaxResults(maxResults);
                 q.setFirstResult(firstResult);
@@ -104,7 +105,7 @@ public class JPAPaginController<T> implements Serializable {
                         cb.like(c.get("productname"), "%"+name+"%")
                 );
             }
-            Query q = em.createQuery(cq);
+            Query q = em.createQuery(cq).setHint(QueryHints.REFRESH, true);
             if (!all) {
                 q.setMaxResults(maxResults);
                 q.setFirstResult(firstResult);
@@ -138,7 +139,7 @@ public class JPAPaginController<T> implements Serializable {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
             Root<T> rt = cq.from(genericClass);
             cq.select(em.getCriteriaBuilder().count(rt));
-            Query q = em.createQuery(cq);
+            Query q = em.createQuery(cq).setHint(QueryHints.REFRESH, true);
             return ((Long) q.getSingleResult()).intValue();
         } finally {
             em.close();

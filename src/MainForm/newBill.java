@@ -17,6 +17,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -87,7 +91,7 @@ public class newBill extends javax.swing.JFrame implements ActionListener, entit
     }
 
     private void setCate() {
-        Query CQuery = SaleManagerProjectPUEntityManager.createQuery("SELECT c FROM Category c");
+        Query CQuery = SaleManagerProjectPUEntityManager.createQuery("SELECT c FROM Category c").setHint(QueryHints.REFRESH, true);
         List<Category> lstEmp = CQuery.getResultList();
         this.cbbCategory.addItem("All");
         for (Category e : lstEmp) {
@@ -97,7 +101,7 @@ public class newBill extends javax.swing.JFrame implements ActionListener, entit
 
     private void refreshTable() {
         if (this.cbbCategory.getSelectedItem() == "All") {
-            
+
             if ("".equals(txtName.getText())) {
                 if (lst == null) {
                     lst = controller.findSortEntities(pagination.getPageSize(), pagination.getCurrentItem());
@@ -120,12 +124,10 @@ public class newBill extends javax.swing.JFrame implements ActionListener, entit
             String pa = param[0];
             if (!"".equals(txtName.getText())) {
                 refreshTable(pa, this.txtName.getText());
+            } else {
+                refreshTable(pa, null);
             }
-            else
-            {
-                 refreshTable(pa, null);
-            }
-            
+
         }
 
     }
@@ -719,15 +721,44 @@ public class newBill extends javax.swing.JFrame implements ActionListener, entit
         // TODO add your handling code here:
         List<Product> prd = new ArrayList<>();
         TableModel model = tblProduct.getModel();
+        EntityManager entityManager2 = factory.createEntityManager();
         EntityTransaction tran = null;
         /**
          * Lấy danh sách id cho storedprocedure.
          */
         String param = "";
         for (int i = 0; i < model.getRowCount(); i++) {
+//            if(i != 0)
+//            {
+//                param =  "," +param + model.getValueAt(i, 0) ;
+//            }
+//            else
+//            {
+//                param = param + model.getValueAt(i, 0);
+//            }
             param = param + model.getValueAt(i, 0) + ",";
         }
-        Query query = entityManager.createNamedStoredProcedureQuery("getProductSelected");
+//        try {
+//            String SPsql = "EXEC getProductSelected ?";   // for stored proc taking 2 parameters
+//            Connection con = DriverManager.getConnection("jdbc:sqlserver://localhost;databaseName=SALE", "sa", "123456");   // java.sql.Connection
+//            PreparedStatement ps = con.prepareStatement(SPsql);
+//            ps.setEscapeProcessing(true);
+//            ps.setString(1, param);
+//            ResultSet rs = ps.executeQuery();
+//            if(rs.next())
+//            {
+//                Product p = new Product();
+//                p.setProductid(rs.getInt("PRODUCTID"));
+//                p.setProductname(rs.getNString("PRODUCTNAME"));
+//                p.setAmount(rs.getInt("AMOUNT"));
+//                prd.add(p);
+//            }
+//        } catch (Exception e) {
+//            JOptionPane.showMessageDialog(null, "AN ERROR OCCURED ");
+//
+//        }
+        Query query = entityManager2.createNamedStoredProcedureQuery("getProductSelected");//.setHint(QueryHints.REFRESH, true);
+    //    query.
         query.setParameter("product_id", param);
         prd = query.getResultList();
         String idcust = this.lbCustID.getText();
@@ -751,10 +782,11 @@ public class newBill extends javax.swing.JFrame implements ActionListener, entit
                         tran.commit();
                         int id = bill.getBillid();
                         int i = 0;
+
                         // Thêm detail
                         for (Product p : prd) {
                             tran.begin();
-                            int amt = ((int) model.getValueAt(i, 4));
+                            int amt = Integer.parseInt(model.getValueAt(i, 4).toString());
                             int pid = p.getProductid();
                             String ins = "INSERT INTO BILLDETAIL VALUES('" + id + "','" + pid + "','" + amt + "')";
                             Query insquery = entityManager.createNativeQuery(ins);
