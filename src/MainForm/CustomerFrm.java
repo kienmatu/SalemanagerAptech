@@ -154,6 +154,7 @@ public class CustomerFrm extends javax.swing.JFrame implements entity {
         lbCheck.setForeground(new java.awt.Color(255, 0, 51));
 
         txtCustID.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtCustID.setEnabled(false);
 
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/check.png"))); // NOI18N
         jButton1.setText("OK");
@@ -429,45 +430,43 @@ public class CustomerFrm extends javax.swing.JFrame implements entity {
 
     private boolean addCustomer() {
         EntityTransaction tran = null;
-        if (checkName() == true && checkPhone() == true) //  neu username ma khong co dau, tuc la chi co cac ky tu tu a-z "[A-Za-z0-9_]+"
+        if (checkPhone() == true) //  neu username ma khong co dau, tuc la chi co cac ky tu tu a-z "[A-Za-z0-9_]+"
         {
-            try {
-                String name = txtName.getText();
-                String address = txtAddress.getText();
-                String phone = this.txtPhoneNumber.getText();
-                Date date = txtDate.getDate() != null ? txtDate.getDate() : new Date();//new SimpleDateFormat("dd/MM/yyyy").parse(txtDate.getText());
-                Date date1 = txtDate1.getDate() != null ? txtDate1.getDate() : new Date();
-                //JOptionPane.showMessageDialog(null, date);
-                //EntityManager entityManager = Persistence.createEntityManagerFactory(unitName).createEntityManager();
-                tran = entityManager.getTransaction();
-                Entity.Customer customer = new Entity.Customer();
-                customer.setCustname(name);
-                customer.setCustaddress(address);
-                customer.setCustphone(phone);
-                customer.setCustdob(date);
-                customer.setCustregdate(date1);
-                tran.begin();
-                entityManager.persist(customer);
-                tran.commit();
+            String name = txtName.getText();
+            if (!name.isEmpty()) {
+                try {
 
-                return true;
-            } catch (Exception e) {
-                if (tran != null && tran.isActive()) {
-                    tran.rollback();
+                    String address = txtAddress.getText();
+                    String phone = this.txtPhoneNumber.getText();
+                    Date date = txtDate.getDate() != null ? txtDate.getDate() : new Date();//new SimpleDateFormat("dd/MM/yyyy").parse(txtDate.getText());
+                    Date date1 = txtDate1.getDate() != null ? txtDate1.getDate() : new Date();
+                    //JOptionPane.showMessageDialog(null, date);
+                    //EntityManager entityManager = Persistence.createEntityManagerFactory(unitName).createEntityManager();
+                    tran = entityManager.getTransaction();
+                    Entity.Customer customer = new Entity.Customer();
+                    customer.setCustname(name);
+                    customer.setCustaddress(address);
+                    customer.setCustphone(phone);
+                    customer.setCustdob(date);
+                    customer.setCustregdate(date1);
+                    tran.begin();
+                    entityManager.persist(customer);
+                    tran.commit();
+
+                    return true;
+                } catch (Exception e) {
+                    if (tran != null && tran.isActive()) {
+                        tran.rollback();
 //                JOptionPane.showMessageDialog(null, e);
 
+                    }
+                    return false;
                 }
-                //JOptionPane.showMessageDialog(null, e);
-                return false;
             }
+            return false;
         } else {
-            if (checkName() == false) {
-                JOptionPane.showMessageDialog(null, "PLEASE CHECK NAME !");
-                return false;
-            } else {
-                JOptionPane.showMessageDialog(null, "PLEASE CHECK PHONENUMBER!");
-                return false;
-            }
+            JOptionPane.showMessageDialog(null, "PLEASE CHECK PHONENUMBER!");
+            return false;
 
         }
 
@@ -475,7 +474,7 @@ public class CustomerFrm extends javax.swing.JFrame implements entity {
 
     private boolean EditCust() {
         EntityTransaction tran = null;
-        if (checkName() == true && checkPhone() == true) //  neu username ma khong co dau, tuc la chi co cac ky tu tu a-z "[A-Za-z0-9_]+"
+        if (checkPhone() == true) //  neu username ma khong co dau, tuc la chi co cac ky tu tu a-z "[A-Za-z0-9_]+"
         {
             try {
                 int ID = Integer.parseInt(txtCustID.getText());
@@ -500,13 +499,8 @@ public class CustomerFrm extends javax.swing.JFrame implements entity {
                 return false;
             }
         } else {
-            if (checkName() == false) {
-                JOptionPane.showMessageDialog(null, "PLEASE CHECK NAME !");
-                return false;
-            } else {
-                JOptionPane.showMessageDialog(null, "PLEASE CHECK PHONENUMBER!");
-                return false;
-            }
+            JOptionPane.showMessageDialog(null, "PLEASE CHECK PHONENUMBER!");
+            return false;
 
         }
 
@@ -812,7 +806,7 @@ public class CustomerFrm extends javax.swing.JFrame implements entity {
     }
 
     private boolean checkPhone() {
-        String number = this.txtPhoneNumber.getText(); // lay user name
+        String number = this.txtPhoneNumber.getText(); // lay phone number
         //boolean valid = (username != null) && username.matches("[A-Za-z0-9_]+");
         Pattern pattern = Pattern.compile("^[0-9\\-\\+]{10,15}$");
         boolean valid = (number != null) && pattern.matcher(number).matches();

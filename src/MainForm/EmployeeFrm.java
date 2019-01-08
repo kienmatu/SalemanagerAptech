@@ -471,7 +471,13 @@ public class EmployeeFrm extends javax.swing.JFrame implements entity {
                 String phone = this.txtPhoneNumber.getText();
                 Date date = txtDate.getDate() != null ? txtDate.getDate() : new Date();
                 tran = entityManager.getTransaction();
-                Employee employee = new Employee(user, pass, name, phone, date);
+                Employee employee = new Employee();
+                employee.setEmpname(name);
+                employee.setUsername(user);
+                employee.setPass(pass);
+                employee.setEmpphone(phone);
+                employee.setEmpstartdate(date);
+                employee.setIsadmin(0);
                 tran.begin();
                 entityManager.persist(employee);
                 tran.commit();
@@ -714,6 +720,10 @@ public class EmployeeFrm extends javax.swing.JFrame implements entity {
                 oneRow.add(e.getUsername());
                 if (e.getIsadmin() != null) {
                     oneRow.add((e.getIsadmin() == 1 ? " YES " : " NO "));
+                }
+                else
+                {
+                    oneRow.add("NO");
                 }
                 //oneRow.add(e.getPass());
                 oneRow.add(e.getEmpphone());
