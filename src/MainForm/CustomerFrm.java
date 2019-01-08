@@ -94,6 +94,7 @@ public class CustomerFrm extends javax.swing.JFrame implements entity {
         txtDate = new com.toedter.calendar.JDateChooser();
         txtDate1 = new com.toedter.calendar.JDateChooser();
         txtName = new javax.swing.JTextField();
+        lbc = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblCustomer = new javax.swing.JTable();
         btnLast = new javax.swing.JButton();
@@ -104,6 +105,7 @@ public class CustomerFrm extends javax.swing.JFrame implements entity {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Customer Manager");
+        setResizable(false);
 
         bg.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -216,6 +218,8 @@ public class CustomerFrm extends javax.swing.JFrame implements entity {
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
                                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lbc)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(txtPhoneNumber)
                             .addComponent(txtName)
@@ -257,7 +261,8 @@ public class CustomerFrm extends javax.swing.JFrame implements entity {
                 .addGap(12, 12, 12)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(jLabel7))
+                    .addComponent(jLabel7)
+                    .addComponent(lbc))
                 .addGap(2, 2, 2)
                 .addComponent(txtPhoneNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -614,11 +619,11 @@ public class CustomerFrm extends javax.swing.JFrame implements entity {
     private void txtPhoneNumberFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPhoneNumberFocusLost
         // TODO add your handling code here:
         if (validatePhoneNumber(txtPhoneNumber.getText())) {
-            lbCheck.setText("Valid");
-            lbCheck.setForeground(Color.BLUE);
+            lbc.setText("Valid");
+            lbc.setForeground(Color.BLUE);
         } else {
-            lbCheck.setText("Invalid");
-            lbCheck.setForeground(Color.red);
+            lbc.setText("Invalid");
+            lbc.setForeground(Color.red);
         }
     }//GEN-LAST:event_txtPhoneNumberFocusLost
 
@@ -789,6 +794,7 @@ public class CustomerFrm extends javax.swing.JFrame implements entity {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lbCheck;
+    private javax.swing.JLabel lbc;
     private javax.swing.JTable tblCustomer;
     private javax.swing.JTextField txtAddress;
     private javax.swing.JTextField txtCustID;
