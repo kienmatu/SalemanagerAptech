@@ -62,7 +62,7 @@ public class PaginationController {
     }
 
     public boolean isHasNextPage() {
-        return currentPage < getTotalPage();
+        return currentPage <= getTotalPage();
     }
 
     public boolean isHasPrevPage() {

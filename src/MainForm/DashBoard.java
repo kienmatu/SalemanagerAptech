@@ -43,9 +43,11 @@ public class DashBoard extends javax.swing.JFrame implements entity {
         if (LoginUser.User.getIsadmin() == 1 || LoginUser.User.getIsadmin() == null) {
             btnEmp.setVisible(true);
             this.btnChangeProfile.setVisible(false);
+            this.btnCatrgory.setVisible(true);
         } else {
             btnEmp.setVisible(false);
             this.btnChangeProfile.setVisible(true);
+             this.btnCatrgory.setVisible(false);
         }
         JFreeChart barChart = ChartFactory.createBarChart("Latest Month Report", "Product", "Quantity Sold",
                 createDataset(),
@@ -97,6 +99,7 @@ public class DashBoard extends javax.swing.JFrame implements entity {
         btnOrder = new javax.swing.JButton();
         btnCustomer = new javax.swing.JButton();
         btnProduct = new javax.swing.JButton();
+        btnCatrgory = new javax.swing.JButton();
         dashPanel = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
@@ -162,13 +165,28 @@ public class DashBoard extends javax.swing.JFrame implements entity {
             }
         });
 
+        btnCatrgory.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        btnCatrgory.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/standings.png"))); // NOI18N
+        btnCatrgory.setText("Category Manager");
+        btnCatrgory.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        btnCatrgory.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnCatrgoryMouseClicked(evt);
+            }
+        });
+        btnCatrgory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCatrgoryActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGap(210, 210, 210)
@@ -180,7 +198,7 @@ public class DashBoard extends javax.swing.JFrame implements entity {
                                 .addContainerGap()
                                 .addComponent(btnChangeProfile, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
+                    .addGroup(jPanel3Layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btnProduct, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -189,7 +207,8 @@ public class DashBoard extends javax.swing.JFrame implements entity {
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(btnCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(btnOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE)))))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(btnCatrgory, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -209,7 +228,9 @@ public class DashBoard extends javax.swing.JFrame implements entity {
                 .addComponent(lbCheck)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(193, 193, 193))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnCatrgory, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(136, 136, 136))
         );
 
         dashPanel.setBackground(new java.awt.Color(153, 153, 255));
@@ -310,6 +331,17 @@ public class DashBoard extends javax.swing.JFrame implements entity {
         }
     }//GEN-LAST:event_jMenu1MouseClicked
 
+    private void btnCatrgoryMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCatrgoryMouseClicked
+        // TODO add your handling code here:
+        CategoryFrm c = new CategoryFrm();
+        c.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        c.setVisible(true);
+    }//GEN-LAST:event_btnCatrgoryMouseClicked
+
+    private void btnCatrgoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCatrgoryActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnCatrgoryActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -346,6 +378,7 @@ public class DashBoard extends javax.swing.JFrame implements entity {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCatrgory;
     private javax.swing.JButton btnChangeProfile;
     private javax.swing.JButton btnCustomer;
     private javax.swing.JButton btnEmp;

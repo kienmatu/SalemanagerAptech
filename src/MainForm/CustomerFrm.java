@@ -167,10 +167,10 @@ public class CustomerFrm extends javax.swing.JFrame implements entity {
         });
 
         txtAddress.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        txtAddress.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0,Color.WHITE));
+        txtAddress.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0,Color.GRAY));
 
         txtPhoneNumber.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        txtPhoneNumber.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0,Color.white));
+        txtPhoneNumber.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0,Color.GRAY));
         txtPhoneNumber.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtPhoneNumberFocusLost(evt);
@@ -194,7 +194,7 @@ public class CustomerFrm extends javax.swing.JFrame implements entity {
         txtDate1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         txtName.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        txtName.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0,Color.WHITE));
+        txtName.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0,Color.GRAY));
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -321,7 +321,7 @@ public class CustomerFrm extends javax.swing.JFrame implements entity {
             }
         });
 
-        cbbPage.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "2", "3", "50" }));
+        cbbPage.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "3", "10", "50" }));
         cbbPage.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cbbPageItemStateChanged(evt);
@@ -349,7 +349,7 @@ public class CustomerFrm extends javax.swing.JFrame implements entity {
             .addGroup(bgLayout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 849, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(bgLayout.createSequentialGroup()
