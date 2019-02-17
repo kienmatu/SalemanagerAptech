@@ -7,20 +7,19 @@ package MainForm;
 
 import ClassData.LoginUser;
 import Entity.Employee;
+import Services.entity;
 import java.awt.event.KeyEvent;
-import javax.persistence.EntityManager;
-import javax.persistence.Persistence;
 import javax.swing.JOptionPane;
 
 /**
  *
  * @author KIENDINH
  */
-public class MainFrm extends javax.swing.JFrame {
+public class MainFrm extends javax.swing.JFrame implements entity{
 
     private static final String userPatten = ".+";
     private static final String passPatten = ".+";
-    private static final EntityManager entityManager = Persistence.createEntityManagerFactory("SaleManagerProjectPU").createEntityManager();
+   // private static final EntityManager entityManager = Persistence.createEntityManagerFactory("SaleManagerProjectPU").createEntityManager();
 
     /**
      * Creates new form MainFrm
@@ -187,7 +186,7 @@ public class MainFrm extends javax.swing.JFrame {
 
         switch (status) {
             case 0:
-                LoginUser.Main = new DashBoard();
+                LoginUser.Main = new mainApp();
                 LoginUser.Main.setVisible(true);
                 this.setVisible(false);
                 break;

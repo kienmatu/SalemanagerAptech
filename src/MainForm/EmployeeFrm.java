@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+import java.util.regex.Pattern;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
@@ -36,7 +37,7 @@ import org.eclipse.persistence.config.QueryHints;
  */
 public class EmployeeFrm extends javax.swing.JFrame implements entity {
 
-    JPAPaginController controller = new JPAPaginController(factory,Employee.class);
+    JPAPaginController controller = new JPAPaginController(factory, Employee.class);
     PaginationController pagination;
     private List<Employee> lst;
     private String luaChon = "ADD";
@@ -456,6 +457,13 @@ public class EmployeeFrm extends javax.swing.JFrame implements entity {
         txtPhoneNumber.setText("");
     }
 
+    private boolean checkUsername(String username) {
+        Pattern pattern = Pattern.compile("[A-Za-z0-9_]+");
+        boolean valid = (username != null) && pattern.matcher(username).matches();
+        return valid;
+
+    }
+
     /**
      * Add new employee
      *
@@ -467,21 +475,30 @@ public class EmployeeFrm extends javax.swing.JFrame implements entity {
             String user = txtUser.getText();
             String pass = txtPassword.getText();
             if (user != null && !"".equals(user) && pass != null && !"".equals(pass)) {
-                String name = txtFullname.getText();
-                String phone = this.txtPhoneNumber.getText();
-                Date date = txtDate.getDate() != null ? txtDate.getDate() : new Date();
-                tran = entityManager.getTransaction();
-                Employee employee = new Employee();
-                employee.setEmpname(name);
-                employee.setUsername(user);
-                employee.setPass(pass);
-                employee.setEmpphone(phone);
-                employee.setEmpstartdate(date);
-                employee.setIsadmin(0);
-                tran.begin();
-                entityManager.persist(employee);
-                tran.commit();
-                return true;
+                if (checkUsername(user)) {
+                    Employee em = entityManager.find(Employee.class, user);
+                    if(em!= null)
+                    {
+                        JOptionPane.showMessageDialog(null, "The user "+user+" has already existed.!");
+                        return false;
+                    }
+
+                    String name = txtFullname.getText();
+                    String phone = this.txtPhoneNumber.getText();
+                    Date date = txtDate.getDate() != null ? txtDate.getDate() : new Date();
+                    tran = entityManager.getTransaction();
+                    Employee employee = new Employee();
+                    employee.setEmpname(name);
+                    employee.setUsername(user);
+                    employee.setPass(pass);
+                    employee.setEmpphone(phone);
+                    employee.setEmpstartdate(date);
+                    employee.setIsadmin(0);
+                    tran.begin();
+                    entityManager.persist(employee);
+                    tran.commit();
+                    return true;
+                }
             }
             return false;
         } catch (Exception e) {
@@ -490,7 +507,7 @@ public class EmployeeFrm extends javax.swing.JFrame implements entity {
 //                JOptionPane.showMessageDialog(null, e);
 
             }
-            JOptionPane.showMessageDialog(null, e);
+            //JOptionPane.showMessageDialog(null, e);
             return false;
         }
 
@@ -720,9 +737,7 @@ public class EmployeeFrm extends javax.swing.JFrame implements entity {
                 oneRow.add(e.getUsername());
                 if (e.getIsadmin() != null) {
                     oneRow.add((e.getIsadmin() == 1 ? " YES " : " NO "));
-                }
-                else
-                {
+                } else {
                     oneRow.add("NO");
                 }
                 //oneRow.add(e.getPass());

@@ -6,9 +6,8 @@
 package ClassData;
 
 import Entity.Employee;
-import MainForm.DashBoard;
 import MainForm.EmployeeFrm;
-import MainForm.OrderFrm;
+import MainForm.mainApp;
 
 /**
  *
@@ -16,13 +15,13 @@ import MainForm.OrderFrm;
  */
 public class LoginUser {
     public static Employee User;
-    public static DashBoard Main;
+    public static mainApp Main;
     public static EmployeeFrm Employee;
     //public static OrderFrm Order;
     public static void disposeAll()
     {
         User = new Employee();
-        Main = new DashBoard();
+        Main = new mainApp();
         Employee = new EmployeeFrm();
     }
 }

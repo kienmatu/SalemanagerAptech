@@ -25,6 +25,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.NamedStoredProcedureQueries;
 import javax.persistence.NamedStoredProcedureQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.SecondaryTable;
 import javax.persistence.StoredProcedureParameter;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -37,6 +38,7 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @Entity
 @Table(name = "PRODUCT")
+//@SecondaryTable(name = "BILLDETAIL")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Product.findAll", query = "SELECT p FROM Product p WHERE p.status = 1")
@@ -61,6 +63,8 @@ import javax.xml.bind.annotation.XmlTransient;
                 @StoredProcedureParameter(name = "startdate", type = Date.class)
                 ,
                 @StoredProcedureParameter(name = "enddate", type = Date.class)
+                ,
+                @StoredProcedureParameter(name = "count", type = Integer.class)
             })
 })
 public class Product implements Serializable {
@@ -96,8 +100,15 @@ public class Product implements Serializable {
     @ManyToOne
     private Category categoryid;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
-
     private Collection<Billdetail> billdetailCollection;
+//    @Column(table = "BILLDETAIL",name = "TOTAL MONEY")
+//    private double totalmoney;
+//    public Product() {
+//    }
+//
+//    public double getTotalmoney() {
+//        return totalmoney;
+//    }
 
     public Product() {
     }

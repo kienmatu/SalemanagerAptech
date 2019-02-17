@@ -8,6 +8,7 @@ package MainForm;
 import Services.entity;
 import Entity.Bill;
 import Entity.Category;
+import Entity.Customer;
 import Entity.Employee;
 import Entity.Product;
 import Services.JPAPaginController;
@@ -17,18 +18,26 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.swing.DefaultCellEditor;
+import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
@@ -37,7 +46,9 @@ import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
+import static org.apache.poi.poifs.macros.Module.ModuleType.Document;
 import org.eclipse.persistence.config.QueryHints;
+import org.xhtmlrenderer.pdf.ITextRenderer;
 
 /**
  *
@@ -212,7 +223,6 @@ public class newBill extends javax.swing.JFrame implements ActionListener, entit
             }
         };
         btnSubmit = new javax.swing.JButton();
-        btnPrint = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -335,8 +345,6 @@ public class newBill extends javax.swing.JFrame implements ActionListener, entit
                 btnSubmitMouseEntered(evt);
             }
         });
-
-        btnPrint.setLabel("Print Order");
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel2.setText("Search Customer by Name:");
@@ -497,8 +505,7 @@ public class newBill extends javax.swing.JFrame implements ActionListener, entit
                                 .addComponent(txtDate, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(btnSubmit, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(122, 122, 122))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(29, 29, 29)
                                 .addComponent(btnFirst)
@@ -544,9 +551,7 @@ public class newBill extends javax.swing.JFrame implements ActionListener, entit
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(32, 32, 32)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(btnSubmit, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(btnSubmit, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(txtDate, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -738,29 +743,28 @@ public class newBill extends javax.swing.JFrame implements ActionListener, entit
 //            }
             param = param + model.getValueAt(i, 0) + ",";
         }
-//        try {
-//            String SPsql = "EXEC getProductSelected ?";   // for stored proc taking 2 parameters
-//            Connection con = DriverManager.getConnection("jdbc:sqlserver://localhost;databaseName=SALE", "sa", "123456");   // java.sql.Connection
-//            PreparedStatement ps = con.prepareStatement(SPsql);
-//            ps.setEscapeProcessing(true);
-//            ps.setString(1, param);
-//            ResultSet rs = ps.executeQuery();
-//            if(rs.next())
-//            {
-//                Product p = new Product();
-//                p.setProductid(rs.getInt("PRODUCTID"));
-//                p.setProductname(rs.getNString("PRODUCTNAME"));
-//                p.setAmount(rs.getInt("AMOUNT"));
-//                prd.add(p);
-//            }
-//        } catch (Exception e) {
-//            JOptionPane.showMessageDialog(null, "AN ERROR OCCURED ");
-//
-//        }
-        Query query = entityManager2.createNamedStoredProcedureQuery("getProductSelected");//.setHint(QueryHints.REFRESH, true);
-    //    query.
-        query.setParameter("product_id", param);
-        prd = query.getResultList();
+        try {
+            String SPsql = "EXEC getProductSelected ?";   // for stored proc taking 2 parameters
+            Connection con = DriverManager.getConnection("jdbc:sqlserver://localhost;databaseName=SALE", "sa", "123456");   // java.sql.Connection
+            PreparedStatement ps = con.prepareStatement(SPsql);
+            ps.setEscapeProcessing(true);
+            ps.setString(1, param);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Product p = new Product();
+                p.setProductid(rs.getInt("PRODUCTID"));
+                p.setProductname(rs.getNString("PRODUCTNAME"));
+                p.setAmount(rs.getInt("AMOUNT"));
+                prd.add(p);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "AN ERROR OCCURED ");
+
+        }
+        //  Query query = entityManager.createNamedStoredProcedureQuery("getProductSelected");//.setHint(QueryHints.REFRESH, true);
+        //    query.
+//        query.setParameter("product_id", param);
+//        prd = query.getResultList();
         String idcust = this.lbCustID.getText();
         if (".".equals(idcust)) { // check khách hàng
             JOptionPane.showMessageDialog(null, "Please choose a customer !");
@@ -788,6 +792,7 @@ public class newBill extends javax.swing.JFrame implements ActionListener, entit
                             tran.begin();
                             int amt = Integer.parseInt(model.getValueAt(i, 4).toString());
                             int pid = p.getProductid();
+                            entityManager.clear();
                             String ins = "INSERT INTO BILLDETAIL VALUES('" + id + "','" + pid + "','" + amt + "')";
                             Query insquery = entityManager.createNativeQuery(ins);
                             insquery.executeUpdate();
@@ -800,7 +805,11 @@ public class newBill extends javax.swing.JFrame implements ActionListener, entit
                         }
 
                         //entityManager.close();
-                        JOptionPane.showMessageDialog(null, "Successfully!");
+                        int input = JOptionPane.showConfirmDialog(null, "Successfully! \n Do you want to print the tax ?");
+                        // 0=yes, 1=no, 2=cancel
+                        if (input == 0) {
+                            ExportPdf(cust, prd);
+                        }
                         resetProduct();
                     } catch (Exception e) {
                         if (tran != null && tran.isActive()) {
@@ -914,12 +923,12 @@ public class newBill extends javax.swing.JFrame implements ActionListener, entit
      */
     private void setDataProduct(List<Product> prod) {
 
-        String[] header = new String[]{"ID", "Product Code", "Name", "UNIT", "Price", "Company"};
+        String[] header = new String[]{"ID", "Product Code", "Name", "UNIT", "AMOUNT", "Price", "Company"};
         DefaultTableModel dataModel = new DefaultTableModel(header, 0);
         if (prod.size() > 0) {
 
             for (Product p : prod) {
-                Object[] columns = new Object[]{p.getProductid(), p.getProductcode(), p.getProductname(), p.getUnit(), p.getPrice(), p.getCompany()};
+                Object[] columns = new Object[]{p.getProductid(), p.getProductcode(), p.getProductname(), p.getUnit(), p.getAmount(), p.getPrice(), p.getCompany()};
                 dataModel.addRow(columns);
             }
         } else {
@@ -973,7 +982,6 @@ public class newBill extends javax.swing.JFrame implements ActionListener, entit
     private javax.swing.JButton btnLast;
     private javax.swing.JButton btnNext;
     private javax.swing.JButton btnPrev;
-    private javax.swing.JButton btnPrint;
     private javax.swing.JButton btnSearch;
     private javax.swing.JButton btnSearchCust;
     private javax.swing.JButton btnSubmit;
@@ -1142,5 +1150,9 @@ public class newBill extends javax.swing.JFrame implements ActionListener, entit
 
         });
 
+    }
+
+    private void ExportPdf(Customer cust, List<Product> prd) throws SQLException {
+       
     }
 }
